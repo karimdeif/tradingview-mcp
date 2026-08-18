@@ -1,0 +1,25 @@
+# NOT INSTALLED. See docs/WORLD_ARM_DEPLOYMENT.md before enabling —
+# there is a blocking finding (TradingView allows one active session per
+# account, and disconnection fails silently) that must be decided first.
+[Unit]
+Description=TradingView world-context realtime arm (read-only, advisory)
+Documentation=https://github.com/karimdeif/tradingview-mcp
+After=graphical-session.target
+
+[Service]
+Type=simple
+# TradingView Desktop must already be running with --remote-debugging-port=9222.
+ExecStart=/usr/bin/node %h/claude-a15-20260818/tradingview-mcp/scripts/world_daemon.mjs --questdb
+WorkingDirectory=%h/claude-a15-20260818/tradingview-mcp
+# Belt and braces: the child MCP server registers only the read-only surface
+# even if this unit is edited later.
+Environment=TV_MCP_TOOL_ALLOWLIST=readonly
+Restart=on-failure
+RestartSec=30
+# SIGINT lets the daemon finish its cycle and restore the chart cursor.
+KillSignal=SIGINT
+TimeoutStopSec=180
+Nice=10
+
+[Install]
+WantedBy=default.target
