@@ -5,3 +5,6 @@ temp_*
 *.log
 discovery-log.json
 rules.json
+
+# Collector output stays local — data never goes in the repo.
+data/

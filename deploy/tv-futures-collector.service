@@ -1,0 +1,27 @@
+# NOT INSTALLED. Template for a systemd *user* unit on asus15.
+# Install deliberately, not automatically:
+#   mkdir -p ~/.config/systemd/user
+#   cp deploy/tv-futures-collector.* ~/.config/systemd/user/
+#   systemctl --user daemon-reload && systemctl --user enable --now tv-futures-collector.timer
+#
+# Before enabling, know what it does to the UI: each sweep drives the TradingView
+# chart through 10 symbols and takes ~5 minutes, then restores the chart to
+# whatever it was on. At a 15-minute cadence that is roughly a 1/3 duty cycle of
+# visible chart flipping. Point it at a dedicated layout/tab before running it
+# against a chart anyone is actually working on.
+[Unit]
+Description=TradingView futures/macro context collector (read-only sweep)
+Documentation=https://github.com/karimdeif/tradingview-mcp
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+# TradingView Desktop must already be running with --remote-debugging-port=9222.
+# The collector exits non-zero rather than launching it (tv_launch would pkill).
+ExecStart=/usr/bin/node %h/claude-a15-20260818/tradingview-mcp/scripts/futures_collector.mjs
+WorkingDirectory=%h/claude-a15-20260818/tradingview-mcp
+# Belt and braces: even if the unit is edited later, the child server only ever
+# registers the read-only surface.
+Environment=TV_MCP_TOOL_ALLOWLIST=readonly
+TimeoutStartSec=600
+Nice=10

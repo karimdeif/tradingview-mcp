@@ -1,0 +1,15 @@
+# NOT INSTALLED. See tv-futures-collector.service for the install steps and the
+# UI-disruption warning.
+[Unit]
+Description=Run the TradingView futures/macro sweep every 15 minutes
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=15min
+# A sweep takes ~5 min; the collector also holds a single-flight lock, so an
+# overlapping trigger exits cleanly rather than corrupting the chart cursor.
+AccuracySec=30s
+Persistent=false
+
+[Install]
+WantedBy=timers.target
