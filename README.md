@@ -18,18 +18,73 @@ Personal AI assistant for your TradingView Desktop charts. Connects Claude Code 
 
 ## How It Works (and why it's safe to run)
 
-This tool does not connect to TradingView's servers, modify any TradingView files, or intercept any network traffic. It communicates exclusively with your locally running TradingView Desktop instance via Chrome DevTools Protocol (CDP) — a standard debugging interface built into all Chromium/Electron applications by Google, including VS Code, Slack, and Discord.
+The MCP server process itself opens exactly one socket: CDP to `127.0.0.1:9222`. It does not modify TradingView files or intercept network traffic, and it stores no credentials. It communicates with your locally running TradingView Desktop instance via Chrome DevTools Protocol (CDP) — a standard debugging interface built into all Chromium/Electron applications by Google, including VS Code, Slack, and Discord.
 
 The debug port is disabled by default and must be explicitly enabled by you using a standard Chromium flag (`--remote-debugging-port=9222`). Nothing happens without that deliberate step.
 
 ## What This Tool Does Not Do
 
-- Connect to TradingView's servers or APIs
+- Store or transmit your credentials — authentication is your existing desktop session
 - Store, transmit, or redistribute any market data
+- Send telemetry or make any outbound call of its own (see note below)
 - Work without a valid TradingView subscription and installed Desktop app
 - Bypass any TradingView paywall or access restriction
-- Execute real trades (chart interaction only)
 - Work if TradingView changes their internal Electron structure
+
+### What it DOES do, that you should know about
+
+Two clarifications this fork corrects, because the upstream README overstated them:
+
+- **It does reach TradingView's servers — as you.** Several tools inject JavaScript into
+  the authenticated page that calls TradingView APIs with `credentials: 'include'`, i.e.
+  your live session cookies. Some of those calls **write to your cloud account**:
+  `alert_create` / `alert_delete` (`pricealerts.tradingview.com`), `watchlist_remove`
+  (`www.tradingview.com/api/v1/symbols_list`), and the `pine_*` save path
+  (`pine-facade.tradingview.com`). This is inherent to a browser-automation bridge, but it
+  is not "no server contact."
+- **It has no dedicated order tool, but it is not order-safe by construction.**
+  `ui_open_panel` accepts a `trading` target that clicks the real Trading Panel button, and
+  `ui_evaluate` runs arbitrary JavaScript in the authenticated page with no sanitization,
+  alongside `ui_click`, `ui_mouse_click`, `ui_keyboard`, and `ui_type_text`. On an account
+  with a broker linked, those compose into a working order-entry path. Use the allowlist
+  below if that matters to you.
+
+Upstream also called `api.github.com` on every health check to compare commits. **Removed in
+this fork** — see `src/core/health.js`. Use `git fetch` to check for updates.
+
+## Restricting the tool surface (`TV_MCP_TOOL_ALLOWLIST`)
+
+All 84 tools register unconditionally by default. Set `TV_MCP_TOOL_ALLOWLIST` to gate
+registration — withheld tools never enter `tools/list` and cannot be invoked at all.
+
+| Value | Effect |
+|---|---|
+| unset | Default. All 84 tools register. |
+| `readonly` | Only the 9 read-only tools in `src/allowlist.js` register. |
+| `quote_get,data_get_ohlcv` | Exactly the named tools register. |
+
+The `readonly` set is `tv_health_check`, `chart_get_state`, `chart_set_symbol`,
+`chart_set_timeframe`, `quote_get`, `data_get_ohlcv`, `symbol_info`, `symbol_search`,
+`capture_screenshot` — enough to inspect symbols and pull quotes and bars, with no writer,
+no UI driver, and no update tool. Note that `chart_set_symbol` / `chart_set_timeframe` do
+change your *visible* chart (as does `quote_get`, which switches and restores internally);
+they touch local view state only, never server-side account state.
+
+The server prints the active mode and the registered tool names to stderr on startup.
+
+Example (Claude Code `.mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "tradingview": {
+      "command": "node",
+      "args": ["/path/to/tradingview-mcp/src/server.js"],
+      "env": { "TV_MCP_TOOL_ALLOWLIST": "readonly" }
+    }
+  }
+}
+```
 
 ## Research Context
 

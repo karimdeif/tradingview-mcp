@@ -14,6 +14,7 @@ import { registerWatchlistTools } from './tools/watchlist.js';
 import { registerUiTools } from './tools/ui.js';
 import { registerPaneTools } from './tools/pane.js';
 import { registerTabTools } from './tools/tab.js';
+import { resolveAllowlist, applyAllowlist } from './allowlist.js';
 
 const server = new McpServer(
   {
@@ -69,6 +70,11 @@ CONTEXT MANAGEMENT:
   }
 );
 
+// Registration-level tool allowlist (karimdeif fork). Must be applied BEFORE
+// any register*() call — it wraps server.tool so disallowed names never register.
+const allowed = resolveAllowlist(process.env.TV_MCP_TOOL_ALLOWLIST);
+const gate = applyAllowlist(server, allowed);
+
 // Register all tool groups
 registerHealthTools(server);
 registerChartTools(server);
@@ -88,6 +94,12 @@ registerTabTools(server);
 // Startup notice (stderr so it doesn't interfere with MCP stdio protocol)
 process.stderr.write('⚠  tradingview-mcp  |  Unofficial tool. Not affiliated with TradingView Inc. or Anthropic.\n');
 process.stderr.write('   Ensure your usage complies with TradingView\'s Terms of Use.\n\n');
+if (allowed) {
+  process.stderr.write(`   TV_MCP_TOOL_ALLOWLIST active: ${gate.registered.length} tool(s) registered, ${gate.skipped.length} withheld.\n`);
+  process.stderr.write(`   Registered: ${gate.registered.join(', ')}\n`);
+} else {
+  process.stderr.write(`   No allowlist set \u2014 all ${gate.registered.length} tools registered.\n`);
+}
 
 // Start stdio transport
 const transport = new StdioServerTransport();
