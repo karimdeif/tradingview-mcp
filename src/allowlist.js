@@ -38,12 +38,38 @@ export const READONLY_TOOLS = [
   'capture_screenshot',
 ];
 
+/**
+ * Research-harvest working set: the read-only tools plus the three readers
+ * needed to harvest karim's stored council verdicts. Each was code-reviewed for
+ * strict read-only behaviour on 2026-08-19:
+ *
+ *   notes_get           — no caller arguments at all (src/core/notes.js)
+ *   draw_list           — no caller arguments; getAllShapes() -> id/name
+ *   draw_get_properties — only input is entity_id, escaped via safeString();
+ *                         calls getters only (getPoints/getProperties/isVisible)
+ *   watchlist_get       — no caller arguments; DOM read. Does click a HARDCODED
+ *                         panel button to open the watchlist (visible side
+ *                         effect, never a data write).
+ *
+ * Deliberately still excluded: every other ui_*, all alert_*, all pine_*,
+ * watchlist writers, draw_shape/draw_clear/draw_remove_one, tv_update,
+ * tv_launch, batch_run.
+ */
+export const HARVEST_TOOLS = [
+  ...READONLY_TOOLS,
+  'notes_get',
+  'draw_list',
+  'draw_get_properties',
+  'watchlist_get',
+];
+
 /** Parse the env var into a Set of allowed names, or null for "no restriction". */
 export function resolveAllowlist(raw) {
   if (raw === undefined || raw === null) return null;
   const trimmed = String(raw).trim();
   if (trimmed === '') return null;
   if (trimmed.toLowerCase() === 'readonly') return new Set(READONLY_TOOLS);
+  if (trimmed.toLowerCase() === 'harvest') return new Set(HARVEST_TOOLS);
   const names = trimmed.split(',').map((s) => s.trim()).filter(Boolean);
   return new Set(names);
 }
