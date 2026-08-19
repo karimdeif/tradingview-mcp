@@ -135,20 +135,32 @@ export function parseRating(noteText) {
     const cand = (explicit[0].split(/:\s*/)[1] || '').trim().toUpperCase().replace(/[\s-]+/g, '_');
     if (RATINGS.includes(cand)) { rating = cand; matched = explicit[0]; }
   }
-  // Fall back to the first recognised token anywhere (longest-first so
-  // STRONG_SELL is not truncated to SELL).
+  // Fall back to whichever token appears FIRST IN THE TEXT, not first in the
+  // severity list.
   //
-  // The separator must be flexible: karim writes both "STRONG_SELL" and
-  // "STRONG SELL". A regex requiring the underscore silently DOWNGRADED
-  // GBCO's "COUNCIL - STRONG SELL - HIGH" to plain SELL, which understates
-  // his call — the dangerous direction for a veto-shaped signal.
+  // Scanning the list in order made an incidentally-mentioned rating beat the
+  // actual verdict, because SELL is checked before HOLD:
+  //   CANA "…CANA HOLD MEDIUM … so no SELL, but entry is not compelling" -> SELL
+  //   EXPA "…HOLD (upgrade from SELL)…"                                  -> SELL
+  // Both are HOLD calls that were being recorded as SELL. Earliest-position
+  // matching reads them correctly, and longest-at-the-same-position keeps
+  // "STRONG SELL" from collapsing to "SELL".
+  //
+  // Residual limitation: this is positional, not semantic. A note phrased
+  // "SELL is not warranted, HOLD" would still read as SELL. rating_drawing
+  // stays the authoritative column for exactly this reason.
   if (!rating) {
+    let best = null;
     for (const r of RATINGS) {
       const pattern = r.replace(/_/g, '[\\s_-]+');
-      const re = new RegExp(`\\b${pattern}\\b`, 'i');
-      const m = noteText.match(re);
-      if (m) { rating = r; matched = m[0]; break; }
+      const m = noteText.match(new RegExp(`\\b${pattern}\\b`, 'i'));
+      if (!m) continue;
+      const idx = m.index;
+      if (best === null || idx < best.idx || (idx === best.idx && r.length > best.rating.length)) {
+        best = { idx, rating: r, matched: m[0] };
+      }
     }
+    if (best) { rating = best.rating; matched = best.matched; }
   }
 
   const conf = noteText.match(/Confidence\s*:\s*([A-Za-z]+)/i);

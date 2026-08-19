@@ -41,6 +41,19 @@ describe('parseRating', () => {
     assert.equal(parseRating('rating: STRONG-SELL').rating, 'STRONG_SELL');
   });
 
+  it('takes the verdict that appears FIRST, not the most severe — CANA/EXPA regression', () => {
+    // Scanning the rating list in severity order let an incidentally-mentioned
+    // SELL beat the actual HOLD verdict, mislabelling two of karim's calls.
+    assert.equal(parseRating('council - CANA HOLD MEDIUM Excellent ROE but priced far above CSV intrinsic; interim FS shows improving capital/profit, so no SELL, but entry is not compelling.').rating, 'HOLD');
+    assert.equal(parseRating('council - EXPA: HOLD (upgrade from SELL), MEDIUM (earnings reports reduce cash-flow concern').rating, 'HOLD');
+  });
+
+  it('longest token still wins at the same position', () => {
+    // Earliest-position must not collapse "STRONG SELL" to "SELL".
+    assert.equal(parseRating('COUNCIL - STRONG SELL - HIGH').rating, 'STRONG_SELL');
+    assert.equal(parseRating('council - WEAK BUY here').rating, 'WEAK_BUY');
+  });
+
   it('still reads a plain SELL as SELL, not as a strong variant', () => {
     assert.equal(parseRating('COUNCIL - SELL - HIGH').rating, 'SELL');
     assert.equal(parseRating('Overall Rating: SELL').rating, 'SELL');
