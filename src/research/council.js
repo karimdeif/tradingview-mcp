@@ -40,7 +40,7 @@ export const NOTES_DDL = `CREATE TABLE IF NOT EXISTS ${NOTES_TABLE} (
   note_len INT,
   rating_drawing SYMBOL CAPACITY 16 CACHE,
   rating_parsed SYMBOL CAPACITY 16 CACHE,
-  rating_agrees BOOLEAN,
+  rating_agreement SYMBOL CAPACITY 8 CACHE,
   confidence_parsed SYMBOL CAPACITY 16 CACHE,
   note_ts TIMESTAMP,
   note_ts_available BOOLEAN,
@@ -75,11 +75,20 @@ export function classifyNote(noteText) {
 
 /**
  * Reconcile the authoritative drawing rating against the parsed one.
- * null when either side is missing — absence is not agreement.
+ *
+ * Returns a STRING, not a nullable boolean. QuestDB's BOOLEAN type cannot hold
+ * NULL — it silently coerces to false (verified against the live instance:
+ * INSERT NULL then `b IS NULL` returns false). A nullable boolean therefore
+ * conflated "the drawing and the prose disagree" (ADIB — a real signal) with
+ * "there is no drawing to compare" (MCQE, ORAS — no signal at all), so a study
+ * filtering rating_agrees = false would have picked up all three.
+ *
+ * 'agree' | 'mismatch' | 'unknown'  — rating_drawing/rating_parsed say why.
  */
 export function ratingAgreement(ratingDrawing, ratingParsed) {
-  if (!ratingDrawing || !ratingParsed) return null;
-  return String(ratingDrawing).trim().toUpperCase() === String(ratingParsed).trim().toUpperCase();
+  if (!ratingDrawing || !ratingParsed) return 'unknown';
+  return String(ratingDrawing).trim().toUpperCase() === String(ratingParsed).trim().toUpperCase()
+    ? 'agree' : 'mismatch';
 }
 
 /** Normalise a raw drawing text value into a rating token, or null. */
@@ -110,7 +119,7 @@ export function buildNoteRow({ symbol, tvSymbol, note, parsed, drawingText, srLi
     rating_drawing: ratingDrawing,
     // Derived guess from prose. See module header re: ADIB.
     rating_parsed: ratingParsed,
-    rating_agrees: ratingAgreement(ratingDrawing, ratingParsed),
+    rating_agreement: ratingAgreement(ratingDrawing, ratingParsed),
     confidence_parsed: parsed?.confidence ?? null,
     // Always null by design; the vintage is batch metadata.
     note_ts: null,

@@ -38,8 +38,11 @@ export const DDL = `CREATE TABLE IF NOT EXISTS ${TABLE} (
   bar_ts TIMESTAMP,
   feed_lag_s INT,
   delay_est_s INT,
-  realtime BOOLEAN,
-  realtime_drift BOOLEAN,
+  -- Tri-state as SYMBOL, not BOOLEAN: QuestDB BOOLEAN cannot hold NULL and
+  -- coerces it to false, which would make "freshness unknown" indistinguishable
+  -- from "confirmed delayed". See src/research/council.js for the incident.
+  realtime SYMBOL CAPACITY 8 CACHE,
+  realtime_drift SYMBOL CAPACITY 8 CACHE,
   exchange SYMBOL CAPACITY 32 CACHE,
   instrument_type SYMBOL CAPACITY 32 CACHE,
   source SYMBOL CAPACITY 16 CACHE,
@@ -98,8 +101,8 @@ export function buildInsert(row) {
     sqlTs(row.bar_ts),
     sqlNum(row.feed_lag_s),
     sqlNum(row.delay_est_s),
-    sqlBool(row.realtime),
-    sqlBool(row.realtime_drift),
+    sqlStr(row.realtime === null || row.realtime === undefined ? 'unknown' : (row.realtime ? 'yes' : 'no')),
+    sqlStr(row.realtime_drift === null || row.realtime_drift === undefined ? 'unknown' : (row.realtime_drift ? 'yes' : 'no')),
     sqlStr(row.exchange),
     sqlStr(row.instrument_type),
     sqlStr(row.source ?? 'tradingview-mcp'),

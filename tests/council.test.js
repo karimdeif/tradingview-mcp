@@ -31,12 +31,19 @@ describe('classifyNote', () => {
 });
 
 describe('ratingAgreement', () => {
-  it('agrees on a match', () => assert.equal(ratingAgreement('SELL', 'SELL'), true));
-  it('disagrees on the real ADIB case', () => assert.equal(ratingAgreement('HOLD', 'WEAK_SELL'), false));
-  it('returns null when either side is missing — absence is not agreement', () => {
-    assert.equal(ratingAgreement(null, 'SELL'), null);
-    assert.equal(ratingAgreement('SELL', null), null);
-    assert.equal(ratingAgreement(null, null), null);
+  it('agrees on a match', () => assert.equal(ratingAgreement('SELL', 'SELL'), 'agree'));
+  it('disagrees on the real ADIB case', () => assert.equal(ratingAgreement('HOLD', 'WEAK_SELL'), 'mismatch'));
+  it("returns 'unknown', not 'mismatch', when either side is missing", () => {
+    // MCQE and ORAS have no rating drawing. Storing that as a false boolean made
+    // them indistinguishable from ADIB's genuine disagreement.
+    assert.equal(ratingAgreement(null, 'SELL'), 'unknown');
+    assert.equal(ratingAgreement('SELL', null), 'unknown');
+    assert.equal(ratingAgreement(null, null), 'unknown');
+  });
+  it('never returns a boolean — QuestDB BOOLEAN cannot hold NULL', () => {
+    for (const v of [ratingAgreement('SELL', 'SELL'), ratingAgreement('HOLD', 'BUY'), ratingAgreement(null, null)]) {
+      assert.equal(typeof v, 'string');
+    }
   });
 });
 
@@ -65,7 +72,7 @@ describe('buildNoteRow — the ADIB case end to end', () => {
     });
     assert.equal(row.rating_drawing, 'HOLD', "karim's chart text must survive verbatim");
     assert.equal(row.rating_parsed, 'WEAK_SELL', 'our derived guess is preserved, not discarded');
-    assert.equal(row.rating_agrees, false, 'the disagreement must be visible, not resolved');
+    assert.equal(row.rating_agreement, 'mismatch', 'the disagreement must be visible, not resolved');
     assert.equal(row.note_kind, 'council');
   });
 
@@ -86,7 +93,7 @@ describe('buildNoteRow — the ADIB case end to end', () => {
     assert.equal(row.note_kind, 'freeform');
     assert.equal(row.rating_drawing, null);
     assert.equal(row.rating_parsed, null);
-    assert.equal(row.rating_agrees, null);
+    assert.equal(row.rating_agreement, 'unknown');
     assert.equal(row.note_len, 14);
   });
 });
@@ -123,10 +130,22 @@ describe('DDL', () => {
       assert.match(ddl, /DEDUP UPSERT KEYS/);
     }
   });
+  it('has NO nullable BOOLEAN column — QuestDB coerces NULL to false', () => {
+    // Structural guard against repeating the rating_agrees incident. Any
+    // tri-state must be SYMBOL. note_ts_available is the one permitted boolean:
+    // it is always written false and never null.
+    const permitted = new Set(['note_ts_available']);
+    for (const ddl of [NOTES_DDL, LEVELS_DDL]) {
+      for (const m of ddl.matchAll(/^\s*(\w+)\s+BOOLEAN/gm)) {
+        assert.ok(permitted.has(m[1]), `${m[1]} is BOOLEAN; tri-state columns must be SYMBOL`);
+      }
+    }
+  });
+
   it('notes table has both rating columns and no collapsed one', () => {
     assert.match(NOTES_DDL, /rating_drawing/);
     assert.match(NOTES_DDL, /rating_parsed/);
-    assert.match(NOTES_DDL, /rating_agrees/);
+    assert.match(NOTES_DDL, /rating_agreement SYMBOL/);
     assert.ok(!/\n\s+rating SYMBOL/.test(NOTES_DDL));
   });
   it('never targets an estate market table', () => {

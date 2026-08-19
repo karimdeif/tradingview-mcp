@@ -54,6 +54,20 @@ describe('SQL building', () => {
     assert.ok(/NULL, false,/.test(sql), 'volume NULL + volume_available false');
   });
 
+  it('has no tri-state BOOLEAN column — QuestDB coerces NULL to false', () => {
+    const permitted = new Set(['volume_available', 'replayed']);
+    for (const m of DDL.matchAll(/^\s*(\w+)\s+BOOLEAN/gm)) {
+      assert.ok(permitted.has(m[1]), `${m[1]} is BOOLEAN but can be null; must be SYMBOL`);
+    }
+    assert.match(DDL, /realtime SYMBOL/);
+    assert.match(DDL, /realtime_drift SYMBOL/);
+  });
+
+  it('renders unknown freshness as "unknown", never as a false boolean', () => {
+    const sql = buildInsert({ ...ROW, realtime: null, realtime_drift: null });
+    assert.match(sql, /'unknown', 'unknown'/);
+  });
+
   it('DDL is WAL, partitioned by day, and deduped on (ts, symbol)', () => {
     assert.match(DDL, /PARTITION BY DAY WAL/);
     assert.match(DDL, /DEDUP UPSERT KEYS\(ts, symbol\)/);
