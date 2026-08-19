@@ -128,18 +128,24 @@ export function parseRating(noteText) {
   const RATINGS = ['STRONG_SELL', 'STRONG_BUY', 'WEAK_SELL', 'WEAK_BUY', 'SELL', 'BUY', 'HOLD'];
 
   // Prefer an explicit "Overall Rating: X" statement.
-  const explicit = noteText.match(/Overall\s+Rating\s*:\s*([A-Z_]+)/i);
+  const explicit = noteText.match(/Overall\s+Rating\s*:\s*((?:STRONG|WEAK)[\s_-]+)?(SELL|BUY|HOLD)/i);
   let rating = null;
   let matched = null;
   if (explicit) {
-    const cand = explicit[1].toUpperCase();
+    const cand = (explicit[0].split(/:\s*/)[1] || '').trim().toUpperCase().replace(/[\s-]+/g, '_');
     if (RATINGS.includes(cand)) { rating = cand; matched = explicit[0]; }
   }
   // Fall back to the first recognised token anywhere (longest-first so
   // STRONG_SELL is not truncated to SELL).
+  //
+  // The separator must be flexible: karim writes both "STRONG_SELL" and
+  // "STRONG SELL". A regex requiring the underscore silently DOWNGRADED
+  // GBCO's "COUNCIL - STRONG SELL - HIGH" to plain SELL, which understates
+  // his call — the dangerous direction for a veto-shaped signal.
   if (!rating) {
     for (const r of RATINGS) {
-      const re = new RegExp(`\\b${r}\\b`, 'i');
+      const pattern = r.replace(/_/g, '[\\s_-]+');
+      const re = new RegExp(`\\b${pattern}\\b`, 'i');
       const m = noteText.match(re);
       if (m) { rating = r; matched = m[0]; break; }
     }

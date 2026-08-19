@@ -31,6 +31,21 @@ describe('parseRating', () => {
     assert.equal(parseRating('the council said STRONG_BUY today').rating, 'STRONG_BUY');
   });
 
+  it('accepts a SPACE separator — GBCO regression', () => {
+    // Verbatim GBCO note. An underscore-only regex downgraded this to plain
+    // SELL, understating karim's call: the dangerous direction for a
+    // veto-shaped signal.
+    assert.equal(parseRating('COUNCIL - STRONG SELL - HIGH').rating, 'STRONG_SELL');
+    assert.equal(parseRating('Overall Rating: STRONG SELL').rating, 'STRONG_SELL');
+    assert.equal(parseRating('Overall Rating: WEAK BUY').rating, 'WEAK_BUY');
+    assert.equal(parseRating('rating: STRONG-SELL').rating, 'STRONG_SELL');
+  });
+
+  it('still reads a plain SELL as SELL, not as a strong variant', () => {
+    assert.equal(parseRating('COUNCIL - SELL - HIGH').rating, 'SELL');
+    assert.equal(parseRating('Overall Rating: SELL').rating, 'SELL');
+  });
+
   it('falls back to the first recognised token when there is no explicit statement', () => {
     const r = parseRating(ADIB);
     assert.equal(r.rating, 'WEAK_SELL', 'must not pick the later HOLD');
