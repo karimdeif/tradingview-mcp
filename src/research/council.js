@@ -146,3 +146,23 @@ export function buildLevelRows({ symbol, levels, vintageDate, harvestedAt }) {
     source: 'TV_NOTES',
   }));
 }
+
+/**
+ * Did this symbol's drawing set come from the previous symbol rather than its own?
+ *
+ * TradingView drawings that are not symbol-pinned persist across a symbol
+ * change, so a symbol with none of its own shows whatever was last on screen.
+ * Proven 2026-08-20: approaching ALRA and NAPR from two different predecessors
+ * returned each predecessor's drawing ids.
+ *
+ * `prevIds` MUST be seeded from the chart's contents before the first symbol
+ * switch. Left null, the first symbol of a run has nothing to compare against
+ * and silently inherits — which is how ACRO and AIHC acquired COMI's "SELL"
+ * rating Text object in the 2026-08-19 harvest.
+ *
+ * An empty set can never be inherited: nothing carried over.
+ */
+export function isInheritedDrawingSet(idSet, prevIds) {
+  if (!idSet) return false;
+  return idSet === prevIds;
+}

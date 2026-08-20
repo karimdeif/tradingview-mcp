@@ -24,7 +24,7 @@ import { appendFileSync, mkdirSync } from 'fs';
 import { dirname, join } from 'path';
 import { parseRating } from '../src/core/notes.js';
 import {
-  buildNoteRow, buildLevelRows, NOTES_DDL, LEVELS_DDL, NOTES_TABLE, LEVELS_TABLE,
+  buildNoteRow, buildLevelRows, isInheritedDrawingSet, NOTES_DDL, LEVELS_DDL, NOTES_TABLE, LEVELS_TABLE,
 } from '../src/research/council.js';
 import { sqlStr, sqlNum, sqlBool, sqlTs } from '../src/world/questdb.js';
 
@@ -129,19 +129,39 @@ async function main() {
   const noteRows = []; const levelRows = []; const failures = [];
 
   /**
-   * Stale-chart guard.
+   * Inherited-drawings guard.
    *
-   * chart_get_state reporting the right symbol is NOT proof the data changed —
-   * on 2026-08-18 a terminated TradingView session kept reporting the correct
-   * symbol after every switch while serving frozen values. Drawing entity IDs
-   * are per-symbol, so an identical NON-EMPTY id set across two different
-   * symbols proves the chart's contents did not actually change.
+   * TradingView drawings that are not symbol-pinned PERSIST across a symbol
+   * change, so a symbol with no drawings of its own shows whatever was last on
+   * screen. Proven 2026-08-20 by approaching ALRA and NAPR from two different
+   * predecessors: each time the drawing id set followed the PREDECESSOR, not
+   * the target.
    *
-   * Identical note TEXT is deliberately not used as the signal: several symbols
+   * Without this check, one symbol's rating Text object and price levels get
+   * filed under another symbol's name. It also catches a genuinely frozen chart
+   * (2026-08-18's terminated session kept reporting correct symbols while
+   * serving stale content) — the signature is the same.
+   *
+   * The NOTE is unaffected either way: the Details panel is symbol-specific, so
+   * the note is still recorded. Only the drawing-derived fields are suppressed.
+   *
+   * Identical note TEXT is deliberately not the signal: several symbols
    * legitimately share a short note such as "COUNCIL - SELL".
    */
+  // Seed the baseline from the chart's CURRENT contents, before the first
+  // symbol switch. Without this the first symbol of a run has no predecessor to
+  // compare against, so if it has no drawings of its own it silently inherits
+  // whatever was on screen when the run started — which is how AIHC acquired
+  // COMI's "SELL" rating Text object.
   let prevIds = null; let prevSymbol = null; let staleStreak = 0;
-  const STALE_ABORT_AFTER = 3;
+  const STALE_ABORT_AFTER = 8;
+
+  {
+    const seed = await client.call('draw_list');
+    prevIds = (seed.shapes || []).map((x) => x.id).sort().join(',');
+    prevSymbol = before?.symbol ? `${before.symbol} (pre-run chart state)` : 'pre-run chart state';
+    if (prevIds) console.error(`[harvest] baseline drawings seeded from ${prevSymbol}: ${(seed.shapes || []).length} object(s)`);
+  }
 
   for (const tv of universe) {
     const bare = tv.includes(':') ? tv.split(':')[1] : tv;
@@ -160,32 +180,33 @@ async function main() {
       const texts = (dl.shapes || []).filter((s) => s.name === 'text');
       const lines = (dl.shapes || []).filter((s) => s.name === 'horizontal_line');
 
+      const idSet = (dl.shapes || []).map((x) => x.id).sort().join(',');
+      const inherited = isInheritedDrawingSet(idSet, prevIds);
+      if (inherited) {
+        staleStreak++;
+        console.error(`  ${bare.padEnd(6)} drawings inherited from ${prevSymbol} — none of its own; note kept, drawing fields suppressed (streak ${staleStreak})`);
+        if (staleStreak >= STALE_ABORT_AFTER) {
+          console.error(`\n*** ABORTING SWEEP — ${staleStreak} consecutive symbols inherited drawings.`);
+          console.error('    A long run is more consistent with a frozen chart than with genuinely undrawn symbols.');
+          console.error('    Rows collected so far are kept; the rest of the universe was NOT harvested.');
+          break;
+        }
+      } else {
+        staleStreak = 0; prevIds = idSet; prevSymbol = bare;
+      }
+
+
       let drawingText = null;
-      if (texts.length) {
+      if (texts.length && !inherited) {
         const props = await client.call('draw_get_properties', { entity_id: texts[0].id });
         drawingText = props?.properties?.text ?? null;
       }
       const levels = [];
-      for (const l of lines) {
+      for (const l of (inherited ? [] : lines)) {
         const props = await client.call('draw_get_properties', { entity_id: l.id });
         const price = props?.points?.[0]?.price;
         if (Number.isFinite(price)) levels.push({ id: l.id, price });
       }
-
-      const idSet = (dl.shapes || []).map((x) => x.id).sort().join(',');
-      if (idSet && idSet === prevIds) {
-        staleStreak++;
-        console.error(`  ${bare.padEnd(6)} STALE? identical drawing ids to ${prevSymbol} (streak ${staleStreak}/${STALE_ABORT_AFTER})`);
-        failures.push({ symbol: bare, reason: `identical drawing ids to ${prevSymbol} — chart likely frozen` });
-        if (staleStreak >= STALE_ABORT_AFTER) {
-          console.error(`\n*** ABORTING SWEEP — ${staleStreak} consecutive symbols returned identical drawing ids.`);
-          console.error('    The TradingView chart is almost certainly frozen (session disconnected?).');
-          console.error('    Rows collected so far are kept; the rest of the universe was NOT harvested.');
-          break;
-        }
-        continue;
-      }
-      staleStreak = 0; prevIds = idSet; prevSymbol = bare;
 
       const parsed = parseRating(note?.note_text);
       const row = buildNoteRow({

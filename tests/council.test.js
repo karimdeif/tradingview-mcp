@@ -6,7 +6,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  classifyNote, ratingAgreement, normaliseDrawingRating, buildNoteRow, buildLevelRows,
+  classifyNote, ratingAgreement, normaliseDrawingRating, buildNoteRow, buildLevelRows, isInheritedDrawingSet,
   NOTES_DDL, LEVELS_DDL,
 } from '../src/research/council.js';
 import { parseRating } from '../src/core/notes.js';
@@ -152,5 +152,30 @@ describe('DDL', () => {
     for (const t of ['trades', 'daily_ohlcv', 'regime_gate', 'news_events']) {
       assert.ok(!new RegExp(`\\b${t}\\b`).test(NOTES_DDL + LEVELS_DDL));
     }
+  });
+});
+
+describe('isInheritedDrawingSet', () => {
+  it('flags a set identical to the predecessor', () => {
+    assert.equal(isInheritedDrawingSet('a,b,c', 'a,b,c'), true);
+  });
+
+  it('passes a genuinely different set', () => {
+    assert.equal(isInheritedDrawingSet('a,b,c', 'd,e'), false);
+  });
+
+  it('never flags an empty set — nothing carried over', () => {
+    assert.equal(isInheritedDrawingSet('', 'a,b'), false);
+    assert.equal(isInheritedDrawingSet('', ''), false);
+  });
+
+  it('FIRST-OF-RUN regression: an unseeded baseline must not silently pass', () => {
+    // With prevIds left null, the first symbol of a run compares against
+    // nothing and inherits whatever was on screen. That is how ACRO and AIHC
+    // acquired COMI's SELL rating. Seeding the baseline from the pre-run chart
+    // state is what makes this detectable.
+    const comiIds = 'HXsiBN,WlKczG,vKb1Cy';
+    assert.equal(isInheritedDrawingSet(comiIds, null), false, 'unseeded: contamination is undetectable');
+    assert.equal(isInheritedDrawingSet(comiIds, comiIds), true, 'seeded: contamination is caught');
   });
 });
