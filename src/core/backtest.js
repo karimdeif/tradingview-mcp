@@ -224,6 +224,16 @@ const ATTESTED_BUILDS = JSON.parse(
 
 export const sha1 = (text) => createHash('sha1').update(text).digest('hex');
 
+/**
+ * TradingView stores Pine source with CRLF line endings — metaInfo.pine.digest
+ * is the sha1 of that CRLF form (measured: the LF form of the same source
+ * hashes 44d652…, the chart reported 7b49ac… = its CRLF variant; the 12
+ * rescued .pine files carry CRLF on disk, which is why their raw sha1 matched
+ * all along). Canonicalize before hashing so identity comparisons are about
+ * CONTENT, not line-ending provenance.
+ */
+export const sha1Canonical = (text) => sha1(String(text).replace(/\r\n/g, '\n').replace(/\n/g, '\r\n'));
+
 /** sha1 pins derived from the attested sources — used by the Node-side pre-check. */
 export const ATTESTED_IMPLEMENTATIONS = Object.fromEntries(
   Object.entries(ATTESTED_BUILDS['TVDesktop/2.14.0'])
@@ -396,8 +406,8 @@ export async function setDraftSource({ source }) {
     })()
   `);
   if (!res || !res.ok) return { success: false, error: res?.error || 'setNewScript failed.' };
-  const want = sha1(source);
-  const got = res.readback === null ? null : sha1(res.readback);
+  const want = sha1Canonical(source);
+  const got = res.readback === null ? null : sha1Canonical(res.readback);
   if (got !== want) {
     return { success: false, error: `editor readback digest ${got} does not match injected source ${want} — buffer not set.` };
   }
@@ -478,7 +488,7 @@ export async function addToChart({ expect_name } = {}) {
       method: 'pine_editor_facade',
     };
   }
-  expectedScript.digest = sha1(expectedScript.source);
+  expectedScript.digest = sha1Canonical(expectedScript.source);
   delete expectedScript.source;
 
   const attached = await attachViaFacade(evaluateAsync);

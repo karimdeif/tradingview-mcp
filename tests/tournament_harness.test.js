@@ -100,11 +100,22 @@ describe('seriesFingerprintOk (pass 10 — the decisive ownership proof)', () =>
   it('REJECTS when too few bars align by timestamp — unverifiable is failure', () => {
     const r = seriesFingerprintOk(chartOf(T.slice(0, 3), [1, 2, 3]), mk(T, T.map(() => 1)));
     assert.equal(r.ok, false);
-    assert.match(r.reason, /aligned daily bars/);
+    assert.match(r.reason, /aligned unique daily bars/);
   });
 
   it('REJECTS missing series outright', () => {
     assert.equal(seriesFingerprintOk(null, []).ok, false);
+  });
+
+  it("REJECTS 60 same-day intraday bars posing as daily bars — pass 11's counterexample", () => {
+    // A silently-failed 1D switch leaves intraday bars; at a foreign price
+    // near the reference close they all "align" to ONE reference day.
+    const t0 = T[T.length - 1];
+    const intraday = Array.from({ length: 60 }, (_, i) => ({ time: t0 + i * 180, close: 100 + (T.length - 1) }));
+    const ref = mk(T, T.map((_, i) => 100 + i));
+    const r = seriesFingerprintOk(intraday, ref);
+    assert.equal(r.ok, false);
+    assert.match(r.reason, /only 1 aligned unique daily bars/);
   });
 
 });

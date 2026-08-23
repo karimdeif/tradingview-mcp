@@ -16,7 +16,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   LIST_STUDIES_JS, verifyAttachment, attachViaFacade, attestImplementations,
-  pollAccepts, identitySignature, sha1,
+  pollAccepts, identitySignature, sha1, sha1Canonical,
 } from '../src/core/backtest.js';
 import {
   resolveAllowlist, scopedWritersActive, BACKTEST_TOOLS, READONLY_TOOLS,
@@ -584,5 +584,17 @@ describe('descriptor-only attestation reads (regression: 2026-08-23 sol-max pass
     assert.equal(instanceGetRan, false,
       'no property GET may occur on the facade for attested names — descriptors only');
     assert.equal(f._attached, true);
+  });
+});
+
+describe('CRLF canonical digest (live finding: TV stores Pine source as CRLF)', () => {
+  it('LF and CRLF forms of the same source hash identically', () => {
+    assert.equal(sha1Canonical('a\nb\n'), sha1Canonical('a\r\nb\r\n'));
+  });
+  it('different content still differs', () => {
+    assert.notEqual(sha1Canonical('a\nb\n'), sha1Canonical('a\nc\n'));
+  });
+  it('canonical form equals raw sha1 of the CRLF form — matching TV-saved files', () => {
+    assert.equal(sha1Canonical('x\ny\n'), sha1('x\r\ny\r\n'));
   });
 });

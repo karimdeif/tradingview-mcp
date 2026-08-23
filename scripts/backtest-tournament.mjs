@@ -84,17 +84,27 @@ export function seriesFingerprintOk(chartBars, refBars, { tol = 0.03, minOverlap
   // and guard-fail every cell.
   const day = (t) => Math.floor(t / 86400);
   const refByTime = new Map(refBars.map((b) => [day(b[0]), b[4]]));
+  // One comparison per UNIQUE UTC day — counting bars let 60 same-day intraday
+  // bars pose as 60 "aligned daily bars" when a 1D switch failed silently
+  // (sol-max pass 11). Last bar of each day wins (the day's close).
+  const lastPerDay = new Map();
+  for (const cb of chartBars) {
+    if (!cb || typeof cb.time !== 'number') continue;
+    const d = day(cb.time);
+    const prev = lastPerDay.get(d);
+    if (!prev || cb.time > prev.time) lastPerDay.set(d, cb);
+  }
   let overlap = 0;
   let hits = 0;
-  for (const cb of chartBars) {
-    const refClose = refByTime.get(day(cb.time));
+  for (const [d, cb] of lastPerDay) {
+    const refClose = refByTime.get(d);
     if (refClose === undefined) continue;
     overlap += 1;
     if (Math.abs(cb.close - refClose) / refClose <= tol) hits += 1;
   }
-  if (overlap < minOverlap) return { ok: false, reason: `only ${overlap} aligned daily bars (need ${minOverlap})` };
+  if (overlap < minOverlap) return { ok: false, reason: `only ${overlap} aligned unique daily bars (need ${minOverlap})` };
   const frac = hits / overlap;
-  return frac >= minFrac ? { ok: true, overlap, frac } : { ok: false, reason: `${hits}/${overlap} aligned closes within ${tol * 100}% (need ${minFrac * 100}%)`, overlap, frac };
+  return frac >= minFrac ? { ok: true, overlap, frac } : { ok: false, reason: `${hits}/${overlap} aligned daily closes within ${tol * 100}% (need ${minFrac * 100}%) — foreign series, or adjustment/corporate-action divergence`, overlap, frac };
 }
 
 /**
@@ -202,6 +212,13 @@ async function setContextVerified(symbol, timeframe) {
   // must bind the cache to the symbol BEFORE any intraday timeframe hides it.
   await chart.setTimeframe({ timeframe: '1D' });
   await delay(2500);
+  // The INTERMEDIATE state must be verified before any bar is read: a failed
+  // 1D switch leaves intraday bars in the cache, and same-day bars at a
+  // foreign price can then satisfy a bar-counting fingerprint (pass 11).
+  const mid = await chart.getState();
+  if (String(mid?.symbol || '').toUpperCase() !== symbol.toUpperCase() || normTf(mid?.resolution) !== '1D') {
+    return { ok: false, guard: true, error: `intermediate 1D state not reached (chart shows ${mid?.symbol}@${mid?.resolution}) — fingerprint would read the wrong series` };
+  }
   const bare0 = symbol.split(':').pop();
   if (REF_DATA[bare0]) {
     let fp = null;
