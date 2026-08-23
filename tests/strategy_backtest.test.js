@@ -302,10 +302,10 @@ describe('attachViaFacade — promise behaviour (regression: pass 3, the un-awai
     // saved-script branch) is not attested save-free.
     let sent = '';
     await attachViaFacade(async (expr) => { sent = expr; return { ok: false }; });
-    const draftCheck = sent.indexOf('isDraft()');
-    const attachCall = sent.indexOf('await f.addToChart()');
+    const draftCheck = sent.indexOf('verified.isDraft.call(f)');
+    const attachCall = sent.indexOf('await verified.addToChart.call(f)');
     assert.ok(draftCheck !== -1 && attachCall !== -1 && draftCheck < attachCall,
-      'isDraft() must be checked before addToChart() is awaited');
+      'isDraft must be checked before addToChart is awaited, both via the attested callables');
     assert.match(sent, /draft !== true/);
   });
 });
@@ -399,5 +399,98 @@ describe('digest correlation (pass 4 — id+version can be reused by an Untitled
     const r = verifyAttachment({ ...base, expectedScript: { script_id: 'USER;abc123', version: '0.9' }, after: [strat()] });
     assert.equal(r.target, undefined);
     assert.ok(r.problems.some((p) => /not fully established/.test(p)));
+  });
+});
+
+describe('atomic attestation binding (regression: 2026-08-23 sol-max pass 5)', () => {
+  // Execute attachViaFacade's REAL page expression against a fake window: the
+  // fake evaluator compiles and runs the expression it receives, so shadowing,
+  // rebinding and drift are exercised for real — not asserted on source text.
+  function makeWindow({ facade, ua = 'TVDesktop/9.9.9-test' }) {
+    return {
+      TradingViewApi: { _pineEditorApi: { getDialogFacade: () => facade } },
+    };
+  }
+  function evaluatorFor(win, ua = 'TVDesktop/9.9.9-test') {
+    return async (expr) => {
+      // eslint-disable-next-line no-new-func
+      const run = new Function('window', 'navigator', `return (${expr})`);
+      return run(win, { userAgent: `Mozilla/5.0 ${ua} Electron/0.0` });
+    };
+  }
+  function buildFacade() {
+    class Facade {
+      isDraft() { return true; }
+      async addToChart() { this._attached = true; }
+      async _addToChartNewDraft() { /* attested body */ }
+    }
+    const f = new Facade();
+    const proto = Facade.prototype;
+    const attested = {
+      'TVDesktop/9.9.9-test': {
+        addToChart: Function.prototype.toString.call(proto.addToChart),
+        _addToChartNewDraft: Function.prototype.toString.call(proto._addToChartNewDraft),
+        isDraft: Function.prototype.toString.call(proto.isDraft),
+      },
+    };
+    return { f, proto, attested };
+  }
+
+  it('attaches when every callable is the attested prototype member', async () => {
+    const { f, attested } = buildFacade();
+    const r = await attachViaFacade(evaluatorFor(makeWindow({ facade: f })), attested);
+    assert.equal(r.ok, true, r.error);
+    assert.equal(r.awaited, true);
+    assert.equal(f._attached, true);
+  });
+
+  it('REFUSES an own-property shadow — the pass-5 bypass', async () => {
+    const { f, attested } = buildFacade();
+    let ran = false;
+    f.addToChart = async () => { ran = true; };   // shadow with unattested code
+    const r = await attachViaFacade(evaluatorFor(makeWindow({ facade: f })), attested);
+    assert.equal(r.ok, false);
+    assert.match(r.error, /shadowed by an own property/);
+    assert.equal(ran, false, 'the shadowed function must never run');
+  });
+
+  it('REFUSES a drifted prototype implementation', async () => {
+    const { f, proto, attested } = buildFacade();
+    let ran = false;
+    proto.addToChart = async function addToChart() { ran = true; };  // drift
+    const r = await attachViaFacade(evaluatorFor(makeWindow({ facade: f })), attested);
+    assert.equal(r.ok, false);
+    assert.match(r.error, /does not match the attested/);
+    assert.equal(ran, false);
+  });
+
+  it('REFUSES an unattested build id', async () => {
+    const { f, attested } = buildFacade();
+    const r = await attachViaFacade(
+      async (expr) => new Function('window', 'navigator', `return (${expr})`)(
+        makeWindow({ facade: f }), { userAgent: 'TVDesktop/3.0.0-unreviewed' },
+      ),
+      attested,
+    );
+    assert.equal(r.ok, false);
+    assert.match(r.error, /not attested/);
+  });
+
+  it('REFUSES a non-draft editor before invoking addToChart', async () => {
+    class Facade {
+      isDraft() { return false; }
+      async addToChart() { this._attached = true; }
+      async _addToChartNewDraft() {}
+    }
+    const f = new Facade();
+    const attested = { 'TVDesktop/9.9.9-test': {
+      addToChart: Function.prototype.toString.call(Facade.prototype.addToChart),
+      _addToChartNewDraft: Function.prototype.toString.call(Facade.prototype._addToChartNewDraft),
+      isDraft: Function.prototype.toString.call(Facade.prototype.isDraft),
+    } };
+    const r = await attachViaFacade(evaluatorFor(makeWindow({ facade: f })), attested);
+    assert.equal(r.ok, false);
+    assert.match(r.error, /does not hold a draft/);
+    assert.notEqual(f._attached, true);
   });
 });

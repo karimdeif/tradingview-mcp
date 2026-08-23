@@ -28,8 +28,10 @@
  *   :             await this._addToChartSavedLastVersion()
  *   }
  *
- * All three branches attach; none saves. There is no click, so bubbling,
- * delegation, default actions and shadow DOM are all irrelevant.
+ * All three branches attach. The draft branch's saveAction persists a
+ * TradingView DRAFT — the identical write a human's "Add to chart" performs on
+ * an untitled script; SAVED scripts are never written. There is no click, so
+ * bubbling, delegation, default actions and shadow DOM are all irrelevant.
  *
  * `updateOnChart()` is NEVER called: its first branch is
  * `if (!isDraft) return void this.saveScript()` — it is a save path.
@@ -41,6 +43,7 @@
  * naming them) — see scopedWritersActive() in src/allowlist.js.
  */
 import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { evaluate, evaluateAsync, getReplayApi } from '../connection.js';
 import { captureScreenshot } from './capture.js';
 
@@ -215,24 +218,34 @@ async function ensureEditorReady() {
  * callback writes only a TV *draft* — the identical write a human triggers by
  * clicking "Add to chart" on an untitled script; saved scripts are untouched).
  */
-const ATTESTED_IMPLEMENTATIONS = {
-  addToChart: 'fa2e5b38fd6fa7a94cd674291a00d5bffbf4b6a6',
-  _addToChartNewDraft: '3a3b6de77986e1c363ff9bac2149169e7d98fc34',
-  isDraft: '75fe079a46e3264325bd975c6df756e34b2e8fc8',
-};
+const ATTESTED_BUILDS = JSON.parse(
+  readFileSync(new URL('./attested-tv-builds.json', import.meta.url), 'utf8'),
+);
 
 export const sha1 = (text) => createHash('sha1').update(text).digest('hex');
 
-/** Fetch String() of the facade methods so Node can hash and compare them. */
+/** sha1 pins derived from the attested sources — used by the Node-side pre-check. */
+export const ATTESTED_IMPLEMENTATIONS = Object.fromEntries(
+  Object.entries(ATTESTED_BUILDS['TVDesktop/2.14.0'])
+    .filter(([k]) => !['reviewed', 'note'].includes(k))
+    .map(([k, src]) => [k, sha1(src)]),
+);
+
+/**
+ * Node-side pre-check (defence in depth; the AUTHORITATIVE check is the atomic
+ * one inside attachViaFacade's page code, bound to the exact callables invoked).
+ */
 async function readFacadeImplementations() {
   return evaluate(`
     (function() {
       try {
         var f = window.TradingViewApi._pineEditorApi.getDialogFacade();
         var p = Object.getPrototypeOf(f);
+        var toStr = Function.prototype.toString;
         var out = {};
         ['addToChart', '_addToChartNewDraft', 'isDraft'].forEach(function(k) {
-          out[k] = typeof p[k] === 'function' ? String(p[k]) : null;
+          if (Object.prototype.hasOwnProperty.call(f, k)) { out[k] = '__SHADOWED__'; return; }
+          out[k] = typeof p[k] === 'function' ? toStr.call(p[k]) : null;
         });
         return out;
       } catch (e) { return null; }
@@ -244,6 +257,7 @@ export function attestImplementations(impls, attested = ATTESTED_IMPLEMENTATIONS
   if (!impls) return { ok: false, error: 'Could not read facade implementations.' };
   for (const [name, expected] of Object.entries(attested)) {
     const src = impls[name];
+    if (src === '__SHADOWED__') return { ok: false, error: `facade.${name} is shadowed by an own property — refusing to attach.` };
     if (typeof src !== 'string' || !src) return { ok: false, error: `facade.${name} is missing — build drift, refusing to attach.` };
     const got = sha1(src);
     if (got !== expected) {
@@ -255,27 +269,69 @@ export function attestImplementations(impls, attested = ATTESTED_IMPLEMENTATIONS
 
 /**
  * The attach invocation, isolated so tests can drive it with fake evaluators
- * (resolving, rejecting, missing-awaited). Production passes evaluateAsync.
- * REQUIRES the editor to hold a DRAFT: only _addToChartNewDraft is attested as
- * save-free for the buffer flow; a modified saved script would route through
+ * and their own attested-source maps. Production passes evaluateAsync.
+ *
+ * ATOMIC ATTESTATION BINDING (sol-max pass 5): hashing prototype methods in one
+ * evaluation and invoking `f.addToChart()` in another let an own-property
+ * shadow or rebound method run unattested code while the prototype hashes
+ * passed. Here, in the SAME evaluation that invokes them:
+ *   - the build id is pinned;
+ *   - each method must NOT be an own property of the facade;
+ *   - the resolved callable must BE the prototype member;
+ *   - its source via Function.prototype.toString.call (immune to toString
+ *     overrides; throws on a Proxy, which we catch and refuse) must equal the
+ *     attested source byte-for-byte;
+ *   - isDraft and addToChart are then invoked as protoFn.call(f) — the exact
+ *     callables just attested, never a re-resolved property.
+ *
+ * REQUIRES the editor to hold a DRAFT: only _addToChartNewDraft is reviewed for
+ * the buffer flow. Its saveAction persists a TradingView DRAFT — the identical
+ * write a human's "Add to chart" performs on an untitled script. It never
+ * writes saved scripts; a modified saved script would route through
  * _addToChartUnsavedVersion, whose semantics we have not accepted.
  */
-export async function attachViaFacade(evalAsync) {
+export async function attachViaFacade(evalAsync, attestedBuilds = ATTESTED_BUILDS) {
   let attached;
   try {
     attached = await evalAsync(`
       (async function() {
         try {
+          var ATTESTED = ${JSON.stringify(attestedBuilds)};
+          var buildKeys = Object.keys(ATTESTED);
+          var build = null;
+          for (var bi = 0; bi < buildKeys.length; bi++) {
+            if (navigator.userAgent.indexOf(buildKeys[bi]) !== -1) { build = buildKeys[bi]; break; }
+          }
+          if (!build) return { ok: false, error: 'This TradingView build is not attested (' + navigator.userAgent.slice(0, 120) + ') — refusing to attach until it is reviewed.' };
+          var expected = ATTESTED[build];
+
           var api = window.TradingViewApi && window.TradingViewApi._pineEditorApi;
           if (!api || typeof api.getDialogFacade !== 'function') return { ok: false, error: 'Pine editor API unavailable.' };
           var f = api.getDialogFacade();
           if (!f) return { ok: false, error: 'Pine editor facade unavailable — is the editor open?' };
-          if (typeof f.addToChart !== 'function') return { ok: false, error: 'facade.addToChart is not a function on this build.' };
-          if (typeof f.isDraft !== 'function') return { ok: false, error: 'facade.isDraft is not a function on this build.' };
-          var draft = f.isDraft();
-          if (draft !== true) return { ok: false, error: 'Editor does not hold a draft (isDraft=' + String(draft) + '). Only the draft attach branch is attested save-free; open a new script and set the source again.' };
-          await f.addToChart();
-          return { ok: true, awaited: true, was_draft: true };
+          var proto = Object.getPrototypeOf(f);
+          var toStr = Function.prototype.toString;
+
+          var names = ['addToChart', '_addToChartNewDraft', 'isDraft'];
+          var verified = {};
+          for (var i = 0; i < names.length; i++) {
+            var k = names[i];
+            if (Object.prototype.hasOwnProperty.call(f, k)) {
+              return { ok: false, error: 'facade.' + k + ' is shadowed by an own property — unattested code would run; refusing.' };
+            }
+            var fn = proto[k];
+            if (typeof fn !== 'function') return { ok: false, error: 'facade.' + k + ' is not a function on this build.' };
+            if (f[k] !== fn) return { ok: false, error: 'facade.' + k + ' resolves to something other than the prototype member — refusing.' };
+            var src;
+            try { src = toStr.call(fn); } catch (e) { return { ok: false, error: 'facade.' + k + ' source is unreadable (proxy?) — refusing.' }; }
+            if (src !== expected[k]) return { ok: false, error: 'facade.' + k + ' does not match the attested ' + build + ' implementation — refusing until re-reviewed.' };
+            verified[k] = fn;
+          }
+
+          var draft = verified.isDraft.call(f);
+          if (draft !== true) return { ok: false, error: 'Editor does not hold a draft (isDraft=' + String(draft) + '). Only the draft attach branch is reviewed; open a new script and set the source again.' };
+          await verified.addToChart.call(f);
+          return { ok: true, awaited: true, was_draft: true, attested_build: build };
         } catch (e) { return { ok: false, error: (e && e.message) ? e.message : String(e) }; }
       })()
     `);

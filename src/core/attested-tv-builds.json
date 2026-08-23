@@ -1,0 +1,9 @@
+{
+  "TVDesktop/2.14.0": {
+    "reviewed": "2026-08-23",
+    "note": "Sources read via Function.prototype.toString.call on the dialog facade prototype; the draft attach branch (_addToChartNewDraft) persists a TV DRAFT (saveNewDraft) — the same write a manual Add-to-chart performs — and never touches saved scripts.",
+    "addToChart": "async addToChart(){const t=this._editorStore.getValueBySelector(S.getIsScriptDraft),e=this._editorStore.getValueBySelector(X.getModified);t?await this._addToChartNewDraft():e?await this._addToChartUnsavedVersion():await this._addToChartSavedLastVersion()}",
+    "_addToChartNewDraft": "async _addToChartNewDraft(){if(!this._editorStore.getValueBySelector(S.getIsScriptDraft))return;const t=this._editorStore.getValueBySelector(S.getScriptIdPart),e=this._editorStore.getValueBySelector(S.getScriptVersion),i=this._editorStore.getValueBySelector(S.getScriptName),r=t??L.emptyPineId,n=(0,v.ensureNotNull)(this._editorRef.current).getValue();await this._compileAndAddToChart({scriptSource:n,pineId:r,pineVersion:e,scriptName:i,saveAction:()=>this._editorStore.saveNewDraft({scriptSource:n}),trackEvent:()=>{(0,K.sendEditorSnowplowEvent)(\"chart_flow\",{action_id:\"add_to_chart\",kind:this.placement}),(0,K.sendEditorSnowplowEvent)(\"editor_user_funnel\",{action_id:\"create_draft\"})}})}",
+    "isDraft": "isDraft(){\nreturn this._editorStore.getValueBySelector(S.getIsScriptDraft)}"
+  }
+}

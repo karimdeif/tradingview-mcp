@@ -10,7 +10,7 @@ import * as core from '../core/backtest.js';
 export function registerBacktestTools(server) {
   server.tool(
     'pine_add_to_chart',
-    'Attach the Pine script currently in the editor buffer to the chart, and verify it actually attached. Takes no selector and performs no DOM click: it calls the Pine editor facade\'s own addToChart(), which has no save path (saveScript is a separate method this tool never references). Success requires the attach call to report success, a stable study-list read, exactly one new study, and an exact name match.',
+    'Attach the Pine script currently in the editor buffer to the chart, and verify it actually attached. Takes no selector and performs no DOM click: it invokes the Pine editor facade\'s attested addToChart() draft branch, which persists a TradingView DRAFT (the same write a manual "Add to chart" performs on an untitled script) and never writes saved scripts. Refuses on a non-draft editor, an unattested TradingView build, or a shadowed/rebound facade method. Success requires the awaited attach to report success, a stable study-list read, exactly one new study, and exact name + script-id + source-digest matches against the editor buffer.',
     {
       expect_name: z
         .string()

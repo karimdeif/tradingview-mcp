@@ -11,8 +11,10 @@ live: `pine_add_to_chart` returned `control_tag: "span"` — the control that
 `querySelectorAll('button')` could never see. The Pine console line reads
 `Added to chart.` and the study count went 0 → 1 with the expected name.
 
-Nothing was written to karim's TradingView cloud account: the editor still reads
-**"Untitled script"** with Save unclicked in the post-run screenshot.
+Karim's SAVED scripts were never written — `listSavedScripts()` pinned at 12
+across every run. Attaching an untitled draft does persist a TradingView
+*draft* (the identical write a manual "Add to chart" performs); that is the
+precise claim, everywhere in this document.
 
 ## Result — Golden Cross Exec (SMA50/200), EGX:COMI, 1D
 
@@ -105,7 +107,7 @@ must re-check it **after every symbol switch**, not once at startup.
   against 12 trades. Do not derive trade counts from its length.
 - Codex review has not run — see below.
 
-## Review status: four sol-max passes; architecture changed as a result
+## Review status: five sol-max passes; architecture changed as a result
 
 `codex exec --model gpt-5.6-sol -c model_reasoning_effort=max`, run on a15.
 
@@ -139,8 +141,10 @@ async addToChart() {
 }
 ```
 
-All three branches attach; **none saves**. `saveScript()` and
-`saveDraftIfModified()` are separate methods this module never references.
+All three branches attach. (Pass-4 correction, applied throughout: the draft
+branch persists a TradingView *draft* — the same write a manual "Add to chart"
+performs on an untitled script — and never writes saved scripts.) `saveScript()`
+and `saveDraftIfModified()` are separate methods this module never references.
 There is no click, so bubbling, delegation, default actions and shadow DOM
 stop being relevant at all.
 
@@ -274,6 +278,40 @@ PF 1.215, max DD 1.06%).
 
 **Tests: 55, all passing.** Live pilot re-run through every new gate: identical
 metrics for the fourth consecutive time; digest correlation held.
+
+### Pass 5 — the residual-risk line was drawn
+
+Verdict BLOCK on one High + one Medium; everything else CLOSED, with the
+reviewer independently recomputing the pilot digest and marking transitive
+build-drift as **accepted residual risk** once the High was fixed.
+
+1. **High — attestation was not bound to the invoked callables.** Hashing the
+   *prototype* methods in one evaluation and invoking `f.addToChart()` in
+   another meant an own-property shadow or rebound method could run unattested
+   code while the prototype hashes passed. Fixed atomically inside the single
+   evaluation that attaches: the build id must be attested
+   (`src/core/attested-tv-builds.json`, pinned from TVDesktop/2.14.0); each
+   method must NOT be an own property; the resolved callable must BE the
+   prototype member; its source via `Function.prototype.toString.call`
+   (throws on a Proxy — caught, refused) must equal the attested source
+   byte-for-byte; and isDraft/addToChart are then invoked as the exact
+   `verified.*.call(f)` callables just checked. The binding tests EXECUTE the
+   real page expression against fake facades — shadowed, drifted, wrong-build
+   and non-draft all refuse, with the unattested function proven never to run.
+2. **Medium — wording.** "No save path"/"none saves" residues replaced
+   everywhere with the precise claim: the draft attach persists a TradingView
+   *draft* (identical to a manual "Add to chart" on an untitled script) and
+   never writes saved scripts.
+
+**Accepted residual risk (reviewer's words):** unchanged reviewed wrappers with
+changed transitive helpers (`_compileAndAddToChart`, `saveNewDraft`, closure
+state). Judged proportionate for a double-opt-in tool on the user's own
+account. Their recommendation — after any TradingView upgrade, compare the full
+saved-script id+version inventory, not merely the count — is adopted as a
+phase-3 harness invariant.
+
+**Tests: 60, all passing.** Fifth consecutive live pilot run: identical metrics
+through the full gate stack (attestation → draft gate → identity digest).
 
 ### One unrelated failing test, pre-existing
 
