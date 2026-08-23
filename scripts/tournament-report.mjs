@@ -138,13 +138,19 @@ const L = [];
 L.push('# EGX Strategy Tournament — comparison report');
 L.push('');
 L.push(`Run: \`${dir}\` · ${cells.length} cells · validator: **${validation.verdict}**${validation.warnings?.length ? ` (warnings: ${validation.warnings.join('; ')})` : ''}`);
-if (validation.provenance_segments && Object.keys(validation.provenance_segments).length > 1) {
+// The provenance block is gated on the VERDICT, not on segment count: a
+// single segment that mismatches run-manifest.json is also QUALIFIED and
+// must be disclosed (pass 13).
+if (validation.verdict === 'QUALIFIED' && validation.provenance_segments) {
+  let currentManifest = null;
+  try { currentManifest = JSON.parse(readFileSync(join(dir, 'run-manifest.json'), 'utf8')).manifest_hash; } catch { /* absent */ }
   L.push('');
-  L.push('**Provenance (disclosed per protocol):** this run\'s cells were produced under more than one harness version — guard stacks differ per segment:');
+  L.push('**Provenance (disclosed per protocol):** the validator returned QUALIFIED — cells were not all produced under the run manifest\'s harness version, so guard stacks differ per segment:');
   for (const [h, n] of Object.entries(validation.provenance_segments)) {
-    L.push(`- manifest \`${h.slice(0, 12)}\`: ${n} cells`);
+    const isCurrent = currentManifest && h === currentManifest;
+    L.push(`- manifest \`${h.slice(0, 12)}\`: ${n} cells — ${isCurrent ? 'CURRENT harness (full in-run guard stack)' : 'EARLIER harness; qualified post-hoc by V1–V5 plus the in-run guards that version carried (see git history for that manifest\'s guard set)'}`);
   }
-  L.push('- The main-matrix segment predates the series-fingerprint/bar-tuple guards; it is qualified post-hoc by V1–V5 (dedupe, well-formed NO_TRADES, digest/entity/resolution/evidence, recomputed G1, adjacency) plus the in-run price band, entity+digest binding and per-segment inventory logs. The baseline segment ran with the full current stack.');
+  L.push(`- run-manifest: \`${currentManifest ? currentManifest.slice(0, 12) : 'missing'}\`. Inventory snapshots cover only the final segment; earlier segments' own run logs each reported the inventory unchanged.`);
 }
 L.push('');
 L.push('## Page 1 — the incumbent, and the honest caveats');
