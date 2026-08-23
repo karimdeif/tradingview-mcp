@@ -32,14 +32,27 @@ study defends it against the "tester lookahead" objection specifically.
 
 ## Pass / fail (binding, set now)
 
-PASS requires, per symbol: (a) ≥90% of tester trades inside the window
-matched by a replay trade within ±1 bar on entry AND exit; (b) per-trade
-return difference ≤0.5% absolute on matched trades; (c) ≤2 unmatched replay
-trades. Study passes if ≥4 of 5 symbols pass.
+Per-symbol PASS requires: (a) ≥90% of tester trades in scope matched
+one-to-one by a replay trade within ±1 bar on entry AND exit (greedy matching
+in entry-time order; each trade matched at most once); (b) per-trade return
+difference ≤0.5% absolute on matched trades; (c) ≤2 unmatched replay trades.
 
-FAIL (any symbol beyond those tolerances, or <4/5): the matrix's gate numbers
-are quarantined pending investigation, and that is reported as loudly as a
-pass. **Investigation order is fixed now (msi registry addition): the replay
+**Study verdict is decided solely by the symbol count: PASS iff ≥4 of the 5
+symbols pass; otherwise FAIL.** (A single failing symbol does NOT fail the
+study — pass-12 review caught the earlier wording contradicting this.)
+
+Scope and measurement, fixed now:
+- A trade is IN SCOPE iff its ENTRY bar falls inside the window; exits may
+  extend past the window end (the recorded COMI baseline has boundary-crossing
+  trades — those with pre-window entries are OUT of scope on both sides).
+- The replay walker records its own trade list — entry/exit bar and per-trade
+  return computed as exit_fill/entry_fill − 1 from the bar data it steps
+  through. The replay API exposes no trade list; none is needed. The tester's
+  side comes from the run-2026-08-23 cells' stored per-trade timestamps and
+  profit_pct.
+
+FAIL: the matrix's gate numbers are quarantined pending investigation, and
+that is reported as loudly as a pass. **Investigation order is fixed now (msi registry addition): the replay
 HARNESS is examined FIRST — a driving fault must not masquerade as a
 lookahead finding about the tester.** Only a harness given a clean bill
 escalates the question to the tester itself.

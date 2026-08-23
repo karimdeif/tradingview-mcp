@@ -106,20 +106,32 @@ export function seriesFingerprintOk(chartBars, refBars, { tol = 0.03, minOverlap
   const frac = hits / overlap;
   if (frac >= minFrac) return { ok: true, overlap, frac };
 
-  // ADJUSTMENT-AWARE fallback (measured live on JUFO, ex-date 2026-08-06):
-  // a corporate action inside the window back-adjusts every earlier TV bar by
-  // a constant factor (-20.00% exactly, bar after bar), while bars AFTER the
-  // ex-date match the raw reference to the cent. The most recent aligned days
-  // therefore pin identity by level even when the full window fails: require
-  // >=4 of the last 5 aligned days within tolerance. A frozen foreign series
-  // fails this too — its recent levels are the other symbol's.
-  const alignedDays = [...lastPerDay.entries()].filter(([d]) => refByTime.has(d)).sort((a, b) => a[0] - b[0]);
-  const tail = alignedDays.slice(-5);
-  const tailHits = tail.filter(([d, cb]) => Math.abs(cb.close - refByTime.get(d)) / refByTime.get(d) <= tol).length;
-  if (tail.length === 5 && tailHits >= 4) {
-    return { ok: true, overlap, frac, adjustment_divergence: `${hits}/${overlap} full-window level matches; identity pinned by ${tailHits}/5 recent aligned days — corporate-action back-adjustment earlier in the window` };
+  // ADJUSTMENT-AWARE fallback — STRUCTURAL, not tail-counting (pass 12: four
+  // matching tail bars alone accepted foreign series, including recorded-
+  // universe pairs HRHO<-ORWE and CLHO<->SKPC). A corporate action has a
+  // specific shape, measured live on JUFO (ex 2026-08-06): every bar BEFORE
+  // the ex-date off by ONE CONSTANT factor (-20.00% exactly, bar after bar),
+  // every bar AFTER matching. Require exactly that: a single split point
+  // where the post-split segment matches by level at >= minFrac, the
+  // pre-split segment's chart/ref ratios are CONSTANT (max spread 1%), and
+  // the two segments cover the whole overlap.
+  const seq = [...lastPerDay.entries()].filter(([d]) => refByTime.has(d)).sort((a, b) => a[0] - b[0])
+    .map(([d, cb]) => ({ ratio: cb.close / refByTime.get(d), match: Math.abs(cb.close - refByTime.get(d)) / refByTime.get(d) <= tol }));
+  for (let split = 1; split < seq.length; split++) {
+    const pre = seq.slice(0, split);
+    const post = seq.slice(split);
+    if (post.length < 5) break;
+    const postFrac = post.filter((x) => x.match).length / post.length;
+    if (postFrac < minFrac) continue;
+    const ratios = pre.map((x) => x.ratio);
+    const rMin = Math.min(...ratios);
+    const rMax = Math.max(...ratios);
+    const constantShift = rMax / rMin - 1 <= 0.01 && (rMin > 1 + tol || rMax < 1 - tol);
+    if (constantShift) {
+      return { ok: true, overlap, frac, adjustment_divergence: `${pre.length} pre-split bars at constant factor ${((rMin + rMax) / 2).toFixed(4)}, ${post.length} post-split bars matching — corporate-action back-adjustment` };
+    }
   }
-  return { ok: false, reason: `${hits}/${overlap} aligned daily closes within ${tol * 100}% (need ${minFrac * 100}%) and only ${tailHits}/${tail.length} recent days match — foreign series`, overlap, frac };
+  return { ok: false, reason: `${hits}/${overlap} aligned daily closes within ${tol * 100}% (need ${minFrac * 100}%) and no constant-shift corporate-action structure — foreign series`, overlap, frac };
 }
 
 /**

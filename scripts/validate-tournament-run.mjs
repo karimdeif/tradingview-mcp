@@ -88,11 +88,30 @@ for (const c of cells) {
   }
 }
 
+// V8 — manifest PROVENANCE (pass 12: 85 cells predated the fingerprint/tuple
+// stack yet the validator said an unqualified PASS). Cells are grouped by the
+// harness manifest they ran under; a mixed run is never a plain PASS — it is
+// QUALIFIED, and the segments must be disclosed wherever results are used.
+let currentManifest = null;
+try { currentManifest = JSON.parse(readFileSync(join(dir, 'run-manifest.json'), 'utf8')).manifest_hash; } catch { /* absent */ }
+const segments = {};
+for (const c of cells) {
+  const h = c.manifest_hash || '(none)';
+  segments[h] = (segments[h] || 0) + 1;
+}
+const segmentKeys = Object.keys(segments);
+const mixed = segmentKeys.length > 1 || (currentManifest && !segments[currentManifest]);
+if (mixed) {
+  warn.push(`V8 mixed provenance: ${segmentKeys.map((k) => `${k.slice(0, 12)}×${segments[k]}`).join(', ')} (run-manifest ${currentManifest ? currentManifest.slice(0, 12) : 'missing'}) — segments ran under DIFFERENT guard stacks; disclose per-segment guarantees. Inventory snapshots cover only the LAST segment; earlier segments' own runs each reported inventory unchanged in their logs.`);
+}
+
 const okCells = cells.filter((c) => c.outcome === 'OK').length;
+const verdict = fails.length ? 'FAIL' : (mixed ? 'QUALIFIED' : 'PASS');
 console.log(JSON.stringify({
   run: dir, cells: cells.length, ok: okCells,
   no_trades: cells.filter((c) => c.outcome === 'NO_TRADES').length,
   error: cells.filter((c) => c.outcome === 'ERROR').length,
-  verdict: fails.length ? 'FAIL' : 'PASS', failures: fails, warnings: warn,
+  provenance_segments: segments,
+  verdict, failures: fails, warnings: warn,
 }, null, 2));
 process.exit(fails.length ? 1 : 0);

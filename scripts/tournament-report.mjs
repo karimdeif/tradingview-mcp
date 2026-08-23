@@ -105,6 +105,10 @@ for (const key of strategies) {
   const medIS = median(isEdges); const medOOS = median(oosEdges);
   const flags = [];
   if (median(trades) !== null && median(trades) < 30) flags.push('INSUFFICIENT-EVIDENCE');
+  // The edge median is over EDGE-BEARING cells only; a small favorable subset
+  // must not pose as breadth (pass 12). Denominators are shown per row, and
+  // fewer than 70% of OK cells bearing an IS edge disqualifies from ranking.
+  if (ok.length > 0 && isEdges.length > 0 && isEdges.length < 0.7 * ok.length) flags.push('SPARSE-EDGE-SUBSET');
   if (isEdges.length === 0 && oosEdges.length > 0) flags.push('OOS-ONLY');
   if (medIS !== null && medOOS !== null && medIS > 0 && medOOS < 0) flags.push('OVERFIT-SUSPECT');
   const src = sc[0];
@@ -114,7 +118,7 @@ for (const key of strategies) {
     error: sc.filter((c) => c.outcome === 'ERROR').length,
     median_net_pct: median(netPcts), median_trades: median(trades),
     profitable_frac: ok.length ? ok.filter((c) => (c.metrics?.net_profit_percent ?? 0) > 0).length / ok.length : null,
-    med_is_edge: medIS, med_oos_edge: medOOS,
+    med_is_edge: medIS, n_is_edge: isEdges.length, med_oos_edge: medOOS, n_oos_edge: oosEdges.length,
     degradation: medIS !== null && medOOS !== null && medIS > 0 ? medOOS / medIS : null,
     med_raw_is: median(splits.map((s) => s.is?.raw_per_year).filter((v) => v != null)),
     med_raw_oos: median(splits.map((s) => s.oos?.raw_per_year).filter((v) => v != null)),
@@ -126,6 +130,7 @@ for (const key of strategies) {
 
 // Ranking: daily breadth strategies only, by median IS B&H-relative edge (P2/P3).
 const rankable = rows.filter((r) => !r.flags.includes('OOS-ONLY') && !r.flags.includes('INSUFFICIENT-EVIDENCE')
+  && !r.flags.includes('SPARSE-EDGE-SUBSET')
   && r.ok >= 5 && r.med_is_edge !== null && r.key !== 'baseline-sma100');
 rankable.sort((a, b) => b.med_is_edge - a.med_is_edge);
 
@@ -133,6 +138,14 @@ const L = [];
 L.push('# EGX Strategy Tournament — comparison report');
 L.push('');
 L.push(`Run: \`${dir}\` · ${cells.length} cells · validator: **${validation.verdict}**${validation.warnings?.length ? ` (warnings: ${validation.warnings.join('; ')})` : ''}`);
+if (validation.provenance_segments && Object.keys(validation.provenance_segments).length > 1) {
+  L.push('');
+  L.push('**Provenance (disclosed per protocol):** this run\'s cells were produced under more than one harness version — guard stacks differ per segment:');
+  for (const [h, n] of Object.entries(validation.provenance_segments)) {
+    L.push(`- manifest \`${h.slice(0, 12)}\`: ${n} cells`);
+  }
+  L.push('- The main-matrix segment predates the series-fingerprint/bar-tuple guards; it is qualified post-hoc by V1–V5 (dedupe, well-formed NO_TRADES, digest/entity/resolution/evidence, recomputed G1, adjacency) plus the in-run price band, entity+digest binding and per-segment inventory logs. The baseline segment ran with the full current stack.');
+}
 L.push('');
 L.push('## Page 1 — the incumbent, and the honest caveats');
 L.push('');
@@ -153,14 +166,14 @@ L.push('- Headline degradation is **B&H-relative per year**: per-trade POSITION 
 L.push('');
 L.push('## Ranking — daily breadth strategies (by median IS edge vs B&H, %/yr)');
 L.push('');
-L.push('| rank | strategy | cells OK | median net (full) | win frac | IS edge/yr | OOS edge/yr | degradation | raw IS/yr | raw OOS/yr | median trades | coverage | flags |');
+L.push('| rank | strategy | cells OK | median net (full) | win frac | IS edge/yr (n) | OOS edge/yr (n) | degradation | raw IS/yr | raw OOS/yr | median trades | coverage | flags |');
 L.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|');
 rows.sort((a, b) => (b.med_is_edge ?? -1e9) - (a.med_is_edge ?? -1e9));
 let rank = 0;
 for (const r of rows) {
   const ranked = rankable.includes(r);
   const label = r.key === 'baseline-sma100' ? 'baseline' : (ranked ? String(++rank) : '—');
-  L.push(`| ${label} | ${r.key} | ${r.ok}/${r.cells} | ${fmt(r.median_net_pct)}% | ${fmt(r.profitable_frac === null ? null : r.profitable_frac * 100, 0)}% | ${fmt(r.med_is_edge)} | ${fmt(r.med_oos_edge)} | ${fmt(r.degradation)} | ${fmt(r.med_raw_is)} | ${fmt(r.med_raw_oos)} | ${fmt(r.median_trades, 0)} | ${r.coverage_min?.slice(0, 10) ?? 'n/a'} → ${r.coverage_max?.slice(0, 10) ?? 'n/a'} | ${r.flags.join(' ') || '—'} |`);
+  L.push(`| ${label} | ${r.key} | ${r.ok}/${r.cells} | ${fmt(r.median_net_pct)}% | ${fmt(r.profitable_frac === null ? null : r.profitable_frac * 100, 0)}% | ${fmt(r.med_is_edge)} (${r.n_is_edge ?? 0}/${r.ok}) | ${fmt(r.med_oos_edge)} (${r.n_oos_edge ?? 0}/${r.ok}) | ${fmt(r.degradation)} | ${fmt(r.med_raw_is)} | ${fmt(r.med_raw_oos)} | ${fmt(r.median_trades, 0)} | ${r.coverage_min?.slice(0, 10) ?? 'n/a'} → ${r.coverage_max?.slice(0, 10) ?? 'n/a'} | ${r.flags.join(' ') || '—'} |`);
 }
 L.push('');
 L.push('Unranked rows: OOS-ONLY (no in-sample trades — intraday depth), INSUFFICIENT-EVIDENCE (median <30 trades), errors, or the baseline.');

@@ -1,5 +1,6 @@
 /** Pure-function tests for the tournament harness (sol-max pass 9: harness changes lacked tests). */
 import { describe, it } from 'node:test';
+import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { cellOutcome, parseStrategyTitle, checkResultIntegrity, normTf, bhOwnershipOk, seriesFingerprintOk, REF_BH } from '../scripts/backtest-tournament.mjs';
 
@@ -114,6 +115,21 @@ describe('seriesFingerprintOk (pass 10 — the decisive ownership proof)', () =>
     const r = seriesFingerprintOk(chartOf(T, tvCloses), mk(T, closes));
     assert.equal(r.ok, true);
     assert.match(r.adjustment_divergence, /corporate-action/);
+  });
+
+  it("REJECTS a foreign series with exactly 4 fabricated tail matches — pass 12's counterexample", () => {
+    const refCloses = T.map((_, i) => 100 + i);
+    // 16 arbitrary foreign bars, then 4 bars copied from the reference tail
+    const closes = T.map((c, i) => (i < 16 ? (100 + i) * (1 + 0.05 + 0.1 * Math.sin(i * 2.1)) : 100 + i));
+    const r = seriesFingerprintOk(chartOf(T, closes), mk(T, refCloses));
+    assert.equal(r.ok, false, 'tail matches without constant-shift structure must not pass');
+  });
+
+  it('REJECTS recorded-universe near-twins under the structural rule (CLHO series under SKPC label)', () => {
+    const REF = JSON.parse(readFileSync('/home/karim/claude-a15-20260818/pine-audit/data/daily_deep.json', 'utf8'));
+    const chartBars = REF.CLHO.slice(-60).map((b) => ({ time: b[0], close: b[4] }));
+    const r = seriesFingerprintOk(chartBars, REF.SKPC.slice(-120));
+    assert.equal(r.ok, false, 'CLHO closes are not a constant multiple of SKPC closes');
   });
 
   it('REJECTS a foreign series even with a near-level tail — recent days must match per-day', () => {
