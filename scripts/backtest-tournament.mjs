@@ -44,12 +44,10 @@ const SRC_DIR = '/home/karim/claude-a15-20260818/pine-audit/sources';
  * references, and a cross-cell duplicate-price abort — unrelated symbols must
  * not share a last price.
  */
-const REF_CLOSES = (() => {
-  try {
-    const D = JSON.parse(readFileSync('/home/karim/claude-a15-20260818/pine-audit/data/daily_deep.json', 'utf8'));
-    return Object.fromEntries(Object.entries(D).map(([sym, bars]) => [sym, bars[bars.length - 1][4]]));
-  } catch { return {}; }
-})();
+const REF_PATH = '/home/karim/claude-a15-20260818/pine-audit/data/daily_deep.json';
+// FATAL if unreadable — a silent {} would bypass every price band (pass 9).
+const REF_RAW = readFileSync(REF_PATH, 'utf8');
+const REF_CLOSES = Object.fromEntries(Object.entries(JSON.parse(REF_RAW)).map(([sym, bars]) => [sym, bars[bars.length - 1][4]]));
 
 /**
  * Daily set: the 20 EGX names already used by pine-audit/backtest.mjs, so the
@@ -133,7 +131,23 @@ export const normTf = (tf) => {
   return t === 'D' ? '1D' : t;
 };
 
+/** Last-bar tuple (t,o,h,l,c,v) read from the chart's own bar cache. */
+async function lastBarTuple() {
+  try {
+    const r = await data.getOhlcv({ count: 2, summary: false });
+    const b = r?.bars?.[r.bars.length - 1];
+    return b ? JSON.stringify(b) : null;
+  } catch { return null; }
+}
+
 async function setContextVerified(symbol, timeframe) {
+  // BAR IDENTITY, not just label identity (pass 9): quote.symbol reads
+  // api.symbol() while prices come from the bar cache, so a frozen cache
+  // passes every label check. A symbol switch MUST replace the cache — the
+  // full last-bar tuple (time+OHLCV) before the switch may not survive it.
+  // Two symbols can share a close; they cannot share an entire bar.
+  const prevSymbol = (await chart.getState())?.symbol || null;
+  const prevBar = await lastBarTuple();
   await chart.setSymbol({ symbol });
   await delay(4000);
   await chart.setTimeframe({ timeframe });
@@ -161,6 +175,15 @@ async function setContextVerified(symbol, timeframe) {
   // A MISSING quote symbol is a failure, not a pass (pass 7).
   if (String(quote.symbol || '').toUpperCase() !== symbol.toUpperCase()) {
     return { ok: false, error: `quote is for ${quote.symbol ?? '(none)'}, not ${symbol} — stale chart` };
+  }
+  if (prevSymbol && String(prevSymbol).toUpperCase() !== symbol.toUpperCase()) {
+    const newBar = await lastBarTuple();
+    if (prevBar !== null && newBar !== null && newBar === prevBar) {
+      return { ok: false, guard: true, error: `bar cache did not change across ${prevSymbol} -> ${symbol}: last-bar tuple identical — FROZEN bars under a fresh label` };
+    }
+    if (newBar === null) {
+      return { ok: false, guard: true, error: `could not read the bar cache after switching to ${symbol} — bar identity unverifiable` };
+    }
   }
   const last = quote.last ?? quote.price;
   const bare = symbol.split(':').pop();
@@ -273,15 +296,15 @@ async function runCell({ strat, symbol, source, title, outDir, manifestHash }) {
   } catch (err) {
     record.outcome = 'ERROR';
     record.error = err.message;
-    // A modal/replay can appear AFTER the context check and surface as an
-    // ordinary error here — re-probe the guards so the sweep aborts instead of
-    // marching a poisoned session into the next cell (sol-max pass 8).
-    if (!record.guard_failure) {
-      try {
-        const g = await guardsClear('post-error');
-        if (!g.ok) { record.guard_failure = true; record.guard_error = g.error; }
-      } catch { record.guard_failure = true; }
-    }
+  }
+  // Re-probe the guards on ANY error outcome — thrown OR classified (an
+  // incomplete report from a mid-cell modal arrives as a non-exception ERROR;
+  // pass 9). A failed probe aborts the sweep.
+  if (record.outcome === 'ERROR' && !record.guard_failure) {
+    try {
+      const g = await guardsClear('post-error');
+      if (!g.ok) { record.guard_failure = true; record.guard_error = g.error; }
+    } catch { record.guard_failure = true; }
   }
   record.finished_at = new Date().toISOString();
   // Atomic: never leave a half-written cell for the resume logic to trust.
@@ -324,6 +347,7 @@ async function main() {
   const tvBuild = await evaluate(`(navigator.userAgent.match(/TVDesktop\\/[0-9.]+/) || [null])[0]`);
   const manifest = {
     harness_sha1: createHash('sha1').update(readFileSync(new URL(import.meta.url).pathname, 'utf8')).digest('hex'),
+    reference_closes_sha1: createHash('sha1').update(REF_RAW).digest('hex'),
     tv_build: tvBuild,
     strategies: STRATEGIES.map((s) => ({
       key: s.key, timeframe: s.timeframe, symbols: s.symbols, patch: s.patch ?? null,
@@ -356,7 +380,23 @@ async function main() {
       const cells = [];
       for (const symbol of strat.symbols) {
         const res = await runCell({ strat, symbol, source, title, outDir, manifestHash });
-        if (res.skipped) { console.log(`  ${symbol}: (cached OK)`); cells.push(JSON.parse(readFileSync(res.cellPath, 'utf8'))); continue; }
+        if (res.skipped) {
+          const cached = JSON.parse(readFileSync(res.cellPath, 'utf8'));
+          console.log(`  ${symbol}: (cached OK)`);
+          cells.push(cached);
+          // Cached cells must still seed the duplicate-price map, or a fresh
+          // cell frozen onto a cached symbol's price goes unseen (pass 9).
+          if (cached.quote_last != null) {
+            const owner = seenPrices.get(cached.quote_last);
+            if (owner && owner !== symbol) {
+              console.error(`FROZEN-FEED SIGNATURE (cached): ${symbol} and ${owner} share last price ${cached.quote_last} — aborting.`);
+              process.exitCode = 6;
+              break outer;
+            }
+            seenPrices.set(cached.quote_last, symbol);
+          }
+          continue;
+        }
         cells.push(res.record);
         const m = res.record.metrics || {};
         console.log(`  ${symbol}: ${res.record.outcome}` + (res.record.outcome === 'OK'
