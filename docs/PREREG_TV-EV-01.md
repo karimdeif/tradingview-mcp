@@ -38,8 +38,15 @@ return difference ≤0.5% absolute on matched trades; (c) ≤2 unmatched replay
 trades. Study passes if ≥4 of 5 symbols pass.
 
 FAIL (any symbol beyond those tolerances, or <4/5): the matrix's gate numbers
-are quarantined pending a lookahead/replay-integrity investigation, and that
-is reported as loudly as a pass.
+are quarantined pending investigation, and that is reported as loudly as a
+pass. **Investigation order is fixed now (msi registry addition): the replay
+HARNESS is examined FIRST — a driving fault must not masquerade as a
+lookahead finding about the tester.** Only a harness given a clean bill
+escalates the question to the tester itself.
+
+Registry: entered as DRAFT in the estate study registry (claude-mubasher
+PR #213), with both gates explicit — karim's registration of the study AND
+his separate GO for the replay run class.
 
 ## Cost & gating
 
