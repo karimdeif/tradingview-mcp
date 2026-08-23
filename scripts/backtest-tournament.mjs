@@ -383,16 +383,14 @@ async function runCell({ strat, symbol, source, title, outDir, manifestHash }) {
     record.trades = rt.trades || [];
     record.trades_truncated = rt.truncated || false;
 
-    // OWNERSHIP: the report's server-computed B&H must belong to the
-    // requested symbol (daily cells; intraday B&H spans the intraday feed and
-    // is not comparable to the daily reference — those rely on the price band,
-    // freshness and tuple checks).
+    // B&H vs raw reference: RECORDED, never fatal. TV's B&H is back-adjusted
+    // while the reference series is raw, and 20 years of dividend adjustments
+    // legitimately compound to 2-3x (measured live: ABUK ratio 2.67 while the
+    // series FINGERPRINT — the actual ownership proof — passed). The ratio is
+    // kept as an adjustment-drift datum for the report, not as a gate.
     if (strat.timeframe === '1D') {
       const own = bhOwnershipOk(symbol, results.metrics?.buy_hold_return);
-      if (own !== null && own !== true) {
-        throw new Error(`B&H ownership failed for ${symbol}: TV ${own.tv_bh_pct.toFixed(0)}% vs reference ${own.ref_bh_pct.toFixed(0)}% (ratio ${own.ratio.toFixed(2)}) — the report was computed over a DIFFERENT symbol's series`);
-      }
-      record.bh_ownership = own === true ? 'ok' : 'not_checkable';
+      record.bh_vs_raw_ref = own === true ? 'within_band' : (own === null ? 'not_checkable' : { ratio: own.ratio, tv_bh_pct: own.tv_bh_pct, ref_bh_pct: own.ref_bh_pct });
     }
 
     record.outcome = cellOutcome(results);
