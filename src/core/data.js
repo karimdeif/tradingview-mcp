@@ -278,15 +278,38 @@ export async function getStrategyResults() {
         var clean = {};
         for (var k in metrics) { if (metrics[k] !== null && metrics[k] !== undefined) clean[k] = metrics[k]; }
         var currency = rd.currency || null;
-        return {metrics: clean, currency: currency, strategy: found.name, source: 'internal_api'};
+        // Coverage window from the round-trip trades themselves: each carries
+        // entry (e.tm) and exit (x.tm) as epoch ms. Without this, a 20-year
+        // daily backtest and a 3-week intraday backtest land in the same table
+        // looking comparable. (#coverage: the panel's own date range is not
+        // exposed anywhere machine-readable; first/last trade bounds are.)
+        var coverage = null;
+        if (Array.isArray(rd.trades) && rd.trades.length) {
+          var first = rd.trades[0], last = rd.trades[rd.trades.length - 1];
+          coverage = {
+            trade_count: rd.trades.length,
+            first_entry_time: first.e ? first.e.tm : null,
+            last_exit_time: last.x ? last.x.tm : (last.e ? last.e.tm : null),
+            last_trade_open: !last.x
+          };
+        }
+        return {metrics: clean, currency: currency, strategy: found.name, coverage: coverage, source: 'internal_api'};
       } catch(e) { return {metrics: {}, source: 'internal_api', error: e.message}; }
     })()
   `);
+  const cov = results?.coverage;
   return {
     success: Object.keys(results?.metrics || {}).length > 0,
     metric_count: Object.keys(results?.metrics || {}).length,
     strategy: results?.strategy, currency: results?.currency, source: results?.source,
     metrics: results?.metrics || {},
+    ...(cov && {
+      coverage: {
+        ...cov,
+        first_entry_iso: cov.first_entry_time ? new Date(cov.first_entry_time).toISOString() : null,
+        last_exit_iso: cov.last_exit_time ? new Date(cov.last_exit_time).toISOString() : null,
+      },
+    }),
     ...(ready.unhidden.length && { unhidden_strategies: ready.unhidden, note: 'Strategy was hidden on the chart; it was made visible so the report could compute.' }),
     error: results?.error,
   };
@@ -319,6 +342,9 @@ export async function getTrades({ max_trades } = {}) {
               entry: o.e,
               price: o.p,
               qty: o.q,
+              // NB: ordersData()'s tm is a BAR INDEX (observed: 4), unlike
+              // reportData.trades where e.tm/x.tm are epoch ms. Coverage
+              // timestamps come from data_get_strategy_results, not from here.
               time_index: o.tm
             });
           }
