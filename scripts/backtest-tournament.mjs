@@ -104,7 +104,22 @@ export function seriesFingerprintOk(chartBars, refBars, { tol = 0.03, minOverlap
   }
   if (overlap < minOverlap) return { ok: false, reason: `only ${overlap} aligned unique daily bars (need ${minOverlap})` };
   const frac = hits / overlap;
-  return frac >= minFrac ? { ok: true, overlap, frac } : { ok: false, reason: `${hits}/${overlap} aligned daily closes within ${tol * 100}% (need ${minFrac * 100}%) — foreign series, or adjustment/corporate-action divergence`, overlap, frac };
+  if (frac >= minFrac) return { ok: true, overlap, frac };
+
+  // ADJUSTMENT-AWARE fallback (measured live on JUFO, ex-date 2026-08-06):
+  // a corporate action inside the window back-adjusts every earlier TV bar by
+  // a constant factor (-20.00% exactly, bar after bar), while bars AFTER the
+  // ex-date match the raw reference to the cent. The most recent aligned days
+  // therefore pin identity by level even when the full window fails: require
+  // >=4 of the last 5 aligned days within tolerance. A frozen foreign series
+  // fails this too — its recent levels are the other symbol's.
+  const alignedDays = [...lastPerDay.entries()].filter(([d]) => refByTime.has(d)).sort((a, b) => a[0] - b[0]);
+  const tail = alignedDays.slice(-5);
+  const tailHits = tail.filter(([d, cb]) => Math.abs(cb.close - refByTime.get(d)) / refByTime.get(d) <= tol).length;
+  if (tail.length === 5 && tailHits >= 4) {
+    return { ok: true, overlap, frac, adjustment_divergence: `${hits}/${overlap} full-window level matches; identity pinned by ${tailHits}/5 recent aligned days — corporate-action back-adjustment earlier in the window` };
+  }
+  return { ok: false, reason: `${hits}/${overlap} aligned daily closes within ${tol * 100}% (need ${minFrac * 100}%) and only ${tailHits}/${tail.length} recent days match — foreign series`, overlap, frac };
 }
 
 /**

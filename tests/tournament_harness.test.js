@@ -107,6 +107,23 @@ describe('seriesFingerprintOk (pass 10 — the decisive ownership proof)', () =>
     assert.equal(seriesFingerprintOk(null, []).ok, false);
   });
 
+  it('accepts a corporate-action window — earlier bars constant-shifted, recent tail matches (JUFO live case)', () => {
+    const closes = T.map((_, i) => 100 + i);
+    // ex-date 12 days in: TV back-adjusts the first 12 bars by -20%
+    const tvCloses = closes.map((c, i) => (i < 12 ? c * 0.8 : c));
+    const r = seriesFingerprintOk(chartOf(T, tvCloses), mk(T, closes));
+    assert.equal(r.ok, true);
+    assert.match(r.adjustment_divergence, /corporate-action/);
+  });
+
+  it('REJECTS a foreign series even with a near-level tail — recent days must match per-day', () => {
+    const refCloses = T.map((_, i) => 100 + i);
+    // foreign series ~2-6% off day by day, no stable tail agreement
+    const foreign = T.map((_, i) => (100 + i) * (1 + 0.02 + 0.04 * Math.abs(Math.sin(i * 2.3))));
+    const r = seriesFingerprintOk(chartOf(T, foreign), mk(T, refCloses));
+    assert.equal(r.ok, false);
+  });
+
   it("REJECTS 60 same-day intraday bars posing as daily bars — pass 11's counterexample", () => {
     // A silently-failed 1D switch leaves intraday bars; at a foreign price
     // near the reference close they all "align" to ONE reference day.
