@@ -219,6 +219,19 @@ async function runCell({ strat, symbol, source, title, outDir, manifestHash }) {
     if (!shotReport?.file_path) throw new Error('report screenshot failed — evidence requirement not met.');
     record.screenshot_report = shotReport.file_path;
 
+    // Per-trade list (entry/exit epoch-ms + P&L): the anti-overfitting
+    // substrate. Parameters are NEVER tuned in this tournament, so an
+    // after-the-fact in-sample/out-of-sample split of these trades is
+    // methodologically sound — the only fitting risk left is SELECTION, and
+    // the report handles that by ranking on the IS window and validating on
+    // OOS. Bound to the same entity as the report.
+    const rt = await data.getReportTrades({});
+    if (rt.entity_id && rt.entity_id !== add.entity_id) {
+      throw new Error(`trade list entity ${rt.entity_id} != attached ${add.entity_id}`);
+    }
+    record.trades = rt.trades || [];
+    record.trades_truncated = rt.truncated || false;
+
     record.outcome = cellOutcome(results);
     record.strategy_name_read_back = results.strategy;
     record.report_entity_id = results.entity_id;

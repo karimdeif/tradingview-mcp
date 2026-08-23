@@ -319,6 +319,52 @@ export async function getStrategyResults() {
   };
 }
 
+/**
+ * Full round-trip trade list from reportData.trades — entry/exit epoch-ms and
+ * per-trade P&L. This is the anti-overfitting substrate: it lets a run be
+ * split into in-sample / out-of-sample windows AFTER the fact without
+ * re-running, since parameters are never tuned. (ordersData(), used by
+ * data_get_trades, has only bar indices and caps at 20 — useless for this.)
+ */
+export async function getReportTrades({ max = 5000 } = {}) {
+  const cap = Math.max(1, Math.min(Number(max) || 5000, 20000));
+  const ready = await ensureStrategyTesterReady();
+  const out = await evaluate(`
+    (function() {
+      ${FIND_STRATEGY_JS}
+      try {
+        var found = findStrategy();
+        var rd = found ? _reportOf(found.strat) : null;
+        if (!rd || !Array.isArray(rd.trades)) return { trades: [], error: 'No computed strategy report with trades on chart.' };
+        var total = rd.trades.length;
+        var start = Math.max(0, total - ${cap});
+        var out = [];
+        for (var i = start; i < total; i++) {
+          var t = rd.trades[i];
+          out.push({
+            entry_time: t.e ? t.e.tm : null,
+            exit_time: t.x ? t.x.tm : null,
+            profit: t.tp ? t.tp.v : null,
+            profit_pct: t.tp ? t.tp.p : null,
+            side: t.e ? t.e.c : null,
+          });
+        }
+        return { trades: out, total_trades: total, truncated: start > 0, strategy: found.name, entity_id: found.id || null };
+      } catch (e) { return { trades: [], error: e.message }; }
+    })()
+  `);
+  return {
+    success: (out?.trades?.length || 0) > 0,
+    trade_count: out?.trades?.length || 0,
+    total_trades: out?.total_trades ?? 0,
+    truncated: out?.truncated ?? false,
+    strategy: out?.strategy, entity_id: out?.entity_id ?? null,
+    trades: out?.trades || [],
+    ...(ready.unhidden.length && { unhidden_strategies: ready.unhidden }),
+    error: out?.error,
+  };
+}
+
 export async function getTrades({ max_trades } = {}) {
   const limit = Math.min(max_trades || 20, MAX_TRADES);
   const ready = await ensureStrategyTesterReady();
