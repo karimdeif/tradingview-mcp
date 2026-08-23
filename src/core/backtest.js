@@ -243,9 +243,14 @@ async function readFacadeImplementations() {
         var p = Object.getPrototypeOf(f);
         var toStr = Function.prototype.toString;
         var out = {};
+        // DESCRIPTOR-ONLY reads: p[k] would invoke a prototype getter, running
+        // arbitrary code during the check itself (sol-max pass 7).
         ['addToChart', '_addToChartNewDraft', 'isDraft'].forEach(function(k) {
-          if (Object.prototype.hasOwnProperty.call(f, k)) { out[k] = '__SHADOWED__'; return; }
-          out[k] = typeof p[k] === 'function' ? toStr.call(p[k]) : null;
+          var own = Object.getOwnPropertyDescriptor(f, k);
+          if (own) { out[k] = '__SHADOWED__'; return; }
+          var d = Object.getOwnPropertyDescriptor(p, k);
+          if (!d || d.get || d.set || typeof d.value !== 'function') { out[k] = null; return; }
+          out[k] = toStr.call(d.value);
         });
         return out;
       } catch (e) { return null; }
@@ -281,8 +286,14 @@ export function attestImplementations(impls, attested = ATTESTED_IMPLEMENTATIONS
  *   - its source via Function.prototype.toString.call (immune to toString
  *     overrides; throws on a Proxy, which we catch and refuse) must equal the
  *     attested source byte-for-byte;
- *   - isDraft and addToChart are then invoked as protoFn.call(f) — the exact
- *     callables just attested, never a re-resolved property.
+ *   - the attested draft-branch callable is then invoked as protoFn.call(f) —
+ *     never a re-resolved property; no f[k]/p[k] read ever occurs (a getter or
+ *     Proxy get trap would execute the very code under vetting).
+ *
+ * RESIDUAL (accepted, per the pass-5 ruling): a facade OBJECT that is itself a
+ * Proxy can run trap code on getOwnPropertyDescriptor/getPrototypeOf. That is
+ * page-compromise — an adversary already executing inside TradingView's page —
+ * which attestation does not claim to defeat; it targets build drift.
  *
  * REQUIRES the editor to hold a DRAFT: only _addToChartNewDraft is reviewed for
  * the buffer flow. Its saveAction persists a TradingView DRAFT — the identical
@@ -316,19 +327,20 @@ export async function attachViaFacade(evalAsync, attestedBuilds = ATTESTED_BUILD
           var verified = {};
           for (var i = 0; i < names.length; i++) {
             var k = names[i];
-            if (Object.prototype.hasOwnProperty.call(f, k)) {
+            // DESCRIPTOR-ONLY: reading f[k] or p[k] invokes getters/Proxy get
+            // traps — executing exactly the code we are trying to vet (sol-max
+            // passes 6 and 7, both proven executable). Own-property presence is
+            // itself grounds for refusal, whatever it holds.
+            var ownDesc = Object.getOwnPropertyDescriptor(f, k);
+            if (ownDesc) {
               return { ok: false, error: 'facade.' + k + ' is shadowed by an own property — unattested code would run; refusing.' };
             }
-            // An ACCESSOR on the prototype can hand the attested function to
-            // every check and a different one to the invocation (sol-max pass
-            // 6, proven executable). Only a plain data property is acceptable.
             var desc = Object.getOwnPropertyDescriptor(proto, k);
             if (!desc || desc.get || desc.set || !('value' in desc)) {
               return { ok: false, error: 'facade.' + k + ' is an accessor, not a data property — refusing.' };
             }
             var fn = desc.value;
             if (typeof fn !== 'function') return { ok: false, error: 'facade.' + k + ' is not a function on this build.' };
-            if (f[k] !== fn) return { ok: false, error: 'facade.' + k + ' resolves to something other than the prototype member — refusing.' };
             var src;
             try { src = toStr.call(fn); } catch (e) { return { ok: false, error: 'facade.' + k + ' source is unreadable (proxy?) — refusing.' }; }
             if (src !== expected[k]) return { ok: false, error: 'facade.' + k + ' does not match the attested ' + build + ' implementation — refusing until re-reviewed.' };
@@ -353,6 +365,43 @@ export async function attachViaFacade(evalAsync, attestedBuilds = ATTESTED_BUILD
   }
   if (!attached || typeof attached !== 'object') return { ok: false, error: 'attach evaluation returned nothing.' };
   return attached;
+}
+
+
+/**
+ * Put SOURCE into a fresh DRAFT via the facade's own setNewScript() —
+ * openNewScript() + setScript() — with the buffer read back and sha1-verified.
+ * Replaces pine_set_source for the backtest flow: that tool's
+ * ensurePineEditorOpen() clicks [aria-label="Pine"] when Monaco is closed,
+ * which reintroduces the DOM-click class this module exists to avoid
+ * (sol-max pass 7). Guarantees isDraft for the subsequent attach as a bonus.
+ */
+export async function setDraftSource({ source }) {
+  if (typeof source !== 'string' || !source.trim()) throw new Error('source is required.');
+  const editorReady = await ensureEditorReady();
+  if (!editorReady.ok) return { success: false, error: editorReady.error };
+
+  const res = await evaluateAsync(`
+    (async function() {
+      try {
+        var api = window.TradingViewApi._pineEditorApi;
+        var f = api.getDialogFacade();
+        if (!f || typeof f.setNewScript !== 'function' || typeof f.getSource !== 'function') {
+          return { ok: false, error: 'facade.setNewScript/getSource unavailable on this build.' };
+        }
+        await f.setNewScript(${JSON.stringify(source)});
+        var back = await f.getSource();
+        return { ok: true, readback: typeof back === 'string' ? back : null };
+      } catch (e) { return { ok: false, error: (e && e.message) ? e.message : String(e) }; }
+    })()
+  `);
+  if (!res || !res.ok) return { success: false, error: res?.error || 'setNewScript failed.' };
+  const want = sha1(source);
+  const got = res.readback === null ? null : sha1(res.readback);
+  if (got !== want) {
+    return { success: false, error: `editor readback digest ${got} does not match injected source ${want} — buffer not set.` };
+  }
+  return { success: true, lines_set: source.split('\n').length, digest: want };
 }
 
 /**
@@ -416,10 +465,16 @@ export async function addToChart({ expect_name } = {}) {
       } catch (e) { return { error: (e && e.message) ? e.message : String(e) }; }
     })()
   `);
-  if (!expectedScript || expectedScript.error || !expectedScript.script_id || !expectedScript.version || !expectedScript.source) {
+  // A FRESH draft (setNewScript) has no scriptIdPart/version until the attach
+  // itself persists it — so id/version are corroboration WHEN PRESENT, and the
+  // SOURCE DIGEST is the unconditional binder: sha1 of the buffer we read here
+  // must equal the attached study's metaInfo.pine.digest. Refusing on a
+  // missing id would refuse every fresh draft; refusing on a missing SOURCE is
+  // mandatory — without it there is no identity at all.
+  if (!expectedScript || expectedScript.error || !expectedScript.source) {
     return {
       success: false,
-      error: `Could not establish the editor's script identity before attaching (${expectedScript?.error || 'missing id/version/source'}) — refusing to attach.`,
+      error: `Could not read the editor buffer before attaching (${expectedScript?.error || 'missing source'}) — refusing to attach.`,
       method: 'pine_editor_facade',
     };
   }
@@ -560,25 +615,25 @@ export function verifyAttachment({ before, after, attached, expect_name, readFai
       problems.push(`Attached study name "${candidate.name}" does not match expected "${expect_name}" (exact match required).`);
     }
 
-    // SOURCE identity, not just title. Every field is REQUIRED and matched
-    // exactly — a missing value is a failure, never a skipped check (the old
-    // version-only-when-both-truthy guard let a stale draft through). The
-    // digest is the decisive one: successive sources can reuse an Untitled
-    // draft's id and version, but sha1(source) cannot collide by accident.
-    if (!expectedScript || !expectedScript.script_id || !expectedScript.version || !expectedScript.digest) {
-      problems.push('Editor script identity (id, version, digest) was not fully established before attaching — source identity unverifiable.');
+    // SOURCE identity, not just title. The DIGEST is the unconditional binder
+    // (sha1(source) cannot collide by accident); it is required on BOTH sides,
+    // and a missing value is a failure, never a skipped check. script id and
+    // version are corroboration: a fresh draft has neither until the attach
+    // persists it, so they are compared exactly WHEN the editor had them, and
+    // the attached study must expose a script id either way.
+    if (!expectedScript || !expectedScript.digest) {
+      problems.push('The editor buffer digest was not established before attaching — source identity unverifiable.');
     } else {
-      if (!candidate.script_id) problems.push('Attached study exposes no script id — source identity unverifiable.');
-      else if (candidate.script_id !== expectedScript.script_id) {
-        problems.push(`Attached study came from script ${candidate.script_id}, but the editor held ${expectedScript.script_id}.`);
-      }
-      if (!candidate.pine_version) problems.push('Attached study exposes no script version — source identity unverifiable.');
-      else if (candidate.pine_version !== expectedScript.version) {
-        problems.push(`Attached study is script version ${candidate.pine_version}, but the editor held ${expectedScript.version}.`);
-      }
       if (!candidate.pine_digest) problems.push('Attached study exposes no source digest — source identity unverifiable.');
       else if (candidate.pine_digest !== expectedScript.digest) {
         problems.push(`Attached study source digest ${candidate.pine_digest} does not match the editor buffer's sha1 ${expectedScript.digest} — a DIFFERENT source is on the chart.`);
+      }
+      if (!candidate.script_id) problems.push('Attached study exposes no script id — source identity unverifiable.');
+      else if (expectedScript.script_id && candidate.script_id !== expectedScript.script_id) {
+        problems.push(`Attached study came from script ${candidate.script_id}, but the editor held ${expectedScript.script_id}.`);
+      }
+      if (expectedScript.version && candidate.pine_version && candidate.pine_version !== expectedScript.version) {
+        problems.push(`Attached study is script version ${candidate.pine_version}, but the editor held ${expectedScript.version}.`);
       }
     }
 

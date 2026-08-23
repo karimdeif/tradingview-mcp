@@ -74,9 +74,12 @@ export const HARVEST_TOOLS = [
  * two independent gates, because these tools drive the UI rather than only
  * reading it.
  *
- *   pine_set_source          — Monaco editor.setValue() only; buffer, never the
- *                              cloud script (verified src/core/pine.js:266 on
- *                              2026-08-23).
+ *   pine_set_draft_source    — facade setNewScript() into a fresh draft, with
+ *                              sha1 readback verification; replaces
+ *                              pine_set_source, whose ensurePineEditorOpen()
+ *                              clicks the Pine launcher when Monaco is closed
+ *                              (sol-max pass 7 — no DOM click may be reachable
+ *                              from the backtest surface).
  *   pine_add_to_chart        — no caller-supplied click target; fixed label set;
  *                              refuses to fall back to Save (src/core/backtest.js)
  *   chart_clear_studies      — no arguments at all
@@ -89,7 +92,7 @@ export const HARVEST_TOOLS = [
  */
 export const BACKTEST_TOOLS = [
   ...READONLY_TOOLS,
-  'pine_set_source',
+  'pine_set_draft_source',
   'pine_add_to_chart',
   'chart_clear_studies',
   'data_get_strategy_results',
@@ -129,7 +132,7 @@ export function applyAllowlist(server, allowed) {
 }
 
 /** Tools gated behind TV_MCP_ALLOW_SCOPED_WRITERS, listed here so the gate is testable. */
-export const SCOPED_WRITER_TOOLS = ['pine_add_to_chart', 'chart_clear_studies'];
+export const SCOPED_WRITER_TOOLS = ['pine_add_to_chart', 'chart_clear_studies', 'pine_set_draft_source'];
 
 /**
  * Both gates must hold before the scoped writers register.

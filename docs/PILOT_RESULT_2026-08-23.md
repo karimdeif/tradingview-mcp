@@ -107,7 +107,7 @@ must re-check it **after every symbol switch**, not once at startup.
   against 12 trades. Do not derive trade counts from its length.
 - Codex review has not run — see below.
 
-## Review status: six sol-max passes; architecture changed as a result
+## Review status: seven sol-max passes; architecture changed as a result
 
 `codex exec --model gpt-5.6-sol -c model_reasoning_effort=max`, run on a15.
 
@@ -336,6 +336,53 @@ fixed: two stale wording lines pass 6 flagged (a "no-save branch" and a
 
 **Tests: 61.** Sixth consecutive byte-identical live pilot run, now through the
 directly-invoked draft branch.
+
+### Pass 7 — the pass-6 fix held; the harness took its first beating
+
+Pass-6's getter fix was confirmed CLOSED. Five High + two Medium new/remaining,
+mostly against the new tournament harness, all implemented:
+
+1. **Descriptor-only attestation.** The Node pre-check read `p[k]` (executes a
+   getter), and `f[k] !== fn` fires a Proxy get trap — the reviewer's proxied
+   facade returned `ok:true` while unattested code ran. All property READS for
+   attested names are gone: descriptors only, in both the pre-check and the
+   page code, with a Proxy-spy regression proving no GET ever occurs. A facade
+   that is ITSELF a Proxy is page-compromise — named as accepted residual.
+2. **Context and provenance binding in the harness.** Exact (not substring)
+   symbol match, landed-timeframe check, quote symbol required and exact, A1
+   read-back required (absence = ERROR), and the report must come from the
+   very entity id the attach returned. A stale or wrong report can no longer
+   be recorded as anything but ERROR.
+3. **ABUK is hard-locked to EGX:ABUK by its own source** (`active =
+   isSymbolOK && isTfOK`) — running it elsewhere yields NO_TRADES by
+   construction. Its row now runs on ABUK only. G1 stays over OK cells —
+   identical legitimate absence is not contamination, and the provenance
+   binding above is what makes a stale-report NO_TRADES impossible; NO_TRADES
+   ratios are reported loudly per strategy.
+4. **Resumability manifest.** Cells are reused only when their recorded
+   manifest hash (harness sha1 + per-strategy source sha1/patch/symbols/
+   timeframe + TV build) matches and the outcome was OK; ERROR/NO_TRADES
+   retry; writes are atomic (tmp + rename).
+5. **No DOM click reachable from the harness.** `pine.setSource` (whose
+   editor-open helper clicks the Pine launcher) is replaced by
+   `pine_set_draft_source`: facade `setNewScript()` into a fresh draft with
+   sha1 readback verification. The MCP preset swapped accordingly —
+   `pine_set_source` is OUT of the backtest preset; the new tool is a scoped
+   writer behind the double gate.
+6. **Guard failures abort the whole sweep** (a poisoned session poisons the
+   next cell too); the saved-script inventory diff and disconnect run in
+   `finally`; screenshots (before, after, report panel) are mandatory
+   evidence — their absence fails the cell.
+
+A fresh-draft nuance surfaced live: `setNewScript` drafts have no
+scriptIdPart/version until the attach persists them, so the SOURCE DIGEST is
+the unconditional identity binder (required on both sides), with id/version as
+exact corroboration when present. The digest is now verified twice per cell:
+at injection (editor readback) and at attach (chart metaInfo).
+
+**Tests: 64.** Seventh consecutive byte-identical live pilot run, through the
+full capability chain: draft injection → attestation-bound attach → provenance-
+bound report read.
 
 ### One unrelated failing test, pre-existing
 

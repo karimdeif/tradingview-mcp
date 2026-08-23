@@ -175,7 +175,7 @@ describe('study listing (regression: strategy flag read off the wrong collection
 describe('backtest allowlist preset', () => {
   it('contains the scoped tools plus everything readonly had', () => {
     const set = resolveAllowlist('backtest');
-    for (const t of ['pine_add_to_chart', 'chart_clear_studies', 'pine_set_source',
+    for (const t of ['pine_add_to_chart', 'chart_clear_studies', 'pine_set_draft_source',
       'data_get_strategy_results', 'data_get_trades', 'data_get_equity']) {
       assert.ok(set.has(t), `missing ${t}`);
     }
@@ -183,9 +183,9 @@ describe('backtest allowlist preset', () => {
     assert.equal(set.size, BACKTEST_TOOLS.length);
   });
 
-  it('excludes every tool that can write to the TradingView cloud account', () => {
+  it('excludes every tool that can write to the TradingView cloud account, and pine_set_source (DOM click reachable)', () => {
     const set = resolveAllowlist('backtest');
-    for (const t of ['pine_save', 'pine_compile', 'pine_smart_compile', 'ui_evaluate',
+    for (const t of ['pine_save', 'pine_compile', 'pine_smart_compile', 'pine_set_source', 'ui_evaluate',
       'ui_click', 'ui_open_panel', 'alert_create', 'watchlist_add', 'batch_run', 'tv_launch']) {
       assert.ok(!set.has(t), `${t} must not be in the backtest preset`);
     }
@@ -195,7 +195,7 @@ describe('backtest allowlist preset', () => {
     const set = resolveAllowlist('readonly');
     assert.equal(set.size, READONLY_TOOLS.length);
     assert.ok(!set.has('pine_add_to_chart'));
-    assert.ok(!set.has('pine_set_source'));
+    assert.ok(!set.has('pine_set_draft_source'));
   });
 });
 
@@ -257,6 +257,24 @@ describe('source identity (regression: 2026-08-23 sol-max pass 3 — title is no
     });
     assert.equal(r.target, undefined);
     assert.ok(r.problems.some((p) => /script version 0\.8/.test(p)));
+  });
+
+  it('accepts a FRESH draft — no pre-attach id/version, digest still binds', () => {
+    // setNewScript() drafts have no scriptIdPart until the attach persists
+    // them; the digest comparison is the unconditional binder.
+    const r = verifyAttachment({
+      ...base, expectedScript: { script_id: null, version: null, digest: SCRIPT.digest },
+      after: [strat('a1', 'Golden Cross Exec')],
+    });
+    assert.deepEqual(r.problems, []);
+  });
+
+  it('still REJECTS a fresh draft whose attached digest differs', () => {
+    const r = verifyAttachment({
+      ...base, expectedScript: { script_id: null, version: null, digest: SCRIPT.digest },
+      after: [strat('a1', 'Golden Cross Exec', { pine_digest: 'someotherdigest' })],
+    });
+    assert.equal(r.target, undefined);
   });
 
   it('REJECTS when the study exposes no script id', () => {
@@ -383,10 +401,9 @@ describe('digest correlation (pass 4 — id+version can be reused by an Untitled
     assert.ok(r.problems.some((p) => /DIFFERENT source is on the chart/.test(p)));
   });
 
-  it('REJECTS a missing study version — absence is failure, not a skipped check', () => {
+  it('accepts a missing study version when the digest binds (fresh-draft mechanics)', () => {
     const r = verifyAttachment({ ...base, after: [strat({ pine_version: null })] });
-    assert.equal(r.target, undefined);
-    assert.ok(r.problems.some((p) => /no script version/.test(p)));
+    assert.deepEqual(r.problems, [], 'digest is the unconditional binder; version is corroboration');
   });
 
   it('REJECTS a missing study digest', () => {
@@ -395,10 +412,10 @@ describe('digest correlation (pass 4 — id+version can be reused by an Untitled
     assert.ok(r.problems.some((p) => /no source digest/.test(p)));
   });
 
-  it('REJECTS when the editor identity was not fully established (no digest)', () => {
+  it('REJECTS when the editor buffer digest was not established (id/version alone insufficient)', () => {
     const r = verifyAttachment({ ...base, expectedScript: { script_id: 'USER;abc123', version: '0.9' }, after: [strat()] });
     assert.equal(r.target, undefined);
-    assert.ok(r.problems.some((p) => /not fully established/.test(p)));
+    assert.ok(r.problems.some((p) => /digest was not established/.test(p)));
   });
 });
 
@@ -526,5 +543,39 @@ describe('atomic attestation binding (regression: 2026-08-23 sol-max pass 5)', (
     assert.equal(r.ok, false);
     assert.match(r.error, /does not hold a draft/);
     assert.notEqual(f._attached, true);
+  });
+});
+
+describe('descriptor-only attestation reads (regression: 2026-08-23 sol-max pass 7)', () => {
+  it('never reads f[k] or proto[k] — a getter/Proxy get trap would execute during the check', async () => {
+    class Facade {
+      isDraft() { return true; }
+      async addToChart() {}
+      async _addToChartNewDraft() { this._attached = true; }
+    }
+    const f = new Facade();
+    const proto = Facade.prototype;
+    // A get on the INSTANCE for any attested name = executing page code mid-check.
+    let instanceGetRan = false;
+    const spy = new Proxy(f, {
+      get(target, prop, recv) {
+        if (['addToChart', '_addToChartNewDraft', 'isDraft'].includes(prop)) instanceGetRan = true;
+        return Reflect.get(target, prop, recv);
+      },
+    });
+    const attested = { 'TVDesktop/9.9.9-test': {
+      addToChart: Function.prototype.toString.call(proto.addToChart),
+      _addToChartNewDraft: Function.prototype.toString.call(proto._addToChartNewDraft),
+      isDraft: Function.prototype.toString.call(proto.isDraft),
+    } };
+    const win = { TradingViewApi: { _pineEditorApi: { getDialogFacade: () => spy } } };
+    const r = await attachViaFacade(async (expr) => {
+      const run = new Function('window', 'navigator', `return (${expr})`);
+      return run(win, { userAgent: 'Mozilla/5.0 TVDesktop/9.9.9-test' });
+    }, attested);
+    assert.equal(r.ok, true, r.error);
+    assert.equal(instanceGetRan, false,
+      'no property GET may occur on the facade for attested names — descriptors only');
+    assert.equal(f._attached, true);
   });
 });

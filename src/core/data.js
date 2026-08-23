@@ -38,7 +38,9 @@ const FIND_STRATEGY_JS = `
       try { mi = s.metaInfo ? s.metaInfo() : null; } catch (e) {}
       var isStrat = mi && (mi.isTVScriptStrategy || mi.is_strategy);
       if ((isStrat || typeof s.reportData === 'function') && typeof s.reportData === 'function') {
-        strategies.push({ s: s, name: mi ? mi.description : null });
+        var sid = null;
+        try { sid = typeof s.id === 'function' ? s.id() : s.id; } catch (e) {}
+        strategies.push({ s: s, name: mi ? mi.description : null, id: sid || null });
       }
     }
     return strategies;
@@ -52,10 +54,10 @@ const FIND_STRATEGY_JS = `
     // Prefer one with a computed report (has .performance).
     for (var j = 0; j < strategies.length; j++) {
       var rd = _reportOf(strategies[j].s);
-      if (rd && rd.performance) return { strat: strategies[j].s, report: rd, name: strategies[j].name, strategy_count: strategies.length };
+      if (rd && rd.performance) return { strat: strategies[j].s, report: rd, name: strategies[j].name, id: strategies[j].id, strategy_count: strategies.length };
     }
     // None computed — return the first so callers can hint "open the panel".
-    if (strategies.length) return { strat: strategies[0].s, report: null, name: strategies[0].name, strategy_count: strategies.length };
+    if (strategies.length) return { strat: strategies[0].s, report: null, name: strategies[0].name, id: strategies[0].id, strategy_count: strategies.length };
     return null;
   }
   // TradingView never computes a report for a hidden strategy (crossed-out eye
@@ -293,7 +295,7 @@ export async function getStrategyResults() {
             last_trade_open: !last.x
           };
         }
-        return {metrics: clean, currency: currency, strategy: found.name, coverage: coverage, source: 'internal_api'};
+        return {metrics: clean, currency: currency, strategy: found.name, entity_id: found.id || null, strategy_count: found.strategy_count, coverage: coverage, source: 'internal_api'};
       } catch(e) { return {metrics: {}, source: 'internal_api', error: e.message}; }
     })()
   `);
@@ -301,7 +303,9 @@ export async function getStrategyResults() {
   return {
     success: Object.keys(results?.metrics || {}).length > 0,
     metric_count: Object.keys(results?.metrics || {}).length,
-    strategy: results?.strategy, currency: results?.currency, source: results?.source,
+    strategy: results?.strategy, entity_id: results?.entity_id ?? null,
+    strategy_count: results?.strategy_count ?? null,
+    currency: results?.currency, source: results?.source,
     metrics: results?.metrics || {},
     ...(cov && {
       coverage: {

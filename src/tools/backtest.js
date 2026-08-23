@@ -24,6 +24,18 @@ export function registerBacktestTools(server) {
   );
 
   server.tool(
+    'pine_set_draft_source',
+    'Open a fresh Pine draft and set its source via the editor facade (no DOM click anywhere in the path), then verify the buffer by sha1 readback. The draft is required by pine_add_to_chart, whose attach path only accepts drafts.',
+    {
+      source: z.string().min(1).describe('Pine source to place in a new draft buffer.'),
+    },
+    async ({ source }) => {
+      try { return jsonResult(await core.setDraftSource({ source })); }
+      catch (err) { return jsonResult({ success: false, error: err.message }, true); }
+    },
+  );
+
+  server.tool(
     'chart_clear_studies',
     'Remove every study from the chart so a backtest run starts from exactly one strategy. Takes no arguments.',
     {},
