@@ -1,0 +1,141 @@
+{
+  "strategy": "golden-cross",
+  "title": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "symbol": "EGX:SWDY",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:25:11.547Z",
+  "resolution_landed": "1D",
+  "quote_last": 120.89,
+  "source_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+    "entity_id": "gOh00q",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787495130800.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787495132500.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_golden-cross_SWDY.png",
+  "trades": [
+    {
+      "entry_time": 1247036400000,
+      "exit_time": 1247382000000,
+      "profit": -876.7472,
+      "profit_pct": -0.088673115,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1266134400000,
+      "exit_time": 1266307200000,
+      "profit": 673.8718,
+      "profit_pct": 0.067883976,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1291536000000,
+      "exit_time": 1295337600000,
+      "profit": -336.81778,
+      "profit_pct": -0.033110775,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1331798400000,
+      "exit_time": 1332662400000,
+      "profit": -669.99756,
+      "profit_pct": -0.067173645,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1341475200000,
+      "exit_time": 1341820800000,
+      "profit": -506.69388,
+      "profit_pct": -0.051282052,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1379232000000,
+      "exit_time": 1380700800000,
+      "profit": 599.1551,
+      "profit_pct": 0.059015222,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1460966400000,
+      "exit_time": 1461657600000,
+      "profit": 711.362,
+      "profit_pct": 0.07654845,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1552550400000,
+      "exit_time": 1552982400000,
+      "profit": -501.59564,
+      "profit_pct": -0.050316256,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1607328000000,
+      "exit_time": 1608537600000,
+      "profit": -457.77728,
+      "profit_pct": -0.046157382,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1640073600000,
+      "exit_time": 1642924800000,
+      "profit": -372.62695,
+      "profit_pct": -0.037753604,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1668067200000,
+      "exit_time": 1668672000000,
+      "profit": 737.9943,
+      "profit_pct": 0.0750492,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1770192000000,
+      "exit_time": 1771488000000,
+      "profit": 534.4928,
+      "profit_pct": 0.05425733,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "report_entity_id": "gOh00q",
+  "metrics": {
+    "net_profit": -465.380310000005,
+    "net_profit_percent": -0.0046538031000000505,
+    "gross_profit": 3256.8760099999963,
+    "gross_loss": 3722.2563200000013,
+    "profit_factor": 0.874973599346322,
+    "max_drawdown": 1949.1410699999979,
+    "max_drawdown_percent": 0.01949141069999998,
+    "total_trades": 12,
+    "winning_trades": 5,
+    "losing_trades": 7,
+    "percent_profitable": 0.4166666666666667,
+    "avg_trade": -38.7816925,
+    "largest_win": 737.9942999999986,
+    "largest_loss": 876.7472100000002,
+    "commission_paid": 236.99031,
+    "sharpe_ratio": -1.1366930873504157,
+    "sortino_ratio": -0.8017827966080375,
+    "buy_hold_return": 2899647.18,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 12,
+    "first_entry_time": 1247036400000,
+    "last_exit_time": 1771488000000,
+    "last_trade_open": false,
+    "first_entry_iso": "2009-07-08T07:00:00.000Z",
+    "last_exit_iso": "2026-02-19T08:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:25:36.887Z"
+}

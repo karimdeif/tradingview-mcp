@@ -1,0 +1,107 @@
+{
+  "strategy": "conservative",
+  "title": "Conservative 100-Tick Structure Strategy",
+  "symbol": "EGX:ARCC",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:46:05.770Z",
+  "note": "Named \"100-Tick\"; run on 1D as the closest available chart — flagged, not hidden.",
+  "resolution_landed": "1D",
+  "quote_last": 72.05,
+  "source_digest": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d",
+    "entity_id": "nQUlCN",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787496385129.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787496386874.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_conservative_ARCC.png",
+  "trades": [
+    {
+      "entry_time": 1427616000000,
+      "exit_time": 1427702400000,
+      "profit": -52.83,
+      "profit_pct": -0.0052941176,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1447920000000,
+      "exit_time": 1447920000000,
+      "profit": 9.07,
+      "profit_pct": 0.0009009009,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1501488000000,
+      "exit_time": 1501488000000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1732780800000,
+      "exit_time": 1732780800000,
+      "profit": -67.9,
+      "profit_pct": -0.006793478,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1736668800000,
+      "exit_time": 1736668800000,
+      "profit": -51.52,
+      "profit_pct": -0.0051612905,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1766304000000,
+      "exit_time": 1766304000000,
+      "profit": 91.08,
+      "profit_pct": 0.009136047,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1773648000000,
+      "exit_time": 1773648000000,
+      "profit": -52.5,
+      "profit_pct": -0.0052620503,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Conservative 100-Tick Structure Strategy",
+  "report_entity_id": "nQUlCN",
+  "metrics": {
+    "net_profit": -124.59999999999974,
+    "net_profit_percent": -0.0012459999999999973,
+    "gross_profit": 100.14999999999998,
+    "gross_loss": 224.74999999999972,
+    "profit_factor": 0.44560622914349324,
+    "max_drawdown": 163.17999999999302,
+    "max_drawdown_percent": 0.00163179999999993,
+    "total_trades": 6,
+    "winning_trades": 2,
+    "losing_trades": 4,
+    "percent_profitable": 0.2857142857142857,
+    "avg_trade": -17.8,
+    "largest_win": 91.08000000000017,
+    "largest_loss": 67.89999999999976,
+    "commission_paid": 0,
+    "sharpe_ratio": -13.302089993701044,
+    "sortino_ratio": -0.9971861937147241,
+    "buy_hold_return": 323804.1,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 7,
+    "first_entry_time": 1427616000000,
+    "last_exit_time": 1773648000000,
+    "last_trade_open": false,
+    "first_entry_iso": "2015-03-29T08:00:00.000Z",
+    "last_exit_iso": "2026-03-16T08:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:46:31.220Z"
+}

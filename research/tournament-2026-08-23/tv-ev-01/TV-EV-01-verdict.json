@@ -1,0 +1,86 @@
+{
+  "verdict": "STUDY FAIL",
+  "passes": 3,
+  "results": [
+    {
+      "symbol": "COMI",
+      "steps": 639,
+      "window": [
+        "2024-01-02",
+        "2026-08-20"
+      ],
+      "tester_trades_in_scope": 17,
+      "walker_trades": 18,
+      "matched": 16,
+      "matched_frac": 0.9411764705882353,
+      "per_trade_return_ok": true,
+      "max_ret_diff": 0.00011907417758048877,
+      "unmatched_walker_trades": 2,
+      "pass": true
+    },
+    {
+      "symbol": "TMGH",
+      "steps": 639,
+      "window": [
+        "2024-01-02",
+        "2026-08-20"
+      ],
+      "tester_trades_in_scope": 19,
+      "walker_trades": 20,
+      "matched": 18,
+      "matched_frac": 0.9473684210526315,
+      "per_trade_return_ok": true,
+      "max_ret_diff": 3.5253363509651914e-8,
+      "unmatched_walker_trades": 2,
+      "pass": true
+    },
+    {
+      "symbol": "ORAS",
+      "steps": 639,
+      "window": [
+        "2024-01-02",
+        "2026-08-20"
+      ],
+      "tester_trades_in_scope": 10,
+      "walker_trades": 11,
+      "matched": 9,
+      "matched_frac": 0.9,
+      "per_trade_return_ok": true,
+      "max_ret_diff": 3.934265709742979e-8,
+      "unmatched_walker_trades": 2,
+      "pass": true
+    },
+    {
+      "symbol": "FWRY",
+      "steps": 639,
+      "window": [
+        "2024-01-02",
+        "2026-08-20"
+      ],
+      "tester_trades_in_scope": 18,
+      "walker_trades": 18,
+      "matched": 15,
+      "matched_frac": 0.8333333333333334,
+      "per_trade_return_ok": false,
+      "max_ret_diff": 0.050181986788582156,
+      "unmatched_walker_trades": 3,
+      "pass": false
+    },
+    {
+      "symbol": "ETEL",
+      "steps": 639,
+      "window": [
+        "2024-01-02",
+        "2026-08-20"
+      ],
+      "tester_trades_in_scope": 19,
+      "walker_trades": 20,
+      "matched": 14,
+      "matched_frac": 0.7368421052631579,
+      "per_trade_return_ok": false,
+      "max_ret_diff": 0.014689726012450109,
+      "unmatched_walker_trades": 6,
+      "pass": false
+    }
+  ]
+}

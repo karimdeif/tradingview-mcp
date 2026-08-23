@@ -1,0 +1,555 @@
+{
+  "strategy": "wkol-3m",
+  "title": "WKOL 3m VWAP Reversion (B) — Min-Gap Guard",
+  "symbol": "EGX:ORAS",
+  "timeframe": "3",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:47:54.154Z",
+  "source_patch": "input.bool(true, \"Signals only (no orders)\") -> input.bool(false, \"Signals only (no orders)\")",
+  "resolution_landed": "3",
+  "quote_last": 782.25,
+  "source_digest": "1533fbed14b51d2236566b8384342cb5e60df4d2",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "1533fbed14b51d2236566b8384342cb5e60df4d2",
+    "entity_id": "vanjI0",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787496493593.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787496495789.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_wkol-3m_ORAS.png",
+  "trades": [
+    {
+      "entry_time": 1723626180000,
+      "exit_time": 1723627800000,
+      "profit": -42.746284,
+      "profit_pct": -0.004294608,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1724839560000,
+      "exit_time": 1724839740000,
+      "profit": -14.45405,
+      "profit_pct": -0.0014811654,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1724919480000,
+      "exit_time": 1724920200000,
+      "profit": -63.29294,
+      "profit_pct": -0.0064699166,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1725877260000,
+      "exit_time": 1725879600000,
+      "profit": -63.725803,
+      "profit_pct": -0.006395718,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1726047000000,
+      "exit_time": 1726047540000,
+      "profit": -45.0606,
+      "profit_pct": -0.0045780535,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1727857980000,
+      "exit_time": 1727858520000,
+      "profit": -52.0068,
+      "profit_pct": -0.005327681,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1728291240000,
+      "exit_time": 1728291420000,
+      "profit": 3.7455,
+      "profit_pct": 0.0003841695,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1728468540000,
+      "exit_time": 1728468720000,
+      "profit": -46.0955,
+      "profit_pct": -0.004741574,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1730027340000,
+      "exit_time": 1730027700000,
+      "profit": -42.63554,
+      "profit_pct": -0.0044015385,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1731585960000,
+      "exit_time": 1731586320000,
+      "profit": -39.60064,
+      "profit_pct": -0.0040381257,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1735128180000,
+      "exit_time": 1735128360000,
+      "profit": -60.4688,
+      "profit_pct": -0.0060957326,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1737372960000,
+      "exit_time": 1737373320000,
+      "profit": 8.189,
+      "profit_pct": 0.00082443387,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1737459540000,
+      "exit_time": 1737461340000,
+      "profit": 58.2903,
+      "profit_pct": 0.0060088825,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1738843560000,
+      "exit_time": 1738843920000,
+      "profit": 36.23299,
+      "profit_pct": 0.003675676,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1739094840000,
+      "exit_time": 1739095020000,
+      "profit": 12.654925,
+      "profit_pct": 0.0012707451,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1739703960000,
+      "exit_time": 1739704140000,
+      "profit": -48.05375,
+      "profit_pct": -0.0048660594,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1739967120000,
+      "exit_time": 1740038400000,
+      "profit": 36.741,
+      "profit_pct": 0.0036982945,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1741777380000,
+      "exit_time": 1741777740000,
+      "profit": 6.42546,
+      "profit_pct": 0.000660041,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1741860180000,
+      "exit_time": 1741860540000,
+      "profit": -1.61442,
+      "profit_pct": -0.00016509174,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1742980680000,
+      "exit_time": 1742981220000,
+      "profit": 1.3821,
+      "profit_pct": 0.00014191998,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1744795800000,
+      "exit_time": 1744795980000,
+      "profit": 5.38362,
+      "profit_pct": 0.0005469634,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1745834220000,
+      "exit_time": 1745834580000,
+      "profit": -61.33248,
+      "profit_pct": -0.006185921,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1746606780000,
+      "exit_time": 1746606960000,
+      "profit": -15.666525,
+      "profit_pct": -0.0016018945,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1748948940000,
+      "exit_time": 1748949840000,
+      "profit": -76.46328,
+      "profit_pct": -0.0077033117,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1750761720000,
+      "exit_time": 1750761900000,
+      "profit": -61.39152,
+      "profit_pct": -0.0061795916,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1751280480000,
+      "exit_time": 1751280660000,
+      "profit": 36.00814,
+      "profit_pct": 0.0037381665,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1752055920000,
+      "exit_time": 1752056280000,
+      "profit": 11.57895,
+      "profit_pct": 0.0012018178,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1753182720000,
+      "exit_time": 1753183440000,
+      "profit": -78.86151,
+      "profit_pct": -0.007928459,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1753693920000,
+      "exit_time": 1753697700000,
+      "profit": -91.73125,
+      "profit_pct": -0.009370216,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1754393220000,
+      "exit_time": 1754463600000,
+      "profit": -29.25,
+      "profit_pct": -0.0029955066,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1754559360000,
+      "exit_time": 1754559540000,
+      "profit": -43.677876,
+      "profit_pct": -0.0045194253,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1756199160000,
+      "exit_time": 1756199340000,
+      "profit": -4.27778,
+      "profit_pct": -0.00043116786,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1756629180000,
+      "exit_time": 1756633140000,
+      "profit": -4.764,
+      "profit_pct": -0.0004967486,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1757324700000,
+      "exit_time": 1757327760000,
+      "profit": -69.505,
+      "profit_pct": -0.0070422017,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1757927340000,
+      "exit_time": 1757927520000,
+      "profit": -212.75035,
+      "profit_pct": -0.021783398,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1758625200000,
+      "exit_time": 1758625920000,
+      "profit": -9.3357,
+      "profit_pct": -0.0009608037,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1759054860000,
+      "exit_time": 1759055040000,
+      "profit": -7.783775,
+      "profit_pct": -0.00078768795,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1760351040000,
+      "exit_time": 1760351220000,
+      "profit": -48.65,
+      "profit_pct": -0.0050812904,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1761210900000,
+      "exit_time": 1761211620000,
+      "profit": -10.822035,
+      "profit_pct": -0.0010994939,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1762077240000,
+      "exit_time": 1762079580000,
+      "profit": -48.6697,
+      "profit_pct": -0.005115453,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1763036820000,
+      "exit_time": 1763280000000,
+      "profit": 270.0703,
+      "profit_pct": 0.027629692,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1763294940000,
+      "exit_time": 1763366400000,
+      "profit": 43.2497,
+      "profit_pct": 0.0044918787,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1763372160000,
+      "exit_time": 1763372880000,
+      "profit": -69.44101,
+      "profit_pct": -0.007212087,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1766923200000,
+      "exit_time": 1766923560000,
+      "profit": -13.5509,
+      "profit_pct": -0.0014032112,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1769515380000,
+      "exit_time": 1769515560000,
+      "profit": 3.77652,
+      "profit_pct": 0.0003893622,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1770542460000,
+      "exit_time": 1770542820000,
+      "profit": -39.67282,
+      "profit_pct": -0.0040192166,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1771836120000,
+      "exit_time": 1771836480000,
+      "profit": 11.2397,
+      "profit_pct": 0.0011813294,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1772444520000,
+      "exit_time": 1772447040000,
+      "profit": -72.1361,
+      "profit_pct": -0.00750261,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1772537220000,
+      "exit_time": 1772611200000,
+      "profit": -10.61235,
+      "profit_pct": -0.0010781904,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1773221580000,
+      "exit_time": 1773221760000,
+      "profit": 1.16151,
+      "profit_pct": 0.000118132964,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1773312300000,
+      "exit_time": 1773561600000,
+      "profit": 50.4985,
+      "profit_pct": 0.0053295493,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1774353600000,
+      "exit_time": 1774425600000,
+      "profit": 31.35,
+      "profit_pct": 0.003288135,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1775128680000,
+      "exit_time": 1775128860000,
+      "profit": -9.604785,
+      "profit_pct": -0.0010135496,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1776164040000,
+      "exit_time": 1776164220000,
+      "profit": -3.50625,
+      "profit_pct": -0.00036257235,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1778498820000,
+      "exit_time": 1778569200000,
+      "profit": 41.668125,
+      "profit_pct": 0.0042346786,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1778664600000,
+      "exit_time": 1778665140000,
+      "profit": -52.45435,
+      "profit_pct": -0.005653812,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1779179580000,
+      "exit_time": 1779180840000,
+      "profit": -7.2856,
+      "profit_pct": -0.0007360065,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1780571520000,
+      "exit_time": 1780572240000,
+      "profit": 23.14,
+      "profit_pct": 0.0024083117,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1780914600000,
+      "exit_time": 1780915140000,
+      "profit": -50.471657,
+      "profit_pct": -0.0053470624,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1780999020000,
+      "exit_time": 1780999920000,
+      "profit": -42.359135,
+      "profit_pct": -0.0044568693,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1781428860000,
+      "exit_time": 1781429220000,
+      "profit": 20.26782,
+      "profit_pct": 0.002204488,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1781690220000,
+      "exit_time": 1781690400000,
+      "profit": 7.47,
+      "profit_pct": 0.0007857998,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1782299340000,
+      "exit_time": 1782370800000,
+      "profit": -22.17336,
+      "profit_pct": -0.002338419,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1783325880000,
+      "exit_time": 1783328220000,
+      "profit": -73.90077,
+      "profit_pct": -0.007883666,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1783848600000,
+      "exit_time": 1783852920000,
+      "profit": -81.79241,
+      "profit_pct": -0.008503739,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1784022300000,
+      "exit_time": 1784022480000,
+      "profit": -21.6671,
+      "profit_pct": -0.0022648864,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1784460420000,
+      "exit_time": 1784530800000,
+      "profit": 36.743916,
+      "profit_pct": 0.0039636274,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1785238020000,
+      "exit_time": 1785308400000,
+      "profit": 4.70275,
+      "profit_pct": 0.0005076714,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1786271940000,
+      "exit_time": 1786272480000,
+      "profit": 43.280056,
+      "profit_pct": 0.0046330346,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1786613220000,
+      "exit_time": 1786613760000,
+      "profit": -3.016,
+      "profit_pct": -0.00031177996,
+      "side": "VWAP3-B"
+    },
+    {
+      "entry_time": 1787481900000,
+      "exit_time": 1787482260000,
+      "profit": -64.062,
+      "profit_pct": -0.0068252296,
+      "side": "VWAP3-B"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "WKOL 3m VWAP Reversion (B) — Min-Gap Guard",
+  "report_entity_id": "vanjI0",
+  "metrics": {
+    "net_profit": -1227.1436249999908,
+    "net_profit_percent": -0.012271436249999908,
+    "gross_profit": 805.2508800000037,
+    "gross_loss": 2032.3945049999945,
+    "profit_factor": 0.3962079596352805,
+    "max_drawdown": 1258.676929999987,
+    "max_drawdown_percent": 0.01258676929999987,
+    "total_trades": 71,
+    "winning_trades": 25,
+    "losing_trades": 46,
+    "percent_profitable": 0.352112676056338,
+    "avg_trade": -17.28371303,
+    "largest_win": 270.0703000000002,
+    "largest_loss": 212.7503450000002,
+    "commission_paid": 2063.4536250000006,
+    "sharpe_ratio": -2.411365781682756,
+    "sortino_ratio": -0.9240397886523908,
+    "buy_hold_return": 191074.08,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 71,
+    "first_entry_time": 1723626180000,
+    "last_exit_time": 1787482260000,
+    "last_trade_open": false,
+    "first_entry_iso": "2024-08-14T09:03:00.000Z",
+    "last_exit_iso": "2026-08-23T10:51:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:48:20.176Z"
+}

@@ -1,0 +1,127 @@
+{
+  "strategy": "pro-stack",
+  "title": "EGX Pro Stack — No Look-Ahead (EMA20/50/200 + RSI + MACD + rVol + VWAP + ATR/ST)",
+  "symbol": "EGX:ORWE",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:37:07.951Z",
+  "resolution_landed": "1D",
+  "quote_last": 26,
+  "source_digest": "e13fb9862bdce1079b68b4e53c23f3e8c79490fa",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "e13fb9862bdce1079b68b4e53c23f3e8c79490fa",
+    "entity_id": "VpQYPT",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787495847352.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787495849366.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_pro-stack_ORWE.png",
+  "trades": [
+    {
+      "entry_time": 1063782000000,
+      "exit_time": 1064127600000,
+      "profit": 405.6472,
+      "profit_pct": 0.040470168,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1080633600000,
+      "exit_time": 1080720000000,
+      "profit": -455.69495,
+      "profit_pct": -0.043335363,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1099209600000,
+      "exit_time": 1099987200000,
+      "profit": -363.7076,
+      "profit_pct": -0.036313258,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1119855600000,
+      "exit_time": 1120114800000,
+      "profit": -618.08563,
+      "profit_pct": -0.06283173,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1127113200000,
+      "exit_time": 1128499200000,
+      "profit": 318.531,
+      "profit_pct": 0.03292288,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1640592000000,
+      "exit_time": 1642492800000,
+      "profit": 191.80392,
+      "profit_pct": 0.01931165,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1680076800000,
+      "exit_time": 1680163200000,
+      "profit": 1179.194,
+      "profit_pct": 0.11847859,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1697958000000,
+      "exit_time": 1698217200000,
+      "profit": 1226.0278,
+      "profit_pct": 0.12172125,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1729407600000,
+      "exit_time": 1729494000000,
+      "profit": 926.15454,
+      "profit_pct": 0.09103004,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1771315200000,
+      "exit_time": 1771488000000,
+      "profit": -326.2215,
+      "profit_pct": -0.0317521,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "EGX Pro Stack — No Look-Ahead (EMA20/50/200 + RSI + MACD + rVol + VWAP + ATR/ST)",
+  "report_entity_id": "VpQYPT",
+  "metrics": {
+    "net_profit": 2483.648859999999,
+    "net_profit_percent": 0.024836488599999988,
+    "gross_profit": 4247.358569999999,
+    "gross_loss": 1763.7097100000005,
+    "profit_factor": 2.408195943991258,
+    "max_drawdown": 1785.3536100000056,
+    "max_drawdown_percent": 0.017781406323129655,
+    "total_trades": 10,
+    "winning_trades": 6,
+    "losing_trades": 4,
+    "percent_profitable": 0.6,
+    "avg_trade": 248.364886,
+    "largest_win": 1226.0278799999987,
+    "largest_loss": 618.0856300000002,
+    "commission_paid": 203.43114,
+    "sharpe_ratio": -1.1784810401123182,
+    "sortino_ratio": -0.8752077043923803,
+    "buy_hold_return": 1006378.45,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 10,
+    "first_entry_time": 1063782000000,
+    "last_exit_time": 1771488000000,
+    "last_trade_open": false,
+    "first_entry_iso": "2003-09-17T07:00:00.000Z",
+    "last_exit_iso": "2026-02-19T08:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:37:33.755Z"
+}

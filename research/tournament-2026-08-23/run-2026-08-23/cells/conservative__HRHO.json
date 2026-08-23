@@ -1,0 +1,149 @@
+{
+  "strategy": "conservative",
+  "title": "Conservative 100-Tick Structure Strategy",
+  "symbol": "EGX:HRHO",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:39:17.092Z",
+  "note": "Named \"100-Tick\"; run on 1D as the closest available chart — flagged, not hidden.",
+  "resolution_landed": "1D",
+  "quote_last": 26.32,
+  "source_digest": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d",
+    "entity_id": "JhpQ1y",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787495976433.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787495978410.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_conservative_HRHO.png",
+  "trades": [
+    {
+      "entry_time": 1003651200000,
+      "exit_time": 1003651200000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1003737600000,
+      "exit_time": 1003737600000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1003824000000,
+      "exit_time": 1003824000000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1004256000000,
+      "exit_time": 1004256000000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1017648000000,
+      "exit_time": 1017648000000,
+      "profit": -454.54,
+      "profit_pct": -0.045454547,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1655625600000,
+      "exit_time": 1655625600000,
+      "profit": -69.36,
+      "profit_pct": -0.006968641,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1701936000000,
+      "exit_time": 1701936000000,
+      "profit": -49.95,
+      "profit_pct": -0.005027933,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1704182400000,
+      "exit_time": 1704182400000,
+      "profit": 103.53,
+      "profit_pct": 0.010416667,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1713945600000,
+      "exit_time": 1713945600000,
+      "profit": 84.28,
+      "profit_pct": 0.008479709,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1732608000000,
+      "exit_time": 1732608000000,
+      "profit": -53.02,
+      "profit_pct": -0.0053268764,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1763625600000,
+      "exit_time": 1763625600000,
+      "profit": 78.12,
+      "profit_pct": 0.007850467,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1779174000000,
+      "exit_time": 1779174000000,
+      "profit": 103.04,
+      "profit_pct": 0.010366531,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1787209200000,
+      "exit_time": 1787209200000,
+      "profit": 88.09,
+      "profit_pct": 0.008842753,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Conservative 100-Tick Structure Strategy",
+  "report_entity_id": "JhpQ1y",
+  "metrics": {
+    "net_profit": -169.8100000000034,
+    "net_profit_percent": -0.0016981000000000342,
+    "gross_profit": 457.05999999999887,
+    "gross_loss": 626.8700000000023,
+    "profit_factor": 0.7291144894475684,
+    "max_drawdown": 573.8500000000058,
+    "max_drawdown_percent": 0.005738500000000058,
+    "total_trades": 9,
+    "winning_trades": 5,
+    "losing_trades": 4,
+    "percent_profitable": 0.38461538461538464,
+    "avg_trade": -13.06230769,
+    "largest_win": 103.53000000000104,
+    "largest_loss": 454.5400000000004,
+    "commission_paid": 0,
+    "sharpe_ratio": -5.677793413747663,
+    "sortino_ratio": -0.9848417917199325,
+    "buy_hold_return": 4437910.62,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 13,
+    "first_entry_time": 1003651200000,
+    "last_exit_time": 1787209200000,
+    "last_trade_open": false,
+    "first_entry_iso": "2001-10-21T08:00:00.000Z",
+    "last_exit_iso": "2026-08-20T07:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:39:42.788Z"
+}

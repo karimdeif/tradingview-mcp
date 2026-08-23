@@ -1,0 +1,78 @@
+{
+  "strategy": "pro-stack",
+  "title": "EGX Pro Stack — No Look-Ahead (EMA20/50/200 + RSI + MACD + rVol + VWAP + ATR/ST)",
+  "symbol": "EGX:SWDY",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:33:43.075Z",
+  "resolution_landed": "1D",
+  "quote_last": 120.89,
+  "source_digest": "e13fb9862bdce1079b68b4e53c23f3e8c79490fa",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "e13fb9862bdce1079b68b4e53c23f3e8c79490fa",
+    "entity_id": "K4pdLQ",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787495642491.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787495644352.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_pro-stack_SWDY.png",
+  "trades": [
+    {
+      "entry_time": 1495958400000,
+      "exit_time": 1497513600000,
+      "profit": -121.04356,
+      "profit_pct": -0.01210151,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1680163200000,
+      "exit_time": 1681200000000,
+      "profit": 1135.2223,
+      "profit_pct": 0.11362812,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1704700800000,
+      "exit_time": 1705478400000,
+      "profit": 823.7173,
+      "profit_pct": 0.081563525,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "EGX Pro Stack — No Look-Ahead (EMA20/50/200 + RSI + MACD + rVol + VWAP + ATR/ST)",
+  "report_entity_id": "K4pdLQ",
+  "metrics": {
+    "net_profit": 1837.8959600000014,
+    "net_profit_percent": 0.018378959600000015,
+    "gross_profit": 1958.9395200000013,
+    "gross_loss": 121.04355999999984,
+    "profit_factor": 16.18375665752068,
+    "max_drawdown": 550.9242599999998,
+    "max_drawdown_percent": 0.005509242599999998,
+    "total_trades": 3,
+    "winning_trades": 2,
+    "losing_trades": 1,
+    "percent_profitable": 0.6666666666666666,
+    "avg_trade": 612.6319867,
+    "largest_win": 1135.2222600000005,
+    "largest_loss": 121.04355999999984,
+    "commission_paid": 62.02404,
+    "sharpe_ratio": -0.9257899569177047,
+    "sortino_ratio": -0.8627828481757258,
+    "buy_hold_return": 1259776,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 3,
+    "first_entry_time": 1495958400000,
+    "last_exit_time": 1705478400000,
+    "last_trade_open": false,
+    "first_entry_iso": "2017-05-28T08:00:00.000Z",
+    "last_exit_iso": "2024-01-17T08:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:34:08.729Z"
+}

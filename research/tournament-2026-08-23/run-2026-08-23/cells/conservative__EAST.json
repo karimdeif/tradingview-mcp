@@ -1,0 +1,450 @@
+{
+  "strategy": "conservative",
+  "title": "Conservative 100-Tick Structure Strategy",
+  "symbol": "EGX:EAST",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:38:51.675Z",
+  "note": "Named \"100-Tick\"; run on 1D as the closest available chart — flagged, not hidden.",
+  "resolution_landed": "1D",
+  "quote_last": 36.4,
+  "source_digest": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d",
+    "entity_id": "cdwxrK",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787495951003.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787495952709.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_conservative_EAST.png",
+  "trades": [
+    {
+      "entry_time": 996390000000,
+      "exit_time": 996476400000,
+      "profit": 238.09,
+      "profit_pct": 0.023809524,
+      "side": "Long"
+    },
+    {
+      "entry_time": 996735600000,
+      "exit_time": 996735600000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1012118400000,
+      "exit_time": 1012118400000,
+      "profit": -303.75,
+      "profit_pct": -0.030303031,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1021964400000,
+      "exit_time": 1021964400000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1028012400000,
+      "exit_time": 1028012400000,
+      "profit": -293.92,
+      "profit_pct": -0.029411765,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1088060400000,
+      "exit_time": 1088319600000,
+      "profit": -146.53,
+      "profit_pct": -0.014705882,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1109145600000,
+      "exit_time": 1109577600000,
+      "profit": 133.54,
+      "profit_pct": 0.013422819,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1111305600000,
+      "exit_time": 1111305600000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1120633200000,
+      "exit_time": 1120633200000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1122447600000,
+      "exit_time": 1122793200000,
+      "profit": -181.14,
+      "profit_pct": -0.018181818,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1124262000000,
+      "exit_time": 1124348400000,
+      "profit": 66.74,
+      "profit_pct": 0.0067114094,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1140076800000,
+      "exit_time": 1140076800000,
+      "profit": -71.84,
+      "profit_pct": -0.0072202166,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1148454000000,
+      "exit_time": 1148454000000,
+      "profit": -68.8,
+      "profit_pct": -0.0069204154,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1151564400000,
+      "exit_time": 1152082800000,
+      "profit": -40.06,
+      "profit_pct": -0.004048583,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1157439600000,
+      "exit_time": 1157526000000,
+      "profit": -366.3,
+      "profit_pct": -0.036885247,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1201593600000,
+      "exit_time": 1201593600000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1284361200000,
+      "exit_time": 1284361200000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1301212800000,
+      "exit_time": 1301212800000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1321171200000,
+      "exit_time": 1321257600000,
+      "profit": -63.84,
+      "profit_pct": -0.006451613,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1321948800000,
+      "exit_time": 1321948800000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1333958400000,
+      "exit_time": 1333958400000,
+      "profit": 117.74,
+      "profit_pct": 0.011904762,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1340265600000,
+      "exit_time": 1340265600000,
+      "profit": -73.89,
+      "profit_pct": -0.0074626864,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1344499200000,
+      "exit_time": 1344499200000,
+      "profit": 149.9,
+      "profit_pct": 0.015151516,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1346313600000,
+      "exit_time": 1346313600000,
+      "profit": -76.81,
+      "profit_pct": -0.007751938,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1360483200000,
+      "exit_time": 1360828800000,
+      "profit": 120.74,
+      "profit_pct": 0.0121951215,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1363852800000,
+      "exit_time": 1363852800000,
+      "profit": 124.7,
+      "profit_pct": 0.012578616,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1413446400000,
+      "exit_time": 1413446400000,
+      "profit": -67.98,
+      "profit_pct": -0.006849315,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1427788800000,
+      "exit_time": 1427788800000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1434268800000,
+      "exit_time": 1434268800000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1434441600000,
+      "exit_time": 1434614400000,
+      "profit": 228.64,
+      "profit_pct": 0.023054754,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1436947200000,
+      "exit_time": 1437033600000,
+      "profit": 271.08,
+      "profit_pct": 0.027272727,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1447056000000,
+      "exit_time": 1447142400000,
+      "profit": -59.52,
+      "profit_pct": -0.005988024,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1447228800000,
+      "exit_time": 1447228800000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1450944000000,
+      "exit_time": 1450944000000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1453276800000,
+      "exit_time": 1453363200000,
+      "profit": -80.34,
+      "profit_pct": -0.008064516,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1571817600000,
+      "exit_time": 1571817600000,
+      "profit": 105.12,
+      "profit_pct": 0.01056338,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1582704000000,
+      "exit_time": 1582704000000,
+      "profit": -63.56,
+      "profit_pct": -0.006381039,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1616313600000,
+      "exit_time": 1616313600000,
+      "profit": 99,
+      "profit_pct": 0.009944751,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1643529600000,
+      "exit_time": 1643529600000,
+      "profit": 77.34,
+      "profit_pct": 0.0077619664,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1649750400000,
+      "exit_time": 1649750400000,
+      "profit": 80.99,
+      "profit_pct": 0.0081206495,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1649836800000,
+      "exit_time": 1649836800000,
+      "profit": 83.16,
+      "profit_pct": 0.008333334,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1651996800000,
+      "exit_time": 1651996800000,
+      "profit": 74.82,
+      "profit_pct": 0.007490637,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1654070400000,
+      "exit_time": 1654070400000,
+      "profit": 76.14,
+      "profit_pct": 0.007614213,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1662019200000,
+      "exit_time": 1662019200000,
+      "profit": 82.8,
+      "profit_pct": 0.008275862,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1663833600000,
+      "exit_time": 1663833600000,
+      "profit": 82.5,
+      "profit_pct": 0.008241759,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1669881600000,
+      "exit_time": 1669881600000,
+      "profit": 73.08,
+      "profit_pct": 0.0072916667,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1678867200000,
+      "exit_time": 1678867200000,
+      "profit": 97.3,
+      "profit_pct": 0.009699321,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1684220400000,
+      "exit_time": 1684220400000,
+      "profit": -50.64,
+      "profit_pct": -0.0050462573,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1696748400000,
+      "exit_time": 1696748400000,
+      "profit": 80.22,
+      "profit_pct": 0.007995431,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1701244800000,
+      "exit_time": 1701244800000,
+      "profit": -52.8,
+      "profit_pct": -0.0052603893,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1706774400000,
+      "exit_time": 1706774400000,
+      "profit": 77.14,
+      "profit_pct": 0.007686084,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1710403200000,
+      "exit_time": 1710403200000,
+      "profit": 77.86,
+      "profit_pct": 0.007751938,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1719126000000,
+      "exit_time": 1719126000000,
+      "profit": 76.57,
+      "profit_pct": 0.0076246336,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1736323200000,
+      "exit_time": 1736323200000,
+      "profit": 86.16,
+      "profit_pct": 0.00856531,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1766390400000,
+      "exit_time": 1766390400000,
+      "profit": 93.24,
+      "profit_pct": 0.009290323,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1784098800000,
+      "exit_time": 1784098800000,
+      "profit": -55.4,
+      "profit_pct": -0.005503577,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Conservative 100-Tick Structure Strategy",
+  "report_entity_id": "cdwxrK",
+  "metrics": {
+    "net_profit": 757.4899999999984,
+    "net_profit_percent": 0.007574899999999984,
+    "gross_profit": 2874.6100000000015,
+    "gross_loss": 2117.120000000003,
+    "profit_factor": 1.3577926617291403,
+    "max_drawdown": 1335.8999999999942,
+    "max_drawdown_percent": 0.013327269104987877,
+    "total_trades": 44,
+    "winning_trades": 26,
+    "losing_trades": 18,
+    "percent_profitable": 0.4642857142857143,
+    "avg_trade": 13.52660714,
+    "largest_win": 271.0799999999996,
+    "largest_loss": 366.29999999999944,
+    "commission_paid": 0,
+    "sharpe_ratio": -3.144749959767974,
+    "sortino_ratio": -0.954069215602425,
+    "buy_hold_return": 8566658.1,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 56,
+    "first_entry_time": 996390000000,
+    "last_exit_time": 1784098800000,
+    "last_trade_open": false,
+    "first_entry_iso": "2001-07-29T07:00:00.000Z",
+    "last_exit_iso": "2026-07-15T07:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:39:17.091Z"
+}

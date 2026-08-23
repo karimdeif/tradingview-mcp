@@ -1,0 +1,106 @@
+{
+  "strategy": "golden-cross",
+  "title": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "symbol": "EGX:CLHO",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:26:27.482Z",
+  "resolution_landed": "1D",
+  "quote_last": 17.71,
+  "source_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+    "entity_id": "zjugoh",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787495206657.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787495208301.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_golden-cross_CLHO.png",
+  "trades": [
+    {
+      "entry_time": 1544515200000,
+      "exit_time": 1544688000000,
+      "profit": 792.9412,
+      "profit_pct": 0.07923472,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1614153600000,
+      "exit_time": 1614499200000,
+      "profit": 865.5634,
+      "profit_pct": 0.08582617,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1637222400000,
+      "exit_time": 1637481600000,
+      "profit": -691.656,
+      "profit_pct": -0.06798161,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1672819200000,
+      "exit_time": 1673337600000,
+      "profit": -612.318,
+      "profit_pct": -0.060592815,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1702540800000,
+      "exit_time": 1703577600000,
+      "profit": -689.53467,
+      "profit_pct": -0.06866218,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1752476400000,
+      "exit_time": 1752649200000,
+      "profit": -32.12638,
+      "profit_pct": -0.0032225442,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1755759600000,
+      "exit_time": 1756105200000,
+      "profit": 699.36,
+      "profit_pct": 0.07014672,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "report_entity_id": "zjugoh",
+  "metrics": {
+    "net_profit": 332.22963000000254,
+    "net_profit_percent": 0.0033222963000000254,
+    "gross_profit": 2357.864650000002,
+    "gross_loss": 2025.6350199999993,
+    "profit_factor": 1.1640125820889504,
+    "max_drawdown": 2275.5950199999934,
+    "max_drawdown_percent": 0.022384698927400495,
+    "total_trades": 7,
+    "winning_trades": 3,
+    "losing_trades": 4,
+    "percent_profitable": 0.42857142857142855,
+    "avg_trade": 47.46137571,
+    "largest_win": 865.5634000000008,
+    "largest_loss": 691.6559999999987,
+    "commission_paid": 141.04037,
+    "sharpe_ratio": -0.8219312552226701,
+    "sortino_ratio": -0.7183023307104579,
+    "buy_hold_return": 311849.55,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 7,
+    "first_entry_time": 1544515200000,
+    "last_exit_time": 1756105200000,
+    "last_trade_open": false,
+    "first_entry_iso": "2018-12-11T08:00:00.000Z",
+    "last_exit_iso": "2025-08-25T07:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:26:52.655Z"
+}

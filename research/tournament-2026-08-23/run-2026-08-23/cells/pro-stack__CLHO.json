@@ -1,0 +1,92 @@
+{
+  "strategy": "pro-stack",
+  "title": "EGX Pro Stack — No Look-Ahead (EMA20/50/200 + RSI + MACD + rVol + VWAP + ATR/ST)",
+  "symbol": "EGX:CLHO",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:35:00.044Z",
+  "resolution_landed": "1D",
+  "quote_last": 17.71,
+  "source_digest": "e13fb9862bdce1079b68b4e53c23f3e8c79490fa",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "e13fb9862bdce1079b68b4e53c23f3e8c79490fa",
+    "entity_id": "T2ttXi",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787495719323.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787495721131.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_pro-stack_CLHO.png",
+  "trades": [
+    {
+      "entry_time": 1489996800000,
+      "exit_time": 1491811200000,
+      "profit": 347.6059,
+      "profit_pct": 0.034663297,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1504684800000,
+      "exit_time": 1504771200000,
+      "profit": -588.646,
+      "profit_pct": -0.058585744,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1648972800000,
+      "exit_time": 1650355200000,
+      "profit": 637.74164,
+      "profit_pct": 0.06387013,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1748502000000,
+      "exit_time": 1749970800000,
+      "profit": -440.22357,
+      "profit_pct": -0.04383779,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1777791600000,
+      "exit_time": 1779001200000,
+      "profit": 848.62665,
+      "profit_pct": 0.08493128,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "EGX Pro Stack — No Look-Ahead (EMA20/50/200 + RSI + MACD + rVol + VWAP + ATR/ST)",
+  "report_entity_id": "T2ttXi",
+  "metrics": {
+    "net_profit": 805.104660000002,
+    "net_profit_percent": 0.00805104660000002,
+    "gross_profit": 1833.9742,
+    "gross_loss": 1028.869539999998,
+    "profit_factor": 1.7825138452441731,
+    "max_drawdown": 798.120980000007,
+    "max_drawdown_percent": 0.007953562747425173,
+    "total_trades": 5,
+    "winning_trades": 3,
+    "losing_trades": 2,
+    "percent_profitable": 0.6,
+    "avg_trade": 161.020932,
+    "largest_win": 848.6266600000006,
+    "largest_loss": 588.6459799999993,
+    "commission_paid": 100.99534,
+    "sharpe_ratio": -1.2520006874616436,
+    "sortino_ratio": -0.8514393111058224,
+    "buy_hold_return": 622852.16,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 5,
+    "first_entry_time": 1489996800000,
+    "last_exit_time": 1779001200000,
+    "last_trade_open": false,
+    "first_entry_iso": "2017-03-20T08:00:00.000Z",
+    "last_exit_iso": "2026-05-17T07:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:35:25.515Z"
+}

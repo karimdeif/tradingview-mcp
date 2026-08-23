@@ -1,0 +1,263 @@
+{
+  "symbol": "TMGH",
+  "steps": 639,
+  "window": [
+    "2024-01-02",
+    "2026-08-20"
+  ],
+  "tester_trades_in_scope": 19,
+  "dust_trades": 0,
+  "walker_trades": 19,
+  "matched": 18,
+  "matched_frac": 0.9473684210526315,
+  "per_trade_return_ok": false,
+  "max_ret_diff": 0.022432056640605703,
+  "unmatched_walker_trades": 1,
+  "pass": false,
+  "matches": [
+    {
+      "tester_entry": 1717570800000,
+      "walker_entry": 1717570800000,
+      "ret_diff": 5.253439159386142e-10,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1719471600000,
+      "walker_entry": 1719471600000,
+      "ret_diff": 0.0040227557651724664,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1720076400000,
+      "walker_entry": 1720076400000,
+      "ret_diff": 2.7341563041405337e-11,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1725260400000,
+      "walker_entry": 1725260400000,
+      "ret_diff": 7.45254850886834e-10,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1727074800000,
+      "walker_entry": 1727074800000,
+      "ret_diff": 7.919791211730143e-10,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1728802800000,
+      "walker_entry": 1728802800000,
+      "ret_diff": 9.7530222613329e-11,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1729148400000,
+      "walker_entry": 1729148400000,
+      "ret_diff": 6.50414158295809e-11,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1729666800000,
+      "walker_entry": 1729666800000,
+      "ret_diff": 1.341239758145818e-10,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1732694400000,
+      "walker_entry": 1732694400000,
+      "ret_diff": 5.1948167989479543e-11,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1746601200000,
+      "walker_entry": 1746601200000,
+      "ret_diff": 1.8427954127930857e-10,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1746946800000,
+      "walker_entry": 1746946800000,
+      "ret_diff": 2.5204644205079063e-9,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1748502000000,
+      "walker_entry": 1748502000000,
+      "ret_diff": 2.564708168062424e-10,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1750748400000,
+      "walker_entry": 1750748400000,
+      "ret_diff": 8.940350955215226e-12,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1754290800000,
+      "walker_entry": 1754377200000,
+      "ret_diff": 0.022432056640605703,
+      "ret_ok": false
+    },
+    {
+      "tester_entry": 1758006000000,
+      "walker_entry": 1758006000000,
+      "ret_diff": 4.4634252543973574e-10,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1758610800000,
+      "walker_entry": 1758610800000,
+      "ret_diff": 4.772151063203722e-9,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1773302400000,
+      "walker_entry": 1773302400000,
+      "ret_diff": 3.1922766097203237e-9,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1774425600000,
+      "walker_entry": 1774425600000,
+      "ret_diff": 3.9277283508942773e-10,
+      "ret_ok": true
+    }
+  ],
+  "walker_trade_list": [
+    {
+      "entry_time": 1717570800000,
+      "entry_fill": 53.5,
+      "exit_time": 1717657200000,
+      "exit_fill": 53,
+      "ret": -0.011325123474656085
+    },
+    {
+      "entry_time": 1719471600000,
+      "entry_fill": 57.060001,
+      "exit_time": 1719903600000,
+      "exit_fill": 57.119999,
+      "ret": -0.0009486132348275333
+    },
+    {
+      "entry_time": 1720076400000,
+      "entry_fill": 60.209999,
+      "exit_time": 1721113200000,
+      "exit_fill": 58.799999,
+      "ret": -0.025369249972658436
+    },
+    {
+      "entry_time": 1725260400000,
+      "entry_fill": 60,
+      "exit_time": 1726642800000,
+      "exit_fill": 57.7,
+      "ret": -0.04025474525474515
+    },
+    {
+      "entry_time": 1727074800000,
+      "entry_fill": 60.23,
+      "exit_time": 1728543600000,
+      "exit_fill": 59.6,
+      "ret": -0.012437006791979122
+    },
+    {
+      "entry_time": 1728802800000,
+      "entry_fill": 58.17,
+      "exit_time": 1728975600000,
+      "exit_fill": 57.89,
+      "ret": -0.006801862397530223
+    },
+    {
+      "entry_time": 1729148400000,
+      "entry_fill": 58.53,
+      "exit_time": 1729580400000,
+      "exit_fill": 58.99,
+      "ret": 0.005845512765041416
+    },
+    {
+      "entry_time": 1729666800000,
+      "entry_fill": 58.49,
+      "exit_time": 1732521600000,
+      "exit_fill": 57.6,
+      "ret": -0.017183876134123977
+    },
+    {
+      "entry_time": 1732694400000,
+      "entry_fill": 58.8,
+      "exit_time": 1732780800000,
+      "exit_fill": 57.33,
+      "ret": -0.026948051948051832
+    },
+    {
+      "entry_time": 1746601200000,
+      "entry_fill": 52.6,
+      "exit_time": 1746687600000,
+      "exit_fill": 53.5,
+      "ret": 0.015078077815720459
+    },
+    {
+      "entry_time": 1746946800000,
+      "entry_fill": 53.6,
+      "exit_time": 1747810800000,
+      "exit_fill": 51.6,
+      "ret": -0.03923688252046442
+    },
+    {
+      "entry_time": 1748502000000,
+      "entry_fill": 55,
+      "exit_time": 1750662000000,
+      "exit_fill": 53,
+      "ret": -0.03828898374352918
+    },
+    {
+      "entry_time": 1750748400000,
+      "entry_fill": 53,
+      "exit_time": 1753858800000,
+      "exit_fill": 53.13,
+      "ret": 0.00044992743105964905
+    },
+    {
+      "entry_time": 1754377200000,
+      "entry_fill": 54.94,
+      "exit_time": 1757314800000,
+      "exit_fill": 52.61,
+      "ret": -0.044323168640605703
+    },
+    {
+      "entry_time": 1758006000000,
+      "entry_fill": 54.18,
+      "exit_time": 1758178800000,
+      "exit_fill": 53.63,
+      "ret": -0.012129066946342526
+    },
+    {
+      "entry_time": 1758610800000,
+      "entry_fill": 54.6,
+      "exit_time": 1773216000000,
+      "exit_fill": 79.8,
+      "ret": 0.45861830477215104
+    },
+    {
+      "entry_time": 1773302400000,
+      "entry_fill": 79.95,
+      "exit_time": 1773734400000,
+      "exit_fill": 73.81,
+      "ret": -0.07864255819227661
+    },
+    {
+      "entry_time": 1774425600000,
+      "entry_fill": 78.5,
+      "exit_time": 1774857600000,
+      "exit_fill": 76.41,
+      "ret": -0.028569010607227163
+    },
+    {
+      "entry_time": 1776153600000,
+      "entry_fill": 84.99,
+      "exit_time": null,
+      "exit_fill": null,
+      "ret": null,
+      "open_at_end": true
+    }
+  ]
+}

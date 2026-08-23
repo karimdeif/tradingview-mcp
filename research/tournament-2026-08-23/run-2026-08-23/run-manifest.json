@@ -1,0 +1,180 @@
+{
+  "manifest_hash": "4bb203a216205eb0f654517f1838fd4388a300ed",
+  "harness_sha1": "d8b390194bede9978c26a1716554a7fb4185a504",
+  "reference_closes_sha1": "51b95816d792c25d79474705f6f111af5b1d828b",
+  "tv_build": "TVDesktop/2.14.0",
+  "strategies": [
+    {
+      "key": "golden-cross",
+      "timeframe": "1D",
+      "symbols": [
+        "COMI",
+        "ABUK",
+        "EAST",
+        "HRHO",
+        "TMGH",
+        "ETEL",
+        "FWRY",
+        "EGAL",
+        "ORAS",
+        "ISPH",
+        "SWDY",
+        "MFPC",
+        "ALCN",
+        "CLHO",
+        "SKPC",
+        "AMOC",
+        "EFID",
+        "JUFO",
+        "ORWE",
+        "ARCC"
+      ],
+      "patch": null,
+      "source_sha1": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc"
+    },
+    {
+      "key": "pro-stack",
+      "timeframe": "1D",
+      "symbols": [
+        "COMI",
+        "ABUK",
+        "EAST",
+        "HRHO",
+        "TMGH",
+        "ETEL",
+        "FWRY",
+        "EGAL",
+        "ORAS",
+        "ISPH",
+        "SWDY",
+        "MFPC",
+        "ALCN",
+        "CLHO",
+        "SKPC",
+        "AMOC",
+        "EFID",
+        "JUFO",
+        "ORWE",
+        "ARCC"
+      ],
+      "patch": null,
+      "source_sha1": "e13fb9862bdce1079b68b4e53c23f3e8c79490fa"
+    },
+    {
+      "key": "conservative",
+      "timeframe": "1D",
+      "symbols": [
+        "COMI",
+        "ABUK",
+        "EAST",
+        "HRHO",
+        "TMGH",
+        "ETEL",
+        "FWRY",
+        "EGAL",
+        "ORAS",
+        "ISPH",
+        "SWDY",
+        "MFPC",
+        "ALCN",
+        "CLHO",
+        "SKPC",
+        "AMOC",
+        "EFID",
+        "JUFO",
+        "ORWE",
+        "ARCC"
+      ],
+      "patch": null,
+      "source_sha1": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d"
+    },
+    {
+      "key": "abuk-1m",
+      "timeframe": "1",
+      "symbols": [
+        "ABUK"
+      ],
+      "patch": null,
+      "source_sha1": "05b3470a4d2cd549508d6f61faba242b3d135b8c"
+    },
+    {
+      "key": "wkol-3m",
+      "timeframe": "3",
+      "symbols": [
+        "COMI",
+        "TMGH",
+        "ORAS",
+        "FWRY",
+        "ABUK",
+        "ISPH",
+        "HRHO",
+        "ETEL"
+      ],
+      "patch": {
+        "from": "input.bool(true, \"Signals only (no orders)\")",
+        "to": "input.bool(false, \"Signals only (no orders)\")"
+      },
+      "source_sha1": "74f33e1067c97a2ccf29caf5b87eef58f573c276"
+    },
+    {
+      "key": "orhd-5m",
+      "timeframe": "5",
+      "symbols": [
+        "COMI",
+        "TMGH",
+        "ORAS",
+        "FWRY",
+        "ABUK",
+        "ISPH",
+        "HRHO",
+        "ETEL"
+      ],
+      "patch": null,
+      "source_sha1": "be9f3b8c0b5b0dc747c5b1247a74ebd7ddeb46f4"
+    },
+    {
+      "key": "orhd-5m-copy",
+      "timeframe": "5",
+      "symbols": [
+        "COMI",
+        "TMGH",
+        "ORAS",
+        "FWRY",
+        "ABUK",
+        "ISPH",
+        "HRHO",
+        "ETEL"
+      ],
+      "patch": null,
+      "source_sha1": "9ac10cfe919d1c7f02463a6c6af807bff3b306b2"
+    },
+    {
+      "key": "baseline-sma100",
+      "timeframe": "1D",
+      "symbols": [
+        "COMI",
+        "ABUK",
+        "EAST",
+        "HRHO",
+        "TMGH",
+        "ETEL",
+        "FWRY",
+        "EGAL",
+        "ORAS",
+        "ISPH",
+        "SWDY",
+        "MFPC",
+        "ALCN",
+        "CLHO",
+        "SKPC",
+        "AMOC",
+        "EFID",
+        "JUFO",
+        "ORWE",
+        "ARCC"
+      ],
+      "patch": null,
+      "source_sha1": "a68cc572b08dcaa13cfdeb0cb5874b648fd3a829"
+    }
+  ]
+}

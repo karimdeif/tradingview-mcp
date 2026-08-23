@@ -1,0 +1,135 @@
+{
+  "strategy": "conservative",
+  "title": "Conservative 100-Tick Structure Strategy",
+  "symbol": "EGX:SKPC",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:43:57.932Z",
+  "note": "Named \"100-Tick\"; run on 1D as the closest available chart — flagged, not hidden.",
+  "resolution_landed": "1D",
+  "quote_last": 17.4,
+  "source_digest": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d",
+    "entity_id": "AGrBRq",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787496257312.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787496259232.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_conservative_SKPC.png",
+  "trades": [
+    {
+      "entry_time": 1388044800000,
+      "exit_time": 1388304000000,
+      "profit": -62.95,
+      "profit_pct": -0.0062972293,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1584518400000,
+      "exit_time": 1584518400000,
+      "profit": 120.87,
+      "profit_pct": 0.012096774,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1657008000000,
+      "exit_time": 1657008000000,
+      "profit": 78.78,
+      "profit_pct": 0.007853403,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1709020800000,
+      "exit_time": 1709020800000,
+      "profit": -53.9,
+      "profit_pct": -0.005384239,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1709107200000,
+      "exit_time": 1709107200000,
+      "profit": -64.87,
+      "profit_pct": -0.0064902646,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1720594800000,
+      "exit_time": 1720594800000,
+      "profit": -67.44,
+      "profit_pct": -0.0067529543,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1734508800000,
+      "exit_time": 1734508800000,
+      "profit": 43.96,
+      "profit_pct": 0.0043777362,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1734595200000,
+      "exit_time": 1734595200000,
+      "profit": -6.4,
+      "profit_pct": -0.0006443299,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1735027200000,
+      "exit_time": 1735027200000,
+      "profit": -118.08,
+      "profit_pct": -0.011764706,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1764057600000,
+      "exit_time": 1764144000000,
+      "profit": -65.6,
+      "profit_pct": -0.0065703024,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1768723200000,
+      "exit_time": 1768723200000,
+      "profit": 98.14,
+      "profit_pct": 0.0098452885,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Conservative 100-Tick Structure Strategy",
+  "report_entity_id": "AGrBRq",
+  "metrics": {
+    "net_profit": -97.48999999999836,
+    "net_profit_percent": -0.0009748999999999836,
+    "gross_profit": 341.7499999999987,
+    "gross_loss": 439.23999999999705,
+    "profit_factor": 0.7780484473180971,
+    "max_drawdown": 332.33000000000175,
+    "max_drawdown_percent": 0.0033187632506363977,
+    "total_trades": 11,
+    "winning_trades": 4,
+    "losing_trades": 7,
+    "percent_profitable": 0.36363636363636365,
+    "avg_trade": -8.862727273,
+    "largest_win": 120.870000000001,
+    "largest_loss": 118.07999999999981,
+    "commission_paid": 0,
+    "sharpe_ratio": -8.003904235786461,
+    "sortino_ratio": -0.9922853215140633,
+    "buy_hold_return": 119139.24,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 11,
+    "first_entry_time": 1388044800000,
+    "last_exit_time": 1768723200000,
+    "last_trade_open": false,
+    "first_entry_iso": "2013-12-26T08:00:00.000Z",
+    "last_exit_iso": "2026-01-18T08:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:44:23.599Z"
+}

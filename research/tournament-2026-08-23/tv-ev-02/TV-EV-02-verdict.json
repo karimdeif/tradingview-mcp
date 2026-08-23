@@ -1,0 +1,146 @@
+{
+  "verdict": "STUDY FAIL",
+  "passes": 2,
+  "results": [
+    {
+      "symbol": "COMI",
+      "steps": 639,
+      "window": [
+        "2024-01-02",
+        "2026-08-20"
+      ],
+      "tester_trades_in_scope": 17,
+      "dust_trades": 0,
+      "walker_trades": 17,
+      "matched": 16,
+      "matched_frac": 0.9411764705882353,
+      "per_trade_return_ok": true,
+      "max_ret_diff": 0.00011907417758048877,
+      "unmatched_walker_trades": 1,
+      "pass": true
+    },
+    {
+      "symbol": "TMGH",
+      "steps": 639,
+      "window": [
+        "2024-01-02",
+        "2026-08-20"
+      ],
+      "tester_trades_in_scope": 19,
+      "dust_trades": 0,
+      "walker_trades": 19,
+      "matched": 18,
+      "matched_frac": 0.9473684210526315,
+      "per_trade_return_ok": false,
+      "max_ret_diff": 0.022432056640605703,
+      "unmatched_walker_trades": 1,
+      "pass": false
+    },
+    {
+      "symbol": "ORAS",
+      "steps": 639,
+      "window": [
+        "2024-01-02",
+        "2026-08-20"
+      ],
+      "tester_trades_in_scope": 10,
+      "dust_trades": 0,
+      "walker_trades": 10,
+      "matched": 9,
+      "matched_frac": 0.9,
+      "per_trade_return_ok": true,
+      "max_ret_diff": 3.934265709742979e-8,
+      "unmatched_walker_trades": 1,
+      "pass": true
+    },
+    {
+      "symbol": "FWRY",
+      "steps": 639,
+      "window": [
+        "2024-01-02",
+        "2026-08-20"
+      ],
+      "tester_trades_in_scope": 18,
+      "dust_trades": 0,
+      "walker_trades": 16,
+      "matched": 15,
+      "matched_frac": 0.8333333333333334,
+      "per_trade_return_ok": false,
+      "max_ret_diff": 0.10786005291739098,
+      "unmatched_walker_trades": 1,
+      "pass": false,
+      "fwry_feb2025_timeline": {
+        "tester": [
+          {
+            "entry_time": 1738828800000,
+            "exit_time": 1739088000000,
+            "profit": -2393.6116,
+            "profit_pct": -0.0055879373,
+            "side": "Gate"
+          },
+          {
+            "entry_time": 1739260800000,
+            "exit_time": 1739433600000,
+            "profit": -22106.574,
+            "profit_pct": -0.051898103,
+            "side": "Gate"
+          },
+          {
+            "entry_time": 1741075200000,
+            "exit_time": 1741507200000,
+            "profit": -12187.113,
+            "profit_pct": -0.030176882,
+            "side": "Gate"
+          },
+          {
+            "entry_time": 1741680000000,
+            "exit_time": 1781074800000,
+            "profit": 476915.56,
+            "profit_pct": 1.2176505,
+            "side": "Gate"
+          }
+        ],
+        "walker": [
+          {
+            "entry_time": 1739260800000,
+            "entry_fill": 8.4,
+            "exit_time": 1739433600000,
+            "exit_fill": 7.98,
+            "ret": -0.051898101898101845
+          },
+          {
+            "entry_time": 1741075200000,
+            "entry_fill": 8.5,
+            "exit_time": 1741507200000,
+            "exit_fill": 8.26,
+            "ret": -0.03017688194158774
+          },
+          {
+            "entry_time": 1741680000000,
+            "entry_fill": 8.42,
+            "exit_time": 1781420400000,
+            "exit_fill": 17.8,
+            "ret": 1.109790447082609
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "ETEL",
+      "steps": 639,
+      "window": [
+        "2024-01-02",
+        "2026-08-20"
+      ],
+      "tester_trades_in_scope": 19,
+      "dust_trades": 0,
+      "walker_trades": 19,
+      "matched": 13,
+      "matched_frac": 0.6842105263157895,
+      "per_trade_return_ok": false,
+      "max_ret_diff": 0.03282627669029719,
+      "unmatched_walker_trades": 6,
+      "pass": false
+    }
+  ]
+}

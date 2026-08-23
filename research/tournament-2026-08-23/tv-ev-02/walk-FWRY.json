@@ -1,0 +1,279 @@
+{
+  "symbol": "FWRY",
+  "steps": 639,
+  "window": [
+    "2024-01-02",
+    "2026-08-20"
+  ],
+  "tester_trades_in_scope": 18,
+  "dust_trades": 0,
+  "walker_trades": 16,
+  "matched": 15,
+  "matched_frac": 0.8333333333333334,
+  "per_trade_return_ok": false,
+  "max_ret_diff": 0.10786005291739098,
+  "unmatched_walker_trades": 1,
+  "pass": false,
+  "matches": [
+    {
+      "tester_entry": 1707379200000,
+      "walker_entry": 1707379200000,
+      "ret_diff": 4.075002557613061e-10,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1707984000000,
+      "walker_entry": 1707984000000,
+      "ret_diff": 1.4234871545393268e-9,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1719990000000,
+      "walker_entry": 1719990000000,
+      "ret_diff": 2.998309517332487e-10,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1720508400000,
+      "walker_entry": 1720508400000,
+      "ret_diff": 8.89066840981112e-11,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1721286000000,
+      "walker_entry": 1721286000000,
+      "ret_diff": 5.38175455588874e-10,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1722409200000,
+      "walker_entry": 1722409200000,
+      "ret_diff": 2.41174163972957e-9,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1724050800000,
+      "walker_entry": 1724050800000,
+      "ret_diff": 0.01334623433928625,
+      "ret_ok": false
+    },
+    {
+      "tester_entry": 1739260800000,
+      "walker_entry": 1739260800000,
+      "ret_diff": 1.1018981560528829e-9,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1741075200000,
+      "walker_entry": 1741075200000,
+      "ret_diff": 5.841225766967106e-11,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1741680000000,
+      "walker_entry": 1741680000000,
+      "ret_diff": 0.10786005291739098,
+      "ret_ok": false
+    },
+    {
+      "tester_entry": 1781679600000,
+      "walker_entry": 1781679600000,
+      "ret_diff": 7.386624541194653e-10,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1783494000000,
+      "walker_entry": 1783494000000,
+      "ret_diff": 1.4185814953271425e-9,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1784530800000,
+      "walker_entry": 1784530800000,
+      "ret_diff": 4.818775586890034e-11,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1784703600000,
+      "walker_entry": 1784703600000,
+      "ret_diff": 7.77297982923475e-11,
+      "ret_ok": true
+    },
+    {
+      "tester_entry": 1785826800000,
+      "walker_entry": 1785826800000,
+      "ret_diff": 2.550301827358714e-10,
+      "ret_ok": true
+    }
+  ],
+  "walker_trade_list": [
+    {
+      "entry_time": 1707379200000,
+      "entry_fill": 5.42,
+      "exit_time": 1707897600000,
+      "exit_fill": 5.68,
+      "ret": 0.045876632592499744
+    },
+    {
+      "entry_time": 1707984000000,
+      "entry_fill": 5.71,
+      "exit_time": 1714374000000,
+      "exit_fill": 5.95,
+      "ret": 0.03994954257651284
+    },
+    {
+      "entry_time": 1719990000000,
+      "entry_fill": 6.58,
+      "exit_time": 1720335600000,
+      "exit_fill": 6.45,
+      "ret": -0.021715366700169048
+    },
+    {
+      "entry_time": 1720508400000,
+      "entry_fill": 6.67,
+      "exit_time": 1721113200000,
+      "exit_fill": 6.51,
+      "ret": -0.025938079911093315
+    },
+    {
+      "entry_time": 1721286000000,
+      "entry_fill": 6.77,
+      "exit_time": 1722322800000,
+      "exit_fill": 6.73,
+      "ret": -0.007894616461824544
+    },
+    {
+      "entry_time": 1722409200000,
+      "entry_fill": 6.77,
+      "exit_time": 1722927600000,
+      "exit_fill": 6.26,
+      "ret": -0.07717983641174164
+    },
+    {
+      "entry_time": 1724050800000,
+      "entry_fill": 6.73,
+      "exit_time": 1739088000000,
+      "exit_fill": 8.31,
+      "ret": 0.23230261566071375
+    },
+    {
+      "entry_time": 1739260800000,
+      "entry_fill": 8.4,
+      "exit_time": 1739433600000,
+      "exit_fill": 7.98,
+      "ret": -0.051898101898101845
+    },
+    {
+      "entry_time": 1741075200000,
+      "entry_fill": 8.5,
+      "exit_time": 1741507200000,
+      "exit_fill": 8.26,
+      "ret": -0.03017688194158774
+    },
+    {
+      "entry_time": 1741680000000,
+      "entry_fill": 8.42,
+      "exit_time": 1781420400000,
+      "exit_fill": 17.8,
+      "ret": 1.109790447082609
+    },
+    {
+      "entry_time": 1781679600000,
+      "entry_fill": 18.89,
+      "exit_time": 1782716400000,
+      "exit_fill": 18.35,
+      "ret": -0.030527439738662454
+    },
+    {
+      "entry_time": 1783494000000,
+      "entry_fill": 19.44,
+      "exit_time": 1784185200000,
+      "exit_fill": 18.63,
+      "ret": -0.04358141858141851
+    },
+    {
+      "entry_time": 1784530800000,
+      "entry_fill": 18.85,
+      "exit_time": 1784617200000,
+      "exit_fill": 19.19,
+      "ret": 0.016003095048187754
+    },
+    {
+      "entry_time": 1784703600000,
+      "entry_fill": 19.32,
+      "exit_time": 1785740400000,
+      "exit_fill": 19.15,
+      "ret": -0.010779593077729799
+    },
+    {
+      "entry_time": 1785826800000,
+      "entry_fill": 18.93,
+      "exit_time": 1786604400000,
+      "exit_fill": 18.88,
+      "ret": -0.004634034744969817
+    },
+    {
+      "entry_time": 1786950000000,
+      "entry_fill": 19.31,
+      "exit_time": null,
+      "exit_fill": null,
+      "ret": null,
+      "open_at_end": true
+    }
+  ],
+  "fwry_feb2025_timeline": {
+    "tester": [
+      {
+        "entry_time": 1738828800000,
+        "exit_time": 1739088000000,
+        "profit": -2393.6116,
+        "profit_pct": -0.0055879373,
+        "side": "Gate"
+      },
+      {
+        "entry_time": 1739260800000,
+        "exit_time": 1739433600000,
+        "profit": -22106.574,
+        "profit_pct": -0.051898103,
+        "side": "Gate"
+      },
+      {
+        "entry_time": 1741075200000,
+        "exit_time": 1741507200000,
+        "profit": -12187.113,
+        "profit_pct": -0.030176882,
+        "side": "Gate"
+      },
+      {
+        "entry_time": 1741680000000,
+        "exit_time": 1781074800000,
+        "profit": 476915.56,
+        "profit_pct": 1.2176505,
+        "side": "Gate"
+      }
+    ],
+    "walker": [
+      {
+        "entry_time": 1739260800000,
+        "entry_fill": 8.4,
+        "exit_time": 1739433600000,
+        "exit_fill": 7.98,
+        "ret": -0.051898101898101845
+      },
+      {
+        "entry_time": 1741075200000,
+        "entry_fill": 8.5,
+        "exit_time": 1741507200000,
+        "exit_fill": 8.26,
+        "ret": -0.03017688194158774
+      },
+      {
+        "entry_time": 1741680000000,
+        "entry_fill": 8.42,
+        "exit_time": 1781420400000,
+        "exit_fill": 17.8,
+        "ret": 1.109790447082609
+      }
+    ]
+  }
+}

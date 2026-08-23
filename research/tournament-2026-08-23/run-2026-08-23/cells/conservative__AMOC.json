@@ -1,0 +1,163 @@
+{
+  "strategy": "conservative",
+  "title": "Conservative 100-Tick Structure Strategy",
+  "symbol": "EGX:AMOC",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:44:23.600Z",
+  "note": "Named \"100-Tick\"; run on 1D as the closest available chart — flagged, not hidden.",
+  "resolution_landed": "1D",
+  "quote_last": 11.13,
+  "source_digest": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d",
+    "entity_id": "AqbsgP",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787496282961.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787496284652.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_conservative_AMOC.png",
+  "trades": [
+    {
+      "entry_time": 1237104000000,
+      "exit_time": 1237104000000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1366272000000,
+      "exit_time": 1366531200000,
+      "profit": 44.04,
+      "profit_pct": 0.0043763677,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1407135600000,
+      "exit_time": 1407222000000,
+      "profit": -127.96,
+      "profit_pct": -0.012727273,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1409036400000,
+      "exit_time": 1409036400000,
+      "profit": -75.4,
+      "profit_pct": -0.00754717,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1428393600000,
+      "exit_time": 1428393600000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1435478400000,
+      "exit_time": 1435478400000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1438675200000,
+      "exit_time": 1438675200000,
+      "profit": 80.84,
+      "profit_pct": 0.008097166,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1708934400000,
+      "exit_time": 1708934400000,
+      "profit": 77.7,
+      "profit_pct": 0.007777778,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1714546800000,
+      "exit_time": 1714546800000,
+      "profit": -72.55,
+      "profit_pct": -0.007256894,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1726470000000,
+      "exit_time": 1726470000000,
+      "profit": 80.15,
+      "profit_pct": 0.008027523,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1739347200000,
+      "exit_time": 1739347200000,
+      "profit": -52.2,
+      "profit_pct": -0.005221932,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1741248000000,
+      "exit_time": 1741248000000,
+      "profit": 103.28,
+      "profit_pct": 0.010335918,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1747292400000,
+      "exit_time": 1747292400000,
+      "profit": -53.36,
+      "profit_pct": -0.0053333333,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1763539200000,
+      "exit_time": 1763971200000,
+      "profit": -72.95,
+      "profit_pct": -0.00729927,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1764057600000,
+      "exit_time": 1764230400000,
+      "profit": -73.35,
+      "profit_pct": -0.007342144,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Conservative 100-Tick Structure Strategy",
+  "report_entity_id": "AqbsgP",
+  "metrics": {
+    "net_profit": -141.76000000000397,
+    "net_profit_percent": -0.0014176000000000397,
+    "gross_profit": 386.0099999999999,
+    "gross_loss": 527.7700000000038,
+    "profit_factor": 0.7313981469200543,
+    "max_drawdown": 203.36000000000058,
+    "max_drawdown_percent": 0.002032704796807492,
+    "total_trades": 12,
+    "winning_trades": 5,
+    "losing_trades": 7,
+    "percent_profitable": 0.3333333333333333,
+    "avg_trade": -9.450666667,
+    "largest_win": 103.28000000000009,
+    "largest_loss": 127.96000000000052,
+    "commission_paid": 0,
+    "sharpe_ratio": -7.3191812251230575,
+    "sortino_ratio": -0.9907951614307332,
+    "buy_hold_return": 373615.34,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 15,
+    "first_entry_time": 1237104000000,
+    "last_exit_time": 1764230400000,
+    "last_trade_open": false,
+    "first_entry_iso": "2009-03-15T08:00:00.000Z",
+    "last_exit_iso": "2025-11-27T08:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:44:48.995Z"
+}

@@ -1,0 +1,99 @@
+{
+  "strategy": "golden-cross",
+  "title": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "symbol": "EGX:ISPH",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:24:46.328Z",
+  "resolution_landed": "1D",
+  "quote_last": 13.22,
+  "source_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+    "entity_id": "613EHx",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787495105538.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787495107213.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_golden-cross_ISPH.png",
+  "trades": [
+    {
+      "entry_time": 1549785600000,
+      "exit_time": 1549958400000,
+      "profit": -542.0702,
+      "profit_pct": -0.05417237,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1643184000000,
+      "exit_time": 1644739200000,
+      "profit": -452.59033,
+      "profit_pct": -0.045524567,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1672300800000,
+      "exit_time": 1673337600000,
+      "profit": -762.7368,
+      "profit_pct": -0.07696529,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1686639600000,
+      "exit_time": 1688886000000,
+      "profit": -789.19775,
+      "profit_pct": -0.08058084,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1725260400000,
+      "exit_time": 1725519600000,
+      "profit": 1049.115,
+      "profit_pct": 0.10757492,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1781420400000,
+      "exit_time": 1782025200000,
+      "profit": 883.4463,
+      "profit_pct": 0.08960183,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "report_entity_id": "613EHx",
+  "metrics": {
+    "net_profit": -614.0338199999983,
+    "net_profit_percent": -0.006140338199999983,
+    "gross_profit": 1932.5612600000009,
+    "gross_loss": 2546.595079999999,
+    "profit_factor": 0.75888046559801,
+    "max_drawdown": 2614.157750000013,
+    "max_drawdown_percent": 0.02614157750000013,
+    "total_trades": 6,
+    "winning_trades": 2,
+    "losing_trades": 4,
+    "percent_profitable": 0.3333333333333333,
+    "avg_trade": -102.33897,
+    "largest_win": 1049.1149900000003,
+    "largest_loss": 789.1977600000007,
+    "commission_paid": 117.91382,
+    "sharpe_ratio": -0.850448314630739,
+    "sortino_ratio": -0.730513132381252,
+    "buy_hold_return": 77207.04000000001,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 6,
+    "first_entry_time": 1549785600000,
+    "last_exit_time": 1782025200000,
+    "last_trade_open": false,
+    "first_entry_iso": "2019-02-10T08:00:00.000Z",
+    "last_exit_iso": "2026-06-21T07:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:25:11.547Z"
+}

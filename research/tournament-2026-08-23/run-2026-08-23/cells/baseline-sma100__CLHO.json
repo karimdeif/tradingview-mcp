@@ -1,0 +1,486 @@
+{
+  "strategy": "baseline-sma100",
+  "title": "SMA100 Per-Symbol Approx (NOT the basket)",
+  "symbol": "EGX:CLHO",
+  "timeframe": "1D",
+  "manifest_hash": "4bb203a216205eb0f654517f1838fd4388a300ed",
+  "started_at": "2026-08-23T15:41:45.945Z",
+  "note": "Per-symbol SMA100 approximation — NOT the basket strategy. The incumbent N=80 basket is gated at index/breadth level; its numbers come from the live clock and the estate engine, not from TV.",
+  "resolution_landed": "1D",
+  "quote_last": 17.71,
+  "source_digest": "70c2f460545f0eef87900c705806d5d0e0e1bef1",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "70c2f460545f0eef87900c705806d5d0e0e1bef1",
+    "entity_id": "ARWDZE",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787499728700.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787499731370.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_baseline-sma100_CLHO.png",
+  "trades": [
+    {
+      "entry_time": 1474185600000,
+      "exit_time": 1509264000000,
+      "profit": 158741.1,
+      "profit_pct": 1.5874126,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1509436800000,
+      "exit_time": 1509609600000,
+      "profit": -6145.809,
+      "profit_pct": -0.023752814,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1509955200000,
+      "exit_time": 1517904000000,
+      "profit": 659.6956,
+      "profit_pct": 0.002611707,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1538985600000,
+      "exit_time": 1539072000000,
+      "profit": -6076.1846,
+      "profit_pct": -0.023992537,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1539849600000,
+      "exit_time": 1540713600000,
+      "profit": -18295.803,
+      "profit_pct": -0.07401876,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1541318400000,
+      "exit_time": 1562572800000,
+      "profit": 128783.125,
+      "profit_pct": 0.56266105,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1565769600000,
+      "exit_time": 1566201600000,
+      "profit": -13041.535,
+      "profit_pct": -0.036463536,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1566288000000,
+      "exit_time": 1567411200000,
+      "profit": -3392.4524,
+      "profit_pct": -0.00984393,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1571212800000,
+      "exit_time": 1571558400000,
+      "profit": 4766.9707,
+      "profit_pct": 0.01397003,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1571644800000,
+      "exit_time": 1571817600000,
+      "profit": -6720.414,
+      "profit_pct": -0.019423435,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1572163200000,
+      "exit_time": 1572854400000,
+      "profit": -3897.4878,
+      "profit_pct": -0.01148772,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1572940800000,
+      "exit_time": 1574236800000,
+      "profit": -2284.4146,
+      "profit_pct": -0.0068115164,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1574323200000,
+      "exit_time": 1574582400000,
+      "profit": -3924.643,
+      "profit_pct": -0.011782335,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1578816000000,
+      "exit_time": 1579075200000,
+      "profit": 1510.7097,
+      "profit_pct": 0.00458947,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1579161600000,
+      "exit_time": 1579507200000,
+      "profit": -11481.072,
+      "profit_pct": -0.034719378,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1591084800000,
+      "exit_time": 1591516800000,
+      "profit": -12255.077,
+      "profit_pct": -0.038393468,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1591689600000,
+      "exit_time": 1591776000000,
+      "profit": -9784.844,
+      "profit_pct": -0.0318783,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1592121600000,
+      "exit_time": 1592208000000,
+      "profit": -4770.715,
+      "profit_pct": -0.016054368,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1592467200000,
+      "exit_time": 1592726400000,
+      "profit": 5334.78,
+      "profit_pct": 0.018245446,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1592812800000,
+      "exit_time": 1595232000000,
+      "profit": -16014.572,
+      "profit_pct": -0.05379052,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1595923200000,
+      "exit_time": 1599552000000,
+      "profit": -14536.369,
+      "profit_pct": -0.051600486,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1600588800000,
+      "exit_time": 1601366400000,
+      "profit": -5813.83,
+      "profit_pct": -0.021760417,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1601452800000,
+      "exit_time": 1602748800000,
+      "profit": -8316.039,
+      "profit_pct": -0.031818777,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1603353600000,
+      "exit_time": 1603699200000,
+      "profit": -7562.495,
+      "profit_pct": -0.029886281,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1605686400000,
+      "exit_time": 1605772800000,
+      "profit": -3472.0613,
+      "profit_pct": -0.014144071,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1609660800000,
+      "exit_time": 1609747200000,
+      "profit": -7079.7573,
+      "profit_pct": -0.029254358,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1610524800000,
+      "exit_time": 1611648000000,
+      "profit": -9866.583,
+      "profit_pct": -0.04199808,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1612166400000,
+      "exit_time": 1616313600000,
+      "profit": -9769.748,
+      "profit_pct": -0.043408874,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1625472000000,
+      "exit_time": 1625558400000,
+      "profit": -4624.811,
+      "profit_pct": -0.021481773,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1627200000000,
+      "exit_time": 1628409600000,
+      "profit": 36.14408,
+      "profit_pct": 0.00017156756,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1628496000000,
+      "exit_time": 1628668800000,
+      "profit": -3212.3296,
+      "profit_pct": -0.015245816,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1629014400000,
+      "exit_time": 1629273600000,
+      "profit": 47.65707,
+      "profit_pct": 0.00022968103,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1629360000000,
+      "exit_time": 1629705600000,
+      "profit": -5100.776,
+      "profit_pct": -0.024577232,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1630396800000,
+      "exit_time": 1632384000000,
+      "profit": -8225.207,
+      "profit_pct": -0.040630337,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1632643200000,
+      "exit_time": 1633852800000,
+      "profit": -13309.601,
+      "profit_pct": -0.06853147,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1635321600000,
+      "exit_time": 1638432000000,
+      "profit": -6560.3633,
+      "profit_pct": -0.036264166,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1639296000000,
+      "exit_time": 1644912000000,
+      "profit": 3393.5137,
+      "profit_pct": 0.019464407,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1646121600000,
+      "exit_time": 1646208000000,
+      "profit": 2651.3167,
+      "profit_pct": 0.014917286,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1646294400000,
+      "exit_time": 1646553600000,
+      "profit": 1567.0587,
+      "profit_pct": 0.008687244,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1648368000000,
+      "exit_time": 1648540800000,
+      "profit": -363.5424,
+      "profit_pct": -0.001998002,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1648627200000,
+      "exit_time": 1655712000000,
+      "profit": -1450.1915,
+      "profit_pct": -0.007986014,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1668067200000,
+      "exit_time": 1678780800000,
+      "profit": 10677.763,
+      "profit_pct": 0.060233068,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1698044400000,
+      "exit_time": 1724569200000,
+      "profit": 94838.42,
+      "profit_pct": 0.497003,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1725260400000,
+      "exit_time": 1725346800000,
+      "profit": -10953.313,
+      "profit_pct": -0.03834405,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1727074800000,
+      "exit_time": 1739692800000,
+      "profit": 65118.258,
+      "profit_pct": 0.23776224,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1740038400000,
+      "exit_time": 1740297600000,
+      "profit": -2764.731,
+      "profit_pct": -0.008135776,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1741161600000,
+      "exit_time": 1741507200000,
+      "profit": -671.8204,
+      "profit_pct": -0.001998002,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1741680000000,
+      "exit_time": 1741852800000,
+      "profit": 559.9369,
+      "profit_pct": 0.0016891975,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1742198400000,
+      "exit_time": 1743667200000,
+      "profit": -11546.566,
+      "profit_pct": -0.034268726,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1747206000000,
+      "exit_time": 1747810800000,
+      "profit": -6605.1855,
+      "profit_pct": -0.020298772,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1748156400000,
+      "exit_time": 1748242800000,
+      "profit": -1831.521,
+      "profit_pct": -0.0057451935,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1748502000000,
+      "exit_time": 1748761200000,
+      "profit": 4437.3506,
+      "profit_pct": 0.013999564,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1748847600000,
+      "exit_time": 1750057200000,
+      "profit": -37233.57,
+      "profit_pct": -0.115847744,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1751180400000,
+      "exit_time": 1752390000000,
+      "profit": 7087.615,
+      "profit_pct": 0.024941929,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1752476400000,
+      "exit_time": 1753599600000,
+      "profit": -7001.68,
+      "profit_pct": -0.024039764,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1753858800000,
+      "exit_time": 1770192000000,
+      "profit": 124667.305,
+      "profit_pct": 0.43858337,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1770537600000,
+      "exit_time": 1770796800000,
+      "profit": -3183.6428,
+      "profit_pct": -0.0078245355,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1771228800000,
+      "exit_time": 1773216000000,
+      "profit": -3302.4797,
+      "profit_pct": -0.008139553,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1773302400000,
+      "exit_time": 1774944000000,
+      "profit": -33301.863,
+      "profit_pct": -0.08275236,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1776326400000,
+      "exit_time": 1776585600000,
+      "profit": -3129.69,
+      "profit_pct": -0.008478534,
+      "side": "Gate"
+    },
+    {
+      "entry_time": 1776758400000,
+      "exit_time": 1787468400000,
+      "profit": 147809.98,
+      "profit_pct": 0.40386143,
+      "side": "Gate"
+    }
+  ],
+  "trades_truncated": false,
+  "bh_vs_raw_ref": "within_band",
+  "outcome": "OK",
+  "strategy_name_read_back": "SMA100 Per-Symbol Approx (NOT the basket)",
+  "report_entity_id": "ARWDZE",
+  "metrics": {
+    "net_profit": 265638.3078300002,
+    "net_profit_percent": 2.656383078300002,
+    "gross_profit": 614878.72401,
+    "gross_loss": 349240.4161799998,
+    "profit_factor": 1.7606173155316858,
+    "max_drawdown": 203465.49874999982,
+    "max_drawdown_percent": 0.5688699199861168,
+    "total_trades": 60,
+    "winning_trades": 18,
+    "losing_trades": 42,
+    "percent_profitable": 0.3,
+    "avg_trade": 4427.305131,
+    "largest_win": 158741.1,
+    "largest_loss": 37233.57164000002,
+    "commission_paid": 33523.33217000001,
+    "sharpe_ratio": 0.12180137608517183,
+    "sortino_ratio": 0.8461559047678973,
+    "buy_hold_return": 1211850.64,
+    "open_pl": 148689.92000000004
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 61,
+    "first_entry_time": 1474185600000,
+    "last_exit_time": 1787468400000,
+    "last_trade_open": false,
+    "first_entry_iso": "2016-09-18T08:00:00.000Z",
+    "last_exit_iso": "2026-08-23T07:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T15:42:15.721Z"
+}

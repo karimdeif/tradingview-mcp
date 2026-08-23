@@ -1,0 +1,169 @@
+{
+  "strategy": "golden-cross",
+  "title": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "symbol": "EGX:ORWE",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:28:33.935Z",
+  "resolution_landed": "1D",
+  "quote_last": 26,
+  "source_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+    "entity_id": "uzWLNo",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787495333177.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787495335008.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_golden-cross_ORWE.png",
+  "trades": [
+    {
+      "entry_time": 1028703600000,
+      "exit_time": 1029222000000,
+      "profit": -415.10117,
+      "profit_pct": -0.041392818,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1130745600000,
+      "exit_time": 1131264000000,
+      "profit": 1117.5248,
+      "profit_pct": 0.10957986,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1162886400000,
+      "exit_time": 1165219200000,
+      "profit": -356.6471,
+      "profit_pct": -0.03565743,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1212994800000,
+      "exit_time": 1213686000000,
+      "profit": -825.75507,
+      "profit_pct": -0.08167043,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1242802800000,
+      "exit_time": 1244358000000,
+      "profit": 1217.5671,
+      "profit_pct": 0.121915,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1351584000000,
+      "exit_time": 1352016000000,
+      "profit": -375.47693,
+      "profit_pct": -0.03726309,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1380096000000,
+      "exit_time": 1380787200000,
+      "profit": 528.138,
+      "profit_pct": 0.051948052,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1475654400000,
+      "exit_time": 1478160000000,
+      "profit": 1166.6556,
+      "profit_pct": 0.11564467,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1552291200000,
+      "exit_time": 1553500800000,
+      "profit": -501.17374,
+      "profit_pct": -0.04907357,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1571299200000,
+      "exit_time": 1571644800000,
+      "profit": 12.41604,
+      "profit_pct": 0.0012213592,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1581926400000,
+      "exit_time": 1583049600000,
+      "profit": -406.80432,
+      "profit_pct": -0.040017124,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1601971200000,
+      "exit_time": 1602489600000,
+      "profit": -529.35156,
+      "profit_pct": -0.052303795,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1670486400000,
+      "exit_time": 1670918400000,
+      "profit": 1075.6504,
+      "profit_pct": 0.10685535,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1764748800000,
+      "exit_time": 1768377600000,
+      "profit": -312.39474,
+      "profit_pct": -0.030736279,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1780988400000,
+      "exit_time": 1781161200000,
+      "profit": -345.96277,
+      "profit_pct": -0.034137048,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1786258800000,
+      "exit_time": 1787468400000,
+      "profit": -20.176,
+      "profit_pct": -0.001998002,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "report_entity_id": "uzWLNo",
+  "metrics": {
+    "net_profit": 1039.1966100000009,
+    "net_profit_percent": 0.010391966100000009,
+    "gross_profit": 5117.952020000001,
+    "gross_loss": 4078.7554099999998,
+    "profit_factor": 1.2547827720809572,
+    "max_drawdown": 2803.3299499999994,
+    "max_drawdown_percent": 0.027468302534834604,
+    "total_trades": 15,
+    "winning_trades": 6,
+    "losing_trades": 9,
+    "percent_profitable": 0.4,
+    "avg_trade": 69.279774,
+    "largest_win": 1217.5671600000005,
+    "largest_loss": 825.7550799999998,
+    "commission_paid": 314.51339,
+    "sharpe_ratio": -1.007106062085856,
+    "sortino_ratio": -0.8256439538472102,
+    "buy_hold_return": 3321028.7199999997,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 16,
+    "first_entry_time": 1028703600000,
+    "last_exit_time": 1787468400000,
+    "last_trade_open": false,
+    "first_entry_iso": "2002-08-07T07:00:00.000Z",
+    "last_exit_iso": "2026-08-23T07:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:28:59.347Z"
+}

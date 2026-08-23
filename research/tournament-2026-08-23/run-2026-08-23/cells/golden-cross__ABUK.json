@@ -1,0 +1,148 @@
+{
+  "strategy": "golden-cross",
+  "title": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "symbol": "EGX:ABUK",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:21:24.006Z",
+  "resolution_landed": "1D",
+  "quote_last": 76.59,
+  "source_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+    "entity_id": "EDdyLu",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787494903136.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787494904878.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_golden-cross_ABUK.png",
+  "trades": [
+    {
+      "entry_time": 1049875200000,
+      "exit_time": 1054018800000,
+      "profit": 307.6453,
+      "profit_pct": 0.030616442,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1074672000000,
+      "exit_time": 1074758400000,
+      "profit": -320.72305,
+      "profit_pct": -0.03193806,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1174464000000,
+      "exit_time": 1176969600000,
+      "profit": -389.2175,
+      "profit_pct": -0.040172942,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1242284400000,
+      "exit_time": 1245049200000,
+      "profit": 503.58472,
+      "profit_pct": 0.051174235,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1302768000000,
+      "exit_time": 1303113600000,
+      "profit": -411.9944,
+      "profit_pct": -0.04130939,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1344412800000,
+      "exit_time": 1344758400000,
+      "profit": -186.41469,
+      "profit_pct": -0.018686999,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1366617600000,
+      "exit_time": 1366790400000,
+      "profit": 404.89896,
+      "profit_pct": 0.04066125,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1490169600000,
+      "exit_time": 1491206400000,
+      "profit": 886.83264,
+      "profit_pct": 0.088729456,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1600934400000,
+      "exit_time": 1601884800000,
+      "profit": -566.0723,
+      "profit_pct": -0.056160923,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1639468800000,
+      "exit_time": 1645689600000,
+      "profit": -434.3932,
+      "profit_pct": -0.043378573,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1742889600000,
+      "exit_time": 1743926400000,
+      "profit": -400.84366,
+      "profit_pct": -0.040134784,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1760943600000,
+      "exit_time": 1761116400000,
+      "profit": -1025.2977,
+      "profit_pct": -0.10333587,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1770278400000,
+      "exit_time": 1770883200000,
+      "profit": -491.51672,
+      "profit_pct": -0.04995414,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "report_entity_id": "EDdyLu",
+  "metrics": {
+    "net_profit": -2123.5115700000006,
+    "net_profit_percent": -0.021235115700000005,
+    "gross_profit": 2102.96163,
+    "gross_loss": 4226.4732,
+    "profit_factor": 0.49756890212861155,
+    "max_drawdown": 2918.1235799999995,
+    "max_drawdown_percent": 0.028951186197437695,
+    "total_trades": 13,
+    "winning_trades": 4,
+    "losing_trades": 9,
+    "percent_profitable": 0.3076923076923077,
+    "avg_trade": -163.3470438,
+    "largest_win": 886.832670000001,
+    "largest_loss": 1025.297680000001,
+    "commission_paid": 256.60157000000004,
+    "sharpe_ratio": -1.496268056171005,
+    "sortino_ratio": -0.8571073999710429,
+    "buy_hold_return": 4905846.54,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 13,
+    "first_entry_time": 1049875200000,
+    "last_exit_time": 1770883200000,
+    "last_trade_open": false,
+    "first_entry_iso": "2003-04-09T08:00:00.000Z",
+    "last_exit_iso": "2026-02-12T08:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:21:49.226Z"
+}

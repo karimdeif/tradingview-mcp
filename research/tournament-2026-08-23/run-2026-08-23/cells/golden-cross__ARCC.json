@@ -1,0 +1,106 @@
+{
+  "strategy": "golden-cross",
+  "title": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "symbol": "EGX:ARCC",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:28:59.347Z",
+  "resolution_landed": "1D",
+  "quote_last": 72.05,
+  "source_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+    "entity_id": "MNlueD",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787495358570.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787495360257.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_golden-cross_ARCC.png",
+  "trades": [
+    {
+      "entry_time": 1483516800000,
+      "exit_time": 1484121600000,
+      "profit": 1328.4169,
+      "profit_pct": 0.13275333,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1522569600000,
+      "exit_time": 1523779200000,
+      "profit": -780.9493,
+      "profit_pct": -0.077051,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1599033600000,
+      "exit_time": 1599552000000,
+      "profit": -774.5077,
+      "profit_pct": -0.076977424,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1612857600000,
+      "exit_time": 1613548800000,
+      "profit": -668.51953,
+      "profit_pct": -0.066956714,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1622016000000,
+      "exit_time": 1625040000000,
+      "profit": 1529.061,
+      "profit_pct": 0.15415198,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1663056000000,
+      "exit_time": 1663488000000,
+      "profit": -809.0089,
+      "profit_pct": -0.07847325,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1729407600000,
+      "exit_time": 1729580400000,
+      "profit": 1255.9181,
+      "profit_pct": 0.12568755,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "report_entity_id": "MNlueD",
+  "metrics": {
+    "net_profit": 1080.4105500000037,
+    "net_profit_percent": 0.010804105500000038,
+    "gross_profit": 4113.395990000001,
+    "gross_loss": 3032.985439999997,
+    "profit_factor": 1.3562201571267696,
+    "max_drawdown": 2952.925789999994,
+    "max_drawdown_percent": 0.02914212892846598,
+    "total_trades": 7,
+    "winning_trades": 3,
+    "losing_trades": 4,
+    "percent_profitable": 0.42857142857142855,
+    "avg_trade": 154.3443643,
+    "largest_win": 1529.0610300000008,
+    "largest_loss": 809.008919999999,
+    "commission_paid": 141.89945,
+    "sharpe_ratio": -0.5307501046537825,
+    "sortino_ratio": -0.6224108824688844,
+    "buy_hold_return": 913316.1599999999,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 7,
+    "first_entry_time": 1483516800000,
+    "last_exit_time": 1729580400000,
+    "last_trade_open": false,
+    "first_entry_iso": "2017-01-04T08:00:00.000Z",
+    "last_exit_iso": "2024-10-22T07:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:29:24.597Z"
+}

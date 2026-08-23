@@ -127,3 +127,27 @@ Claude Code ←→ MCP Server (stdio) ←→ CDP (localhost:9222) ←→ Trading
 ```
 
 Pine graphics path: `study._graphics._primitivesCollection.dwglines.get('lines').get(false)._primitivesDataById`
+
+## Fork addition: strategy-backtest surface (2026-08-23)
+
+Scoped writers, registered ONLY when `TV_MCP_ALLOW_SCOPED_WRITERS=1` AND the
+allowlist names them (`TV_MCP_TOOL_ALLOWLIST=backtest`):
+
+- `pine_set_draft_source` — facade `setNewScript()` into a fresh draft, sha1
+  readback verified. No DOM click anywhere in the path.
+- `pine_add_to_chart` — attested facade draft-branch attach: build
+  implementations pinned by source hash (`src/core/attested-tv-builds.json`),
+  bound atomically to the invoked callables; draft-only; CRLF-canonical
+  source-digest identity; refuses on any drift, shadow, accessor or Proxy.
+  Never writes saved scripts (a TV draft is persisted, as a manual
+  "Add to chart" does).
+- `chart_clear_studies` — no arguments.
+
+`data_get_strategy_results` returns `coverage` (epoch-ms trade bounds) and
+`entity_id`; `getReportTrades()` (core) returns the full per-trade list.
+Metrics are FRACTIONS (0.006 = 0.60%); `buy_hold_return` is absolute currency.
+
+Tournament tooling: `scripts/backtest-tournament.mjs` (serial, resumable,
+guarded), `scripts/validate-tournament-run.mjs` (post-hoc V1–V8),
+`scripts/tournament-report.mjs` (validator-gated, IS/OOS per
+`docs/ANTI_OVERFITTING_PROTOCOL.md`). Day index: `docs/DAY_2026-08-23.md`.

@@ -1,0 +1,84 @@
+{
+  "strategy": "golden-cross",
+  "title": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "symbol": "EGX:MFPC",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:25:36.887Z",
+  "resolution_landed": "1D",
+  "quote_last": 39.3,
+  "source_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+    "entity_id": "Vqfwff",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787495156091.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787495157902.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_golden-cross_MFPC.png",
+  "trades": [
+    {
+      "entry_time": 1574064000000,
+      "exit_time": 1574755200000,
+      "profit": -379.44507,
+      "profit_pct": -0.037897356,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1600934400000,
+      "exit_time": 1602576000000,
+      "profit": -576.15686,
+      "profit_pct": -0.0578658,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1761116400000,
+      "exit_time": 1761721200000,
+      "profit": -155.77107,
+      "profit_pct": -0.015728902,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1762934400000,
+      "exit_time": 1764057600000,
+      "profit": -277.8752,
+      "profit_pct": -0.028134512,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "report_entity_id": "Vqfwff",
+  "metrics": {
+    "net_profit": -1389.2482,
+    "net_profit_percent": -0.013892482,
+    "gross_profit": 0,
+    "gross_loss": 1389.2482,
+    "profit_factor": 0,
+    "max_drawdown": 1389.2482000000018,
+    "max_drawdown_percent": 0.013892482000000018,
+    "total_trades": 4,
+    "winning_trades": 0,
+    "losing_trades": 4,
+    "percent_profitable": 0,
+    "avg_trade": -347.31205,
+    "largest_loss": 576.1568400000004,
+    "commission_paid": 78.10820000000001,
+    "sharpe_ratio": -2.129891232881556,
+    "sortino_ratio": -0.9051952324035758,
+    "buy_hold_return": 606813.9,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 4,
+    "first_entry_time": 1574064000000,
+    "last_exit_time": 1764057600000,
+    "last_trade_open": false,
+    "first_entry_iso": "2019-11-18T08:00:00.000Z",
+    "last_exit_iso": "2025-11-25T08:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:26:02.267Z"
+}

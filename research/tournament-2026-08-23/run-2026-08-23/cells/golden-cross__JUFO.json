@@ -1,0 +1,127 @@
+{
+  "strategy": "golden-cross",
+  "title": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "symbol": "EGX:JUFO",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:28:08.289Z",
+  "resolution_landed": "1D",
+  "quote_last": 26.88,
+  "source_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "7eed590e3a06e5b6a6e368ad1ce06cdd2f17a0cc",
+    "entity_id": "Tp65Lj",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787495307552.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787495309558.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_golden-cross_JUFO.png",
+  "trades": [
+    {
+      "entry_time": 1342684800000,
+      "exit_time": 1343721600000,
+      "profit": -459.1017,
+      "profit_pct": -0.04577002,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1411628400000,
+      "exit_time": 1412755200000,
+      "profit": -353.24863,
+      "profit_pct": -0.035569936,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1423468800000,
+      "exit_time": 1424246400000,
+      "profit": -513.30975,
+      "profit_pct": -0.05252975,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1484726400000,
+      "exit_time": 1484812800000,
+      "profit": -665.45245,
+      "profit_pct": -0.06735834,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1508659200000,
+      "exit_time": 1508745600000,
+      "profit": 891.987,
+      "profit_pct": 0.090925835,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1550476800000,
+      "exit_time": 1550563200000,
+      "profit": -353.75833,
+      "profit_pct": -0.03574686,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1636444800000,
+      "exit_time": 1637136000000,
+      "profit": -501.8075,
+      "profit_pct": -0.050919667,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1672214400000,
+      "exit_time": 1672819200000,
+      "profit": -645.975,
+      "profit_pct": -0.06584325,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1720594800000,
+      "exit_time": 1721286000000,
+      "profit": -677.0298,
+      "profit_pct": -0.06955506,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1764835200000,
+      "exit_time": 1766908800000,
+      "profit": 500.31735,
+      "profit_pct": 0.05176104,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Golden Cross Exec — Hard-coded (Watchlist-ready)",
+  "report_entity_id": "Tp65Lj",
+  "metrics": {
+    "net_profit": -2777.3787899999993,
+    "net_profit_percent": -0.027773787899999992,
+    "gross_profit": 1392.3043500000008,
+    "gross_loss": 4169.68314,
+    "profit_factor": 0.3339113077067052,
+    "max_drawdown": 3369.752389999994,
+    "max_drawdown_percent": 0.03369752389999994,
+    "total_trades": 10,
+    "winning_trades": 2,
+    "losing_trades": 8,
+    "percent_profitable": 0.2,
+    "avg_trade": -277.737879,
+    "largest_win": 891.987,
+    "largest_loss": 677.0297599999992,
+    "commission_paid": 193.98879000000002,
+    "sharpe_ratio": -1.267616138554579,
+    "sortino_ratio": -0.8167473867775816,
+    "buy_hold_return": 1078931.4,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 10,
+    "first_entry_time": 1342684800000,
+    "last_exit_time": 1766908800000,
+    "last_trade_open": false,
+    "first_entry_iso": "2012-07-19T08:00:00.000Z",
+    "last_exit_iso": "2025-12-28T08:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:28:33.934Z"
+}

@@ -1,0 +1,121 @@
+{
+  "strategy": "conservative",
+  "title": "Conservative 100-Tick Structure Strategy",
+  "symbol": "EGX:ISPH",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:41:50.567Z",
+  "note": "Named \"100-Tick\"; run on 1D as the closest available chart — flagged, not hidden.",
+  "resolution_landed": "1D",
+  "quote_last": 13.22,
+  "source_digest": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d",
+    "entity_id": "rzCIo3",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787496129970.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787496131883.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_conservative_ISPH.png",
+  "trades": [
+    {
+      "entry_time": 1554969600000,
+      "exit_time": 1554969600000,
+      "profit": -62,
+      "profit_pct": -0.006203474,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1572508800000,
+      "exit_time": 1572508800000,
+      "profit": 98.35,
+      "profit_pct": 0.0098452885,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1572768000000,
+      "exit_time": 1572768000000,
+      "profit": 98.42,
+      "profit_pct": 0.0098452885,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1631779200000,
+      "exit_time": 1631779200000,
+      "profit": 92.13,
+      "profit_pct": 0.009202454,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1632038400000,
+      "exit_time": 1632038400000,
+      "profit": 95.73,
+      "profit_pct": 0.00955414,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1709798400000,
+      "exit_time": 1709798400000,
+      "profit": 88.5,
+      "profit_pct": 0.00882353,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1730185200000,
+      "exit_time": 1730185200000,
+      "profit": 82.64,
+      "profit_pct": 0.008230452,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1773043200000,
+      "exit_time": 1773043200000,
+      "profit": -74.24,
+      "profit_pct": -0.0073937154,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1773129600000,
+      "exit_time": 1773129600000,
+      "profit": 77.92,
+      "profit_pct": 0.0077669905,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Conservative 100-Tick Structure Strategy",
+  "report_entity_id": "rzCIo3",
+  "metrics": {
+    "net_profit": 497.4499999999971,
+    "net_profit_percent": 0.004974499999999971,
+    "gross_profit": 633.689999999998,
+    "gross_loss": 136.24000000000095,
+    "profit_factor": 4.651277157956501,
+    "max_drawdown": 76.05000000000291,
+    "max_drawdown_percent": 0.0007605000000000291,
+    "total_trades": 9,
+    "winning_trades": 7,
+    "losing_trades": 2,
+    "percent_profitable": 0.7777777777777778,
+    "avg_trade": 55.27222222,
+    "largest_win": 98.41999999999915,
+    "largest_loss": 74.24000000000007,
+    "commission_paid": 0,
+    "sharpe_ratio": -5.567208065949507,
+    "sortino_ratio": -0.9843442298932787,
+    "buy_hold_return": 64014.96,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 9,
+    "first_entry_time": 1554969600000,
+    "last_exit_time": 1773129600000,
+    "last_trade_open": false,
+    "first_entry_iso": "2019-04-11T08:00:00.000Z",
+    "last_exit_iso": "2026-03-10T08:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:42:16.229Z"
+}

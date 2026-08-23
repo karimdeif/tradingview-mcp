@@ -1,0 +1,1597 @@
+{
+  "strategy": "orhd-5m-copy",
+  "title": "ORHD — VWAP Bounce A3_70 (B_Full) — WKOL‑compatible webhook + Signals/Orders",
+  "symbol": "EGX:TMGH",
+  "timeframe": "5",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:54:33.845Z",
+  "resolution_landed": "5",
+  "quote_last": 97.8,
+  "source_digest": "9ac10cfe919d1c7f02463a6c6af807bff3b306b2",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "9ac10cfe919d1c7f02463a6c6af807bff3b306b2",
+    "entity_id": "0rflE5",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787496893391.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787496895355.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_orhd-5m-copy_TMGH.png",
+  "trades": [
+    {
+      "entry_time": 1685356200000,
+      "exit_time": 1685356800000,
+      "profit": 180.70416,
+      "profit_pct": 0.0036144678,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1685356200000,
+      "exit_time": 1685357100000,
+      "profit": 456.09045,
+      "profit_pct": 0.00912278,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1690707000000,
+      "exit_time": 1690709400000,
+      "profit": -688.8959,
+      "profit_pct": -0.01369298,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1690707000000,
+      "exit_time": 1690709400000,
+      "profit": -688.8959,
+      "profit_pct": -0.01369298,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1691311800000,
+      "exit_time": 1691312100000,
+      "profit": -520.29504,
+      "profit_pct": -0.010483738,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1691311800000,
+      "exit_time": 1691312100000,
+      "profit": -520.29504,
+      "profit_pct": -0.010483738,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1691484300000,
+      "exit_time": 1691485200000,
+      "profit": -250.066,
+      "profit_pct": -0.0050922562,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1691484300000,
+      "exit_time": 1691485200000,
+      "profit": -250.066,
+      "profit_pct": -0.0050922562,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1692696600000,
+      "exit_time": 1692696900000,
+      "profit": 346.12775,
+      "profit_pct": 0.0070854286,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1692696600000,
+      "exit_time": 1692697200000,
+      "profit": 444.6198,
+      "profit_pct": 0.009101615,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1693899300000,
+      "exit_time": 1693899900000,
+      "profit": 189.08218,
+      "profit_pct": 0.0038391429,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1693899300000,
+      "exit_time": 1693899900000,
+      "profit": 483.61972,
+      "profit_pct": 0.009819461,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1694422500000,
+      "exit_time": 1694429700000,
+      "profit": -861.2779,
+      "profit_pct": -0.017371314,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1694422500000,
+      "exit_time": 1694429700000,
+      "profit": -861.2779,
+      "profit_pct": -0.017371314,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1694677500000,
+      "exit_time": 1694678400000,
+      "profit": 173.89372,
+      "profit_pct": 0.003569132,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1694677500000,
+      "exit_time": 1694678400000,
+      "profit": 453.7533,
+      "profit_pct": 0.00931319,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1694939700000,
+      "exit_time": 1694940300000,
+      "profit": 180.02643,
+      "profit_pct": 0.0036709423,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1694939700000,
+      "exit_time": 1694940300000,
+      "profit": 470.62988,
+      "profit_pct": 0.009596675,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1695290400000,
+      "exit_time": 1695291000000,
+      "profit": 181.21407,
+      "profit_pct": 0.0036709423,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1695290400000,
+      "exit_time": 1695291000000,
+      "profit": 473.73462,
+      "profit_pct": 0.009596675,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1695553800000,
+      "exit_time": 1695625200000,
+      "profit": 380.77417,
+      "profit_pct": 0.0076638428,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1695553800000,
+      "exit_time": 1695625200000,
+      "profit": -148.83025,
+      "profit_pct": -0.0029955066,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1696927200000,
+      "exit_time": 1696929300000,
+      "profit": 159.22765,
+      "profit_pct": 0.0031970677,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1696927200000,
+      "exit_time": 1696931700000,
+      "profit": -149.18904,
+      "profit_pct": -0.0029955066,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1697448300000,
+      "exit_time": 1697450100000,
+      "profit": -408.01505,
+      "profit_pct": -0.008192105,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1697448300000,
+      "exit_time": 1697450100000,
+      "profit": -408.01505,
+      "profit_pct": -0.008192105,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1697621700000,
+      "exit_time": 1697623500000,
+      "profit": -863.5838,
+      "profit_pct": -0.017481359,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1697621700000,
+      "exit_time": 1697623500000,
+      "profit": -863.5838,
+      "profit_pct": -0.017481359,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1697961600000,
+      "exit_time": 1697962200000,
+      "profit": -730.8479,
+      "profit_pct": -0.015056045,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1697961600000,
+      "exit_time": 1697962200000,
+      "profit": -730.8479,
+      "profit_pct": -0.015056045,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1698056100000,
+      "exit_time": 1698056400000,
+      "profit": -1319.2257,
+      "profit_pct": -0.027591716,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1698056100000,
+      "exit_time": 1698056400000,
+      "profit": -1319.2257,
+      "profit_pct": -0.027591716,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1698133800000,
+      "exit_time": 1698135600000,
+      "profit": -809.82214,
+      "profit_pct": -0.017420724,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1698133800000,
+      "exit_time": 1698135600000,
+      "profit": -809.82214,
+      "profit_pct": -0.017420724,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1698315300000,
+      "exit_time": 1698315900000,
+      "profit": -789.81854,
+      "profit_pct": -0.017292175,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1698315300000,
+      "exit_time": 1698315900000,
+      "profit": -789.81854,
+      "profit_pct": -0.017292175,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1698657000000,
+      "exit_time": 1698657300000,
+      "profit": 1476.8044,
+      "profit_pct": 0.032896657,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1698657000000,
+      "exit_time": 1698657300000,
+      "profit": 1476.8044,
+      "profit_pct": 0.032896657,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1698829500000,
+      "exit_time": 1698829800000,
+      "profit": 651.1576,
+      "profit_pct": 0.014047305,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1698829500000,
+      "exit_time": 1698829800000,
+      "profit": 651.1576,
+      "profit_pct": 0.014047305,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1698915000000,
+      "exit_time": 1698918300000,
+      "profit": -564.7749,
+      "profit_pct": -0.012016228,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1698915000000,
+      "exit_time": 1698918300000,
+      "profit": -564.7749,
+      "profit_pct": -0.012016228,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1699173300000,
+      "exit_time": 1699174200000,
+      "profit": -787.9052,
+      "profit_pct": -0.01696627,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1699173300000,
+      "exit_time": 1699174200000,
+      "profit": -787.9052,
+      "profit_pct": -0.01696627,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1699519800000,
+      "exit_time": 1699521300000,
+      "profit": -729.548,
+      "profit_pct": -0.015976246,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1699519800000,
+      "exit_time": 1699521300000,
+      "profit": -729.548,
+      "profit_pct": -0.015976246,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1699952700000,
+      "exit_time": 1699954200000,
+      "profit": -362.10132,
+      "profit_pct": -0.008060728,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1699952700000,
+      "exit_time": 1699954200000,
+      "profit": -362.10132,
+      "profit_pct": -0.008060728,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1700040600000,
+      "exit_time": 1700044500000,
+      "profit": -761.85754,
+      "profit_pct": -0.01709456,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1700040600000,
+      "exit_time": 1700044500000,
+      "profit": -761.85754,
+      "profit_pct": -0.01709456,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1700653200000,
+      "exit_time": 1700653800000,
+      "profit": -558.9549,
+      "profit_pct": -0.012762082,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1700653200000,
+      "exit_time": 1700653800000,
+      "profit": -558.9549,
+      "profit_pct": -0.012762082,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1701604500000,
+      "exit_time": 1701604800000,
+      "profit": 884.65314,
+      "profit_pct": 0.020453205,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1701604500000,
+      "exit_time": 1701604800000,
+      "profit": 884.65314,
+      "profit_pct": 0.020453205,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1701685800000,
+      "exit_time": 1701763200000,
+      "profit": 140.08598,
+      "profit_pct": 0.0031740756,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1701685800000,
+      "exit_time": 1701764100000,
+      "profit": 412.37695,
+      "profit_pct": 0.009343658,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1702467600000,
+      "exit_time": 1702468200000,
+      "profit": 136.48312,
+      "profit_pct": 0.0030732162,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1702467600000,
+      "exit_time": 1702468500000,
+      "profit": 405.99823,
+      "profit_pct": 0.00914194,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1702894200000,
+      "exit_time": 1702896000000,
+      "profit": -398.16895,
+      "profit_pct": -0.008912447,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1702894200000,
+      "exit_time": 1702896000000,
+      "profit": -398.16895,
+      "profit_pct": -0.008912447,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1703062800000,
+      "exit_time": 1703063400000,
+      "profit": -132.615,
+      "profit_pct": -0.0029955066,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1703062800000,
+      "exit_time": 1703063700000,
+      "profit": -351.20663,
+      "profit_pct": -0.007933053,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1703504100000,
+      "exit_time": 1703505300000,
+      "profit": 140.99547,
+      "profit_pct": 0.0032022004,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1703504100000,
+      "exit_time": 1703505300000,
+      "profit": 395.69284,
+      "profit_pct": 0.008986727,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1704012900000,
+      "exit_time": 1704016500000,
+      "profit": -384.61887,
+      "profit_pct": -0.008681072,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1704012900000,
+      "exit_time": 1704016500000,
+      "profit": -384.61887,
+      "profit_pct": -0.008681072,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1705309200000,
+      "exit_time": 1705310700000,
+      "profit": -687.46094,
+      "profit_pct": -0.015649794,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1705309200000,
+      "exit_time": 1705310700000,
+      "profit": -687.46094,
+      "profit_pct": -0.015649794,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1705397700000,
+      "exit_time": 1705398900000,
+      "profit": 135.7216,
+      "profit_pct": 0.0031399056,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1705397700000,
+      "exit_time": 1705398900000,
+      "profit": 400.9232,
+      "profit_pct": 0.009275318,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1705489500000,
+      "exit_time": 1705490400000,
+      "profit": -748.049,
+      "profit_pct": -0.017198836,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1705489500000,
+      "exit_time": 1705490400000,
+      "profit": -748.049,
+      "profit_pct": -0.017198836,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1705827000000,
+      "exit_time": 1705827600000,
+      "profit": -736.194,
+      "profit_pct": -0.017214246,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1705827000000,
+      "exit_time": 1705827600000,
+      "profit": -736.194,
+      "profit_pct": -0.017214246,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1705912500000,
+      "exit_time": 1705912800000,
+      "profit": 157.04584,
+      "profit_pct": 0.0037368748,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1705912500000,
+      "exit_time": 1705913100000,
+      "profit": 401.39877,
+      "profit_pct": 0.009551204,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1705999800000,
+      "exit_time": 1706000700000,
+      "profit": 128.896,
+      "profit_pct": 0.0030469447,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1705999800000,
+      "exit_time": 1706001000000,
+      "profit": -126.72,
+      "profit_pct": -0.0029955066,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1706437500000,
+      "exit_time": 1706437800000,
+      "profit": -627.3605,
+      "profit_pct": -0.014828571,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1706437500000,
+      "exit_time": 1706438400000,
+      "profit": 129.40268,
+      "profit_pct": 0.0030586193,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1706608500000,
+      "exit_time": 1706610000000,
+      "profit": 131.53253,
+      "profit_pct": 0.0031292539,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1706608500000,
+      "exit_time": 1706610000000,
+      "profit": 377.7826,
+      "profit_pct": 0.00898772,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1706787900000,
+      "exit_time": 1706789100000,
+      "profit": -717.643,
+      "profit_pct": -0.016968124,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1706787900000,
+      "exit_time": 1706789100000,
+      "profit": -717.643,
+      "profit_pct": -0.016968124,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1707211800000,
+      "exit_time": 1707212700000,
+      "profit": -709.03357,
+      "profit_pct": -0.017052488,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1707211800000,
+      "exit_time": 1707212700000,
+      "profit": -709.03357,
+      "profit_pct": -0.017052488,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1707298800000,
+      "exit_time": 1707299400000,
+      "profit": 124.48534,
+      "profit_pct": 0.0030469447,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1707298800000,
+      "exit_time": 1707299400000,
+      "profit": 371.3545,
+      "profit_pct": 0.009089396,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1707727800000,
+      "exit_time": 1707728400000,
+      "profit": 128.37613,
+      "profit_pct": 0.0031224755,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1707727800000,
+      "exit_time": 1707728400000,
+      "profit": 370.59225,
+      "profit_pct": 0.009013865,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1707813600000,
+      "exit_time": 1707813900000,
+      "profit": -583.30035,
+      "profit_pct": -0.014096607,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1707813600000,
+      "exit_time": 1707814200000,
+      "profit": -704.63806,
+      "profit_pct": -0.017028973,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1707994200000,
+      "exit_time": 1707995400000,
+      "profit": -603.0165,
+      "profit_pct": -0.014813448,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1707994200000,
+      "exit_time": 1707995400000,
+      "profit": -603.0165,
+      "profit_pct": -0.014813448,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1708332900000,
+      "exit_time": 1708333200000,
+      "profit": -708.5083,
+      "profit_pct": -0.017666718,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1708332900000,
+      "exit_time": 1708333200000,
+      "profit": -708.5083,
+      "profit_pct": -0.017666718,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1708424400000,
+      "exit_time": 1708424700000,
+      "profit": 278.84625,
+      "profit_pct": 0.0070752455,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1708424400000,
+      "exit_time": 1708425000000,
+      "profit": -118.0575,
+      "profit_pct": -0.0029955066,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1709109600000,
+      "exit_time": 1709110200000,
+      "profit": -118.335,
+      "profit_pct": -0.0029955066,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1709109600000,
+      "exit_time": 1709110200000,
+      "profit": -675.24835,
+      "profit_pct": -0.017093092,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1709208600000,
+      "exit_time": 1709209500000,
+      "profit": 117.3413,
+      "profit_pct": 0.0030015127,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1709208600000,
+      "exit_time": 1709452800000,
+      "profit": 351.7891,
+      "profit_pct": 0.008998532,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1709455500000,
+      "exit_time": 1709455800000,
+      "profit": -227.645,
+      "profit_pct": -0.0057882364,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1709455500000,
+      "exit_time": 1709456700000,
+      "profit": 118.33525,
+      "profit_pct": 0.003008862,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1709548200000,
+      "exit_time": 1709548500000,
+      "profit": 751.3927,
+      "profit_pct": 0.019131053,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1709548200000,
+      "exit_time": 1709548500000,
+      "profit": 751.3927,
+      "profit_pct": 0.019131053,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1710066600000,
+      "exit_time": 1710067200000,
+      "profit": -356.0058,
+      "profit_pct": -0.008890488,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1710066600000,
+      "exit_time": 1710067200000,
+      "profit": -356.0058,
+      "profit_pct": -0.008890488,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1710233700000,
+      "exit_time": 1710235800000,
+      "profit": -676.64813,
+      "profit_pct": -0.017049134,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1710233700000,
+      "exit_time": 1710235800000,
+      "profit": -676.64813,
+      "profit_pct": -0.017049134,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1710407400000,
+      "exit_time": 1710407700000,
+      "profit": -826.22577,
+      "profit_pct": -0.02119131,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1710407400000,
+      "exit_time": 1710407700000,
+      "profit": -826.22577,
+      "profit_pct": -0.02119131,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1711355400000,
+      "exit_time": 1711356000000,
+      "profit": -652.6443,
+      "profit_pct": -0.017114127,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1711355400000,
+      "exit_time": 1711356000000,
+      "profit": -652.6443,
+      "profit_pct": -0.017114127,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1711528500000,
+      "exit_time": 1711528800000,
+      "profit": -727.342,
+      "profit_pct": -0.019407103,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1711528500000,
+      "exit_time": 1711528800000,
+      "profit": -727.342,
+      "profit_pct": -0.019407103,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1712221500000,
+      "exit_time": 1712222100000,
+      "profit": 111.12686,
+      "profit_pct": 0.0030223264,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1712221500000,
+      "exit_time": 1712222100000,
+      "profit": 332.39447,
+      "profit_pct": 0.009040159,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1712570100000,
+      "exit_time": 1712571300000,
+      "profit": 112.27648,
+      "profit_pct": 0.0030338273,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1712570100000,
+      "exit_time": 1712571600000,
+      "profit": 335.4113,
+      "profit_pct": 0.009063161,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1713170700000,
+      "exit_time": 1713171000000,
+      "profit": 429.1297,
+      "profit_pct": 0.011519706,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1713170700000,
+      "exit_time": 1713171000000,
+      "profit": 429.1297,
+      "profit_pct": 0.011519706,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1713693000000,
+      "exit_time": 1713693900000,
+      "profit": -359.65964,
+      "profit_pct": -0.0095527405,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1713693000000,
+      "exit_time": 1713693900000,
+      "profit": -359.65964,
+      "profit_pct": -0.0095527405,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1714380900000,
+      "exit_time": 1714386600000,
+      "profit": 112.02341,
+      "profit_pct": 0.0030041663,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1714380900000,
+      "exit_time": 1714386600000,
+      "profit": -111.7005,
+      "profit_pct": -0.0029955066,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1714551600000,
+      "exit_time": 1714553100000,
+      "profit": -635.3356,
+      "profit_pct": -0.017030122,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1714551600000,
+      "exit_time": 1714553100000,
+      "profit": -635.3356,
+      "profit_pct": -0.017030122,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1714639800000,
+      "exit_time": 1714640400000,
+      "profit": 113.16168,
+      "profit_pct": 0.0030848794,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1714639800000,
+      "exit_time": 1714640400000,
+      "profit": 329.64645,
+      "profit_pct": 0.00898643,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1715155800000,
+      "exit_time": 1715156400000,
+      "profit": -110.5317,
+      "profit_pct": -0.0029955066,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1715155800000,
+      "exit_time": 1715156700000,
+      "profit": -276.45245,
+      "profit_pct": -0.0074921055,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1715590200000,
+      "exit_time": 1715590500000,
+      "profit": -109.863,
+      "profit_pct": -0.0029955066,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1715590200000,
+      "exit_time": 1715590800000,
+      "profit": 115.15896,
+      "profit_pct": 0.0031399056,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1715674200000,
+      "exit_time": 1715674500000,
+      "profit": 260.3365,
+      "profit_pct": 0.0070902766,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1715674200000,
+      "exit_time": 1715675100000,
+      "profit": -109.9872,
+      "profit_pct": -0.0029955066,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1716191100000,
+      "exit_time": 1716197700000,
+      "profit": -496.1017,
+      "profit_pct": -0.013498542,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1716191100000,
+      "exit_time": 1716197700000,
+      "profit": -496.1017,
+      "profit_pct": -0.013498542,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1718091900000,
+      "exit_time": 1718092200000,
+      "profit": 273.6498,
+      "profit_pct": 0.007549733,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1718091900000,
+      "exit_time": 1718092800000,
+      "profit": 329.24628,
+      "profit_pct": 0.009083586,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1718277000000,
+      "exit_time": 1719126000000,
+      "profit": 109.59532,
+      "profit_pct": 0.0029974165,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1718277000000,
+      "exit_time": 1719126000000,
+      "profit": 275.59595,
+      "profit_pct": 0.00753751,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1719387000000,
+      "exit_time": 1719387900000,
+      "profit": 113.10273,
+      "profit_pct": 0.0030765897,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1719387000000,
+      "exit_time": 1719387900000,
+      "profit": 330.1267,
+      "profit_pct": 0.008980017,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1719906600000,
+      "exit_time": 1719906900000,
+      "profit": -349.0424,
+      "profit_pct": -0.009439829,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1719906600000,
+      "exit_time": 1719906900000,
+      "profit": -349.0424,
+      "profit_pct": -0.009439829,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1722937500000,
+      "exit_time": 1723014000000,
+      "profit": 113.03058,
+      "profit_pct": 0.0030860363,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1722937500000,
+      "exit_time": 1723015800000,
+      "profit": 160.2796,
+      "profit_pct": 0.004376061,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1723027200000,
+      "exit_time": 1723027500000,
+      "profit": 310.26016,
+      "profit_pct": 0.008431478,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1723027200000,
+      "exit_time": 1723027800000,
+      "profit": 336.54068,
+      "profit_pct": 0.009145666,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1723362000000,
+      "exit_time": 1723362300000,
+      "profit": 372.4592,
+      "profit_pct": 0.010038338,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1723362000000,
+      "exit_time": 1723362300000,
+      "profit": 372.4592,
+      "profit_pct": 0.010038338,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1723534500000,
+      "exit_time": 1723535400000,
+      "profit": -542.7268,
+      "profit_pct": -0.014493087,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1723534500000,
+      "exit_time": 1723535400000,
+      "profit": -542.7268,
+      "profit_pct": -0.014493087,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1724748300000,
+      "exit_time": 1724751900000,
+      "profit": -366.94794,
+      "profit_pct": -0.009944484,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1724748300000,
+      "exit_time": 1724751900000,
+      "profit": -366.94794,
+      "profit_pct": -0.009944484,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1725349800000,
+      "exit_time": 1725350400000,
+      "profit": -109.593,
+      "profit_pct": -0.0029955066,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1725349800000,
+      "exit_time": 1725351900000,
+      "profit": -459.5273,
+      "profit_pct": -0.012560265,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1727604600000,
+      "exit_time": 1727605200000,
+      "profit": -219.70552,
+      "profit_pct": -0.006053309,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1727604600000,
+      "exit_time": 1727605200000,
+      "profit": -219.70552,
+      "profit_pct": -0.006053309,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1728467400000,
+      "exit_time": 1728470100000,
+      "profit": 110.84409,
+      "profit_pct": 0.0030724835,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1728467400000,
+      "exit_time": 1728543600000,
+      "profit": 323.67438,
+      "profit_pct": 0.008971918,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1728892200000,
+      "exit_time": 1728893400000,
+      "profit": -517.5607,
+      "profit_pct": -0.014265993,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1728892200000,
+      "exit_time": 1728893400000,
+      "profit": -517.5607,
+      "profit_pct": -0.014265993,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1728990000000,
+      "exit_time": 1728990300000,
+      "profit": 163.85017,
+      "profit_pct": 0.0045830747,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1728990000000,
+      "exit_time": 1728991500000,
+      "profit": 362.5417,
+      "profit_pct": 0.010140701,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1729766400000,
+      "exit_time": 1729767000000,
+      "profit": 109.6623,
+      "profit_pct": 0.0030469447,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1729766400000,
+      "exit_time": 1730012400000,
+      "profit": 133.826,
+      "profit_pct": 0.0037183282,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1730980800000,
+      "exit_time": 1731225600000,
+      "profit": 111.12255,
+      "profit_pct": 0.0030727885,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1730980800000,
+      "exit_time": 1731226200000,
+      "profit": 324.64178,
+      "profit_pct": 0.008977076,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1736929800000,
+      "exit_time": 1736930400000,
+      "profit": -616.55707,
+      "profit_pct": -0.01696276,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1736929800000,
+      "exit_time": 1736930400000,
+      "profit": -616.55707,
+      "profit_pct": -0.01696276,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1738149900000,
+      "exit_time": 1738151100000,
+      "profit": -250.97635,
+      "profit_pct": -0.007020112,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1738149900000,
+      "exit_time": 1738151100000,
+      "profit": -250.97635,
+      "profit_pct": -0.007020112,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1739352900000,
+      "exit_time": 1739353500000,
+      "profit": 107.543785,
+      "profit_pct": 0.0030292768,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1739352900000,
+      "exit_time": 1739353500000,
+      "profit": -106.3449,
+      "profit_pct": -0.0029955066,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1740657300000,
+      "exit_time": 1740659100000,
+      "profit": 766.0464,
+      "profit_pct": 0.021598533,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1740657300000,
+      "exit_time": 1740659100000,
+      "profit": 766.0464,
+      "profit_pct": 0.021598533,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1748429100000,
+      "exit_time": 1748429700000,
+      "profit": -226.68471,
+      "profit_pct": -0.0062525086,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1748429100000,
+      "exit_time": 1748429700000,
+      "profit": -226.68471,
+      "profit_pct": -0.0062525086,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1750584900000,
+      "exit_time": 1750586100000,
+      "profit": 111.18688,
+      "profit_pct": 0.003083789,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1750584900000,
+      "exit_time": 1750590300000,
+      "profit": 323.5279,
+      "profit_pct": 0.008973107,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1762333800000,
+      "exit_time": 1762334700000,
+      "profit": 112.995964,
+      "profit_pct": 0.0031201702,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1762333800000,
+      "exit_time": 1762336800000,
+      "profit": -265.136,
+      "profit_pct": -0.007321229,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1762425000000,
+      "exit_time": 1762428600000,
+      "profit": -189.23268,
+      "profit_pct": -0.0052372254,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1762425000000,
+      "exit_time": 1762428600000,
+      "profit": -189.23268,
+      "profit_pct": -0.0052372254,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1763292900000,
+      "exit_time": 1763293500000,
+      "profit": 111.5934,
+      "profit_pct": 0.0031044527,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1763292900000,
+      "exit_time": 1763294400000,
+      "profit": 325.99133,
+      "profit_pct": 0.009068858,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1763371500000,
+      "exit_time": 1763373900000,
+      "profit": -248.32726,
+      "profit_pct": -0.006859865,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1763371500000,
+      "exit_time": 1763373900000,
+      "profit": -248.32726,
+      "profit_pct": -0.006859865,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1764494100000,
+      "exit_time": 1764498600000,
+      "profit": 108.84765,
+      "profit_pct": 0.003026668,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1764494100000,
+      "exit_time": 1764498900000,
+      "profit": 325.4223,
+      "profit_pct": 0.009048843,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1764753000000,
+      "exit_time": 1764753600000,
+      "profit": 110.34647,
+      "profit_pct": 0.003050843,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1764753000000,
+      "exit_time": 1764753600000,
+      "profit": 324.38492,
+      "profit_pct": 0.008968547,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1768813500000,
+      "exit_time": 1768813800000,
+      "profit": 373.3935,
+      "profit_pct": 0.010272614,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1768813500000,
+      "exit_time": 1768813800000,
+      "profit": 373.3935,
+      "profit_pct": 0.010272614,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1768897800000,
+      "exit_time": 1768905900000,
+      "profit": -526.51135,
+      "profit_pct": -0.014333072,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1768897800000,
+      "exit_time": 1768905900000,
+      "profit": -526.51135,
+      "profit_pct": -0.014333072,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1769342100000,
+      "exit_time": 1769342400000,
+      "profit": 201.7848,
+      "profit_pct": 0.005568432,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1769342100000,
+      "exit_time": 1769343000000,
+      "profit": -108.549,
+      "profit_pct": -0.0029955066,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1771320000000,
+      "exit_time": 1771322700000,
+      "profit": -616.48663,
+      "profit_pct": -0.017003007,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1771320000000,
+      "exit_time": 1771322700000,
+      "profit": -616.48663,
+      "profit_pct": -0.017003007,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1772360100000,
+      "exit_time": 1772362500000,
+      "profit": 109.13124,
+      "profit_pct": 0.0030613402,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1772360100000,
+      "exit_time": 1772363100000,
+      "profit": 320.81323,
+      "profit_pct": 0.008999425,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1773135900000,
+      "exit_time": 1773216000000,
+      "profit": 108.216,
+      "profit_pct": 0.0030165806,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1773135900000,
+      "exit_time": 1773216000000,
+      "profit": 184.60126,
+      "profit_pct": 0.005145862,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1773745500000,
+      "exit_time": 1773820800000,
+      "profit": 126.7825,
+      "profit_pct": 0.0035208624,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1773745500000,
+      "exit_time": 1773820800000,
+      "profit": 323.8864,
+      "profit_pct": 0.008994613,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1775735700000,
+      "exit_time": 1776153900000,
+      "profit": 110.55134,
+      "profit_pct": 0.003050468,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1775735700000,
+      "exit_time": 1776154500000,
+      "profit": 325.44852,
+      "profit_pct": 0.008980174,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1777974300000,
+      "exit_time": 1778050800000,
+      "profit": 142.71628,
+      "profit_pct": 0.0039154314,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1777974300000,
+      "exit_time": 1778051100000,
+      "profit": 142.71628,
+      "profit_pct": 0.0039154314,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1779185700000,
+      "exit_time": 1779186000000,
+      "profit": -179.90346,
+      "profit_pct": -0.004920617,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1779185700000,
+      "exit_time": 1779186900000,
+      "profit": 112.7469,
+      "profit_pct": 0.003083789,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1780905900000,
+      "exit_time": 1780910400000,
+      "profit": -297.69806,
+      "profit_pct": -0.008145323,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1780905900000,
+      "exit_time": 1780910400000,
+      "profit": -297.69806,
+      "profit_pct": -0.008145323,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1784110200000,
+      "exit_time": 1784110500000,
+      "profit": 209.48216,
+      "profit_pct": 0.005778133,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1784110200000,
+      "exit_time": 1784111400000,
+      "profit": 325.1484,
+      "profit_pct": 0.008968547,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1784545500000,
+      "exit_time": 1784545800000,
+      "profit": -380.97287,
+      "profit_pct": -0.010440957,
+      "side": "A3_70"
+    },
+    {
+      "entry_time": 1784545500000,
+      "exit_time": 1784545800000,
+      "profit": -380.97287,
+      "profit_pct": -0.010440957,
+      "side": "A3_70"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "ORHD — VWAP Bounce A3_70 (B_Full) — WKOL‑compatible webhook + Signals/Orders",
+  "report_entity_id": "0rflE5",
+  "metrics": {
+    "net_profit": -27610.866569999933,
+    "net_profit_percent": -0.2761086656999993,
+    "gross_profit": 31858.01997000001,
+    "gross_loss": 59468.88653999994,
+    "profit_factor": 0.535709037507734,
+    "max_drawdown": 30536.191349999906,
+    "max_drawdown_percent": 0.3034296895613895,
+    "total_trades": 220,
+    "winning_trades": 103,
+    "losing_trades": 117,
+    "percent_profitable": 0.4681818181818182,
+    "avg_trade": -125.503939,
+    "largest_win": 1476.804450000004,
+    "largest_loss": 1319.2256549999993,
+    "commission_paid": 26778.966569999968,
+    "sharpe_ratio": -0.4104335559009398,
+    "sortino_ratio": -0.39141769536405624,
+    "buy_hold_return": 980598.75,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 220,
+    "first_entry_time": 1685356200000,
+    "last_exit_time": 1784545800000,
+    "last_trade_open": false,
+    "first_entry_iso": "2023-05-29T10:30:00.000Z",
+    "last_exit_iso": "2026-07-20T11:10:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:54:59.917Z"
+}

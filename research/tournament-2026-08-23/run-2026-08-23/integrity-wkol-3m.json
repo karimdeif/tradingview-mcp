@@ -1,0 +1,10 @@
+{
+  "ok": 8,
+  "no_trades": 0,
+  "error": 0,
+  "g1": {
+    "ok": true,
+    "clone_count": 0,
+    "clones": []
+  }
+}

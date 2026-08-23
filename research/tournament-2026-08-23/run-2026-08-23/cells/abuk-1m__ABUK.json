@@ -1,0 +1,43 @@
+{
+  "strategy": "abuk-1m",
+  "title": "ABUK 1m SMA(70/250) — Python Parity Windowed",
+  "symbol": "EGX:ABUK",
+  "timeframe": "1",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:46:31.221Z",
+  "note": "Source hard-locks execution to EGX:ABUK (active = isSymbolOK && isTfOK) — other symbols are disabled by construction, so only ABUK is run (sol-max pass 7).",
+  "resolution_landed": "1",
+  "quote_last": 76.59,
+  "source_digest": "05b3470a4d2cd549508d6f61faba242b3d135b8c",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "05b3470a4d2cd549508d6f61faba242b3d135b8c",
+    "entity_id": "3WX8yp",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787496411930.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787496414817.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_abuk-1m_ABUK.png",
+  "trades": [],
+  "trades_truncated": false,
+  "outcome": "NO_TRADES",
+  "strategy_name_read_back": "ABUK 1m SMA(70/250) — Python Parity Windowed",
+  "report_entity_id": "3WX8yp",
+  "metrics": {
+    "net_profit": 0,
+    "net_profit_percent": 0,
+    "gross_profit": 0,
+    "gross_loss": 0,
+    "max_drawdown": 0,
+    "max_drawdown_percent": 0,
+    "total_trades": 0,
+    "winning_trades": 0,
+    "losing_trades": 0,
+    "commission_paid": 0,
+    "buy_hold_return": 0,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": null,
+  "finished_at": "2026-08-23T14:46:59.170Z"
+}

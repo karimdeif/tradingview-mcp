@@ -1,0 +1,121 @@
+{
+  "strategy": "conservative",
+  "title": "Conservative 100-Tick Structure Strategy",
+  "symbol": "EGX:ETEL",
+  "timeframe": "1D",
+  "manifest_hash": "058a8e3a4460c94550b9cb4276c6094d6b652caa",
+  "started_at": "2026-08-23T14:40:08.393Z",
+  "note": "Named \"100-Tick\"; run on 1D as the closest available chart — flagged, not hidden.",
+  "resolution_landed": "1D",
+  "quote_last": 118.49,
+  "source_digest": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d",
+  "attach": {
+    "success": true,
+    "script_id": "USER;645f172f6ab844b2845c4abd7297e936",
+    "pine_digest": "d5a5c814aafe7bdfc2c1871732e71ec17c8a553d",
+    "entity_id": "YKke0e",
+    "screenshot_before": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_before_1787496027729.png",
+    "screenshot_after": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/add_after_1787496029505.png"
+  },
+  "screenshot_report": "/home/karim/claude-a15-20260818/tradingview-mcp/screenshots/cell_conservative_ETEL.png",
+  "trades": [
+    {
+      "entry_time": 1614067200000,
+      "exit_time": 1614067200000,
+      "profit": -70,
+      "profit_pct": -0.007005254,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1649923200000,
+      "exit_time": 1649923200000,
+      "profit": -60.5,
+      "profit_pct": -0.006056935,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1656403200000,
+      "exit_time": 1656403200000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1706083200000,
+      "exit_time": 1706083200000,
+      "profit": -68.64,
+      "profit_pct": -0.0068746693,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1717311600000,
+      "exit_time": 1717311600000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1729407600000,
+      "exit_time": 1729407600000,
+      "profit": 3.05,
+      "profit_pct": 0.000303859,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1732003200000,
+      "exit_time": 1732003200000,
+      "profit": 0,
+      "profit_pct": 0,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1742889600000,
+      "exit_time": 1742889600000,
+      "profit": 79.46,
+      "profit_pct": 0.007980187,
+      "side": "Long"
+    },
+    {
+      "entry_time": 1773129600000,
+      "exit_time": 1773129600000,
+      "profit": 98.01,
+      "profit_pct": 0.009862414,
+      "side": "Long"
+    }
+  ],
+  "trades_truncated": false,
+  "outcome": "OK",
+  "strategy_name_read_back": "Conservative 100-Tick Structure Strategy",
+  "report_entity_id": "YKke0e",
+  "metrics": {
+    "net_profit": -18.620000000000942,
+    "net_profit_percent": -0.00018620000000000943,
+    "gross_profit": 180.51999999999944,
+    "gross_loss": 199.14000000000038,
+    "profit_factor": 0.9064979411469273,
+    "max_drawdown": 207.0500000000029,
+    "max_drawdown_percent": 0.002070500000000029,
+    "total_trades": 6,
+    "winning_trades": 3,
+    "losing_trades": 3,
+    "percent_profitable": 0.3333333333333333,
+    "avg_trade": -2.068888889,
+    "largest_win": 98.01000000000028,
+    "largest_loss": 70.00000000000006,
+    "commission_paid": 0,
+    "sharpe_ratio": -7.685681181231194,
+    "sortino_ratio": -0.9916414022490968,
+    "buy_hold_return": 937504.92,
+    "open_pl": 0
+  },
+  "currency": "EGP",
+  "coverage": {
+    "trade_count": 9,
+    "first_entry_time": 1614067200000,
+    "last_exit_time": 1773129600000,
+    "last_trade_open": false,
+    "first_entry_iso": "2021-02-23T08:00:00.000Z",
+    "last_exit_iso": "2026-03-10T08:00:00.000Z"
+  },
+  "finished_at": "2026-08-23T14:40:33.866Z"
+}
