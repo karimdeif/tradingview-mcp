@@ -99,15 +99,15 @@ must re-check it **after every symbol switch**, not once at startup.
 
 ## Still open
 
-- **Coverage window per run is not yet machine-readable.** `data_get_trades`
-  returns `time_index` (bar index) and no timestamps; the window shown above was
-  read off the panel. Phase 3 needs either a bar-index → date mapping or a panel
-  read to fill the mandatory coverage column.
+- ~~Coverage window not machine-readable~~ — **solved** (commit 3fd6c73):
+  `data_get_strategy_results` now returns `coverage` from `reportData.trades`'
+  epoch-ms bounds (`ordersData()`'s `tm` remains a bar index and is documented
+  as such).
 - `data_get_trades` returns **orders**, not round-trip trades: 20 rows (its cap)
   against 12 trades. Do not derive trade counts from its length.
 - Codex review has not run — see below.
 
-## Review status: five sol-max passes; architecture changed as a result
+## Review status: six sol-max passes; architecture changed as a result
 
 `codex exec --model gpt-5.6-sol -c model_reasoning_effort=max`, run on a15.
 
@@ -160,13 +160,15 @@ the cloud account** when the script is not a draft. It is now never called.
 
 ### Verified live after the rewrite
 
-`method: "pine_editor_facade"`, `was_draft: true` (the no-save branch),
+`method: "pine_editor_facade"`, `was_draft: true` (the reviewed draft branch,
+which persists a TV draft and never writes saved scripts),
 studies 0 → 1, exact name match, `is_strategy: true` — and the metrics came back
 **byte-identical** to the DOM-click run (+0.60%, 12 trades, PF 1.215, max DD
 1.06%), which is a useful cross-check that the new attach path changes nothing
 about the result.
 
-**Nothing was written to the account, checked rather than asserted:**
+**No saved script was written — checked rather than asserted** (the attach does
+persist a TV *draft*, as a manual "Add to chart" would):
 `listSavedScripts()` returns **12** scripts, exactly matching
 `pine-audit/inventory.json`. The editor's `scriptIdPart`
 (`USER;645f172f…`, version 0.9) is a local draft and appears nowhere in that
@@ -312,6 +314,28 @@ phase-3 harness invariant.
 
 **Tests: 60, all passing.** Fifth consecutive live pilot run: identical metrics
 through the full gate stack (attestation → draft gate → identity digest).
+
+### Pass 6 — one High: the dispatch itself was the last hole
+
+The attested `addToChart()` dynamically re-resolves `this._addToChartNewDraft()`
+when it runs — so a prototype **getter** could serve the attested function to
+every check and an unattested one to the invocation. The reviewer's executable
+probe returned `ok:true` while running the unattested function. Two fixes:
+
+1. Accessor rejection: each attested name must be a plain **data property** on
+   the prototype (`getOwnPropertyDescriptor` — any getter/setter refuses).
+2. The dispatch is bypassed entirely: with `isDraft === true` just verified,
+   `addToChart`'s only reviewed behaviour IS the draft branch, so the held,
+   attested `verified._addToChartNewDraft.call(f)` is invoked directly — never
+   a re-resolved property.
+
+The regression test builds that exact getter (attested for the checks,
+unattested for the call) and proves the unattested function never runs. Also
+fixed: two stale wording lines pass 6 flagged (a "no-save branch" and a
+"nothing was written" residue) and the outdated coverage-window open item.
+
+**Tests: 61.** Sixth consecutive byte-identical live pilot run, now through the
+directly-invoked draft branch.
 
 ### One unrelated failing test, pre-existing
 

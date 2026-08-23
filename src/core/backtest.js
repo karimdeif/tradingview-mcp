@@ -319,7 +319,14 @@ export async function attachViaFacade(evalAsync, attestedBuilds = ATTESTED_BUILD
             if (Object.prototype.hasOwnProperty.call(f, k)) {
               return { ok: false, error: 'facade.' + k + ' is shadowed by an own property — unattested code would run; refusing.' };
             }
-            var fn = proto[k];
+            // An ACCESSOR on the prototype can hand the attested function to
+            // every check and a different one to the invocation (sol-max pass
+            // 6, proven executable). Only a plain data property is acceptable.
+            var desc = Object.getOwnPropertyDescriptor(proto, k);
+            if (!desc || desc.get || desc.set || !('value' in desc)) {
+              return { ok: false, error: 'facade.' + k + ' is an accessor, not a data property — refusing.' };
+            }
+            var fn = desc.value;
             if (typeof fn !== 'function') return { ok: false, error: 'facade.' + k + ' is not a function on this build.' };
             if (f[k] !== fn) return { ok: false, error: 'facade.' + k + ' resolves to something other than the prototype member — refusing.' };
             var src;
@@ -330,8 +337,14 @@ export async function attachViaFacade(evalAsync, attestedBuilds = ATTESTED_BUILD
 
           var draft = verified.isDraft.call(f);
           if (draft !== true) return { ok: false, error: 'Editor does not hold a draft (isDraft=' + String(draft) + '). Only the draft attach branch is reviewed; open a new script and set the source again.' };
-          await verified.addToChart.call(f);
-          return { ok: true, awaited: true, was_draft: true, attested_build: build };
+          // Invoke the DRAFT BRANCH callable directly — the attested one we
+          // hold, never a re-resolved property. addToChart's own dispatch
+          // re-resolves this._addToChartNewDraft() dynamically, which a
+          // prototype getter could redirect to unattested code even after
+          // every check above (sol-max pass 6). With draft === true just
+          // verified, addToChart's only reviewed behaviour IS this call.
+          await verified._addToChartNewDraft.call(f);
+          return { ok: true, awaited: true, was_draft: true, attested_build: build, invoked: '_addToChartNewDraft' };
         } catch (e) { return { ok: false, error: (e && e.message) ? e.message : String(e) }; }
       })()
     `);

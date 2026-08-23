@@ -303,9 +303,9 @@ describe('attachViaFacade — promise behaviour (regression: pass 3, the un-awai
     let sent = '';
     await attachViaFacade(async (expr) => { sent = expr; return { ok: false }; });
     const draftCheck = sent.indexOf('verified.isDraft.call(f)');
-    const attachCall = sent.indexOf('await verified.addToChart.call(f)');
+    const attachCall = sent.indexOf('await verified._addToChartNewDraft.call(f)');
     assert.ok(draftCheck !== -1 && attachCall !== -1 && draftCheck < attachCall,
-      'isDraft must be checked before addToChart is awaited, both via the attested callables');
+      'isDraft must be checked before the draft branch is awaited, both via the attested callables');
     assert.match(sent, /draft !== true/);
   });
 });
@@ -421,8 +421,8 @@ describe('atomic attestation binding (regression: 2026-08-23 sol-max pass 5)', (
   function buildFacade() {
     class Facade {
       isDraft() { return true; }
-      async addToChart() { this._attached = true; }
-      async _addToChartNewDraft() { /* attested body */ }
+      async addToChart() { this._dispatched = true; }
+      async _addToChartNewDraft() { this._attached = true; }
     }
     const f = new Facade();
     const proto = Facade.prototype;
@@ -441,7 +441,41 @@ describe('atomic attestation binding (regression: 2026-08-23 sol-max pass 5)', (
     const r = await attachViaFacade(evaluatorFor(makeWindow({ facade: f })), attested);
     assert.equal(r.ok, true, r.error);
     assert.equal(r.awaited, true);
-    assert.equal(f._attached, true);
+    assert.equal(r.invoked, '_addToChartNewDraft');
+    assert.equal(f._attached, true, 'the verified draft branch must run');
+    assert.notEqual(f._dispatched, true, 'addToChart dispatch must be bypassed — its dynamic re-resolution is the pass-6 hole');
+  });
+
+  it('REFUSES a prototype GETTER — the pass-6 bypass (attested for checks, unattested for calls)', async () => {
+    class Facade {
+      isDraft() { return true; }
+      async addToChart() {}
+      async _addToChartNewDraft() {}
+    }
+    const f = new Facade();
+    const proto = Facade.prototype;
+    const attestedFn = proto._addToChartNewDraft;
+    let unattestedRan = false;
+    let reads = 0;
+    // getter: serves the attested fn to the first reads (the checks), then an
+    // unattested one to the invocation.
+    Object.defineProperty(proto, '_addToChartNewDraft', {
+      configurable: true,
+      get() { reads += 1; return reads <= 3 ? attestedFn : async () => { unattestedRan = true; }; },
+    });
+    const attested = { 'TVDesktop/9.9.9-test': {
+      addToChart: Function.prototype.toString.call(proto.addToChart),
+      _addToChartNewDraft: Function.prototype.toString.call(attestedFn),
+      isDraft: Function.prototype.toString.call(proto.isDraft),
+    } };
+    try {
+      const r = await attachViaFacade(evaluatorFor(makeWindow({ facade: f })), attested);
+      assert.equal(r.ok, false);
+      assert.match(r.error, /accessor, not a data property/);
+      assert.equal(unattestedRan, false, 'the getter-served unattested function must never run');
+    } finally {
+      Object.defineProperty(proto, '_addToChartNewDraft', { configurable: true, writable: true, value: attestedFn });
+    }
   });
 
   it('REFUSES an own-property shadow — the pass-5 bypass', async () => {
