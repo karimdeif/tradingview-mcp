@@ -15,7 +15,8 @@ import { registerUiTools } from './tools/ui.js';
 import { registerPaneTools } from './tools/pane.js';
 import { registerTabTools } from './tools/tab.js';
 import { registerNotesTools } from './tools/notes.js';
-import { resolveAllowlist, applyAllowlist } from './allowlist.js';
+import { registerBacktestTools } from './tools/backtest.js';
+import { resolveAllowlist, applyAllowlist, scopedWritersActive } from './allowlist.js';
 
 const server = new McpServer(
   {
@@ -93,11 +94,20 @@ registerPaneTools(server);
 registerTabTools(server);
 registerNotesTools(server);
 
+// Scoped strategy-backtest tools: SECOND gate, independent of the allowlist.
+// These drive the Pine editor's add control and clear studies, so they need an
+// explicit opt-in env var on top of being named by TV_MCP_TOOL_ALLOWLIST.
+// Without both, they are never handed to the server and cannot be invoked.
+const scopedWriters = process.env.TV_MCP_ALLOW_SCOPED_WRITERS === '1';
+const writersActive = scopedWritersActive(allowed, process.env.TV_MCP_ALLOW_SCOPED_WRITERS);
+if (writersActive) registerBacktestTools(server);
+
 // Startup notice (stderr so it doesn't interfere with MCP stdio protocol)
 process.stderr.write('⚠  tradingview-mcp  |  Unofficial tool. Not affiliated with TradingView Inc. or Anthropic.\n');
 process.stderr.write('   Ensure your usage complies with TradingView\'s Terms of Use.\n\n');
 if (allowed) {
   process.stderr.write(`   TV_MCP_TOOL_ALLOWLIST active: ${gate.registered.length} tool(s) registered, ${gate.skipped.length} withheld.\n`);
+  process.stderr.write(`   Scoped writers: env=${scopedWriters ? 'set' : 'unset'}, active=${writersActive}.\n`);
   process.stderr.write(`   Registered: ${gate.registered.join(', ')}\n`);
 } else {
   process.stderr.write(`   No allowlist set \u2014 all ${gate.registered.length} tools registered.\n`);

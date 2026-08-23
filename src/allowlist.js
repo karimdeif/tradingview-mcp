@@ -14,6 +14,8 @@
  * TV_MCP_TOOL_ALLOWLIST:
  *   unset       → upstream behaviour, all tools register
  *   'readonly'  → the READONLY_TOOLS set below
+ *   'backtest'  → READONLY_TOOLS + scoped strategy-backtest tools
+ *                 (also needs TV_MCP_ALLOW_SCOPED_WRITERS=1)
  *   'a,b,c'     → exactly those tool names
  */
 
@@ -63,6 +65,38 @@ export const HARVEST_TOOLS = [
   'watchlist_get',
 ];
 
+
+/**
+ * Strategy-backtest working set: the read-only tools plus the minimum needed to
+ * put one Pine strategy on the chart and read its Strategy Tester report.
+ *
+ * Requires TV_MCP_ALLOW_SCOPED_WRITERS=1 in addition to naming this preset —
+ * two independent gates, because these tools drive the UI rather than only
+ * reading it.
+ *
+ *   pine_set_source          — Monaco editor.setValue() only; buffer, never the
+ *                              cloud script (verified src/core/pine.js:266 on
+ *                              2026-08-23).
+ *   pine_add_to_chart        — no caller-supplied click target; fixed label set;
+ *                              refuses to fall back to Save (src/core/backtest.js)
+ *   chart_clear_studies      — no arguments at all
+ *   data_get_strategy_results / data_get_trades / data_get_equity
+ *                            — internal report API reads (src/core/data.js)
+ *
+ * Deliberately excluded: pine_save and pine_compile/pine_smart_compile (all
+ * three can write to the user's cloud scripts), every ui_*, alert_*, watchlist
+ * writers, draw_* writers, batch_run, tv_launch, tv_update.
+ */
+export const BACKTEST_TOOLS = [
+  ...READONLY_TOOLS,
+  'pine_set_source',
+  'pine_add_to_chart',
+  'chart_clear_studies',
+  'data_get_strategy_results',
+  'data_get_trades',
+  'data_get_equity',
+];
+
 /** Parse the env var into a Set of allowed names, or null for "no restriction". */
 export function resolveAllowlist(raw) {
   if (raw === undefined || raw === null) return null;
@@ -70,6 +104,7 @@ export function resolveAllowlist(raw) {
   if (trimmed === '') return null;
   if (trimmed.toLowerCase() === 'readonly') return new Set(READONLY_TOOLS);
   if (trimmed.toLowerCase() === 'harvest') return new Set(HARVEST_TOOLS);
+  if (trimmed.toLowerCase() === 'backtest') return new Set(BACKTEST_TOOLS);
   const names = trimmed.split(',').map((s) => s.trim()).filter(Boolean);
   return new Set(names);
 }
@@ -91,4 +126,24 @@ export function applyAllowlist(server, allowed) {
     return original(name, ...rest);
   };
   return { registered, skipped };
+}
+
+/** Tools gated behind TV_MCP_ALLOW_SCOPED_WRITERS, listed here so the gate is testable. */
+export const SCOPED_WRITER_TOOLS = ['pine_add_to_chart', 'chart_clear_studies'];
+
+/**
+ * Both gates must hold before the scoped writers register.
+ *
+ * The subtle part, and a real defect found by review on 2026-08-23: an unset or
+ * blank allowlist resolves to `null`, and `applyAllowlist(server, null)` permits
+ * EVERYTHING. Gating on the env var alone therefore registered these tools on a
+ * default install with no allowlist at all. The allowlist must NAME them.
+ *
+ * @param {Set<string>|null} allowed resolved allowlist
+ * @param {string|undefined} envValue raw TV_MCP_ALLOW_SCOPED_WRITERS
+ */
+export function scopedWritersActive(allowed, envValue) {
+  if (envValue !== '1') return false;
+  if (allowed === null || allowed === undefined) return false;
+  return SCOPED_WRITER_TOOLS.some((t) => allowed.has(t));
 }
