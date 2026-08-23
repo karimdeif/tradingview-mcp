@@ -31,9 +31,23 @@ splits at **2022-01-01**:
   - OOS = trades exiting after (≈2022–2026, includes the 2023–26 bull run and
     the float-devaluation shocks).
 Ranking happens on IS. The OOS column then answers "did the ranking survive
-data the ranker never saw". The **degradation ratio** (OOS avg-trade / IS
-avg-trade) is a headline column; a great IS row that collapses OOS is
-labelled OVERFIT-SUSPECT, not celebrated.
+data the ranker never saw".
+
+**The headline degradation ratio is B&H-RELATIVE, not raw** (amended
+2026-08-23, msi review): the OOS window is dominated by a single regime — the
+float-shock devaluations rolling into the 2024–26 bull — so raw OOS numbers
+flatter every long-biased strategy regardless of skill. The headline compares
+(strategy − buy-and-hold) within IS against (strategy − buy-and-hold) within
+OOS; raw sits beside it, clearly secondary. Window B&H comes from the local
+daily series (pine-audit `daily_deep.json`, 2003→, the same closes the G4
+cross-engine uses), with the known caveat that it is unadjusted where TV is
+back-adjusted — full-period agreement measured at ~1.3% on COMI. Intraday
+cells with no IS trades are OOS-ONLY rows under P4, never ranked.
+
+A great IS row that collapses OOS is labelled OVERFIT-SUSPECT, not
+celebrated. **And a page-1 sentence states plainly: this OOS is one macro
+regime — survival is necessary evidence, not sufficient. The genuinely unseen
+data is the bar-replay forward-walk the 1–2 survivors get afterwards.**
 
 **P3 — Breadth over peaks.** Per-strategy score = MEDIAN across symbols +
 fraction of symbols profitable, never the best cell. A strategy that only
