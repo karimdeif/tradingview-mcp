@@ -144,7 +144,7 @@ const INTRADAY_SYMBOLS = ['COMI', 'TMGH', 'ORAS', 'FWRY', 'ABUK', 'ISPH', 'HRHO'
  * TV path. The report must never read as "the incumbent was backtested in TV".
  */
 const BASELINE_PINE = `//@version=6
-strategy("SMA100 Per-Symbol Approx (NOT the basket)", overlay=true, initial_capital=100000, currency=currency.EGP, commission_type=strategy.commission.percent, commission_value=0.10, pyramiding=0, process_orders_on_close=false, max_bars_back=200)
+strategy("SMA100 Per-Symbol Approx (NOT the basket)", overlay=true, initial_capital=100000, currency=currency.EGP, default_qty_type=strategy.percent_of_equity, default_qty_value=100, commission_type=strategy.commission.percent, commission_value=0.10, pyramiding=0, process_orders_on_close=false, max_bars_back=200)
 sma100 = ta.sma(close, 100)
 longNow = close > sma100
 exitNow = close < sma100

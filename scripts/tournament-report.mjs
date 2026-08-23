@@ -60,17 +60,30 @@ function splitCell(c) {
     if (w.t0 === null || start < w.t0) w.t0 = start;
     if (w.t1 === null || t.exit_time > w.t1) w.t1 = t.exit_time;
   }
+  // Sum of per-trade POSITION returns per window (tp.p — return on the
+  // position itself, independent of the strategy's declared sizing).
+  const posSum = { is: 0, oos: 0 };
+  for (const t of trades) {
+    if (t.exit_time == null || t.profit_pct == null) continue;
+    posSum[t.exit_time < SPLIT_MS ? 'is' : 'oos'] += t.profit_pct;
+  }
   const out = {};
   for (const k of ['is', 'oos']) {
     const w = windows[k];
     if (!w.n) { out[k] = null; continue; }
     const stratR = w.profit / CAPITAL;
     const bh = refBH(bare, w.t0, w.t1);
+    // METRIC v2 (unit bug fixed before any ranking was consumed; v1 in git):
+    // the edge compares LIKE WITH LIKE — per-trade POSITION returns (sizing-
+    // independent timing skill) against the window's B&H, both per year.
+    // Portfolio-sized returns divided by fully-invested B&H measured only
+    // "how much of the account sat out of a bull market".
     out[k] = {
       n: w.n, years: yrs(w.t0, w.t1), strat_pct: stratR * 100,
+      pos_return_pct: posSum[k] * 100,
       bh_pct: bh === null ? null : bh * 100,
-      edge_per_year: bh === null ? null : ((stratR - bh) / yrs(w.t0, w.t1)) * 100,
-      raw_per_year: (stratR / yrs(w.t0, w.t1)) * 100,
+      edge_per_year: bh === null ? null : ((posSum[k] - bh) / yrs(w.t0, w.t1)) * 100,
+      raw_per_year: (posSum[k] / yrs(w.t0, w.t1)) * 100,
     };
   }
   return out;
@@ -136,7 +149,7 @@ L.push('');
 L.push('- Live-clock and backtest numbers answer different questions; never compare them cell-to-cell.');
 L.push('- The 20-name symbol set is today\'s liquid survivors — every backtest here inherits survivorship shine.');
 L.push('- **The OOS window (2022→) is a single macro-regime** (float shocks → 2024-26 bull): survival is necessary evidence, not sufficient. The genuinely unseen test is the bar-replay forward-walk for the finalists.');
-L.push('- Headline degradation is **B&H-relative per year** (strategy edge over holding, per window); raw sits beside it. Parameters were never tuned (P1); ranking uses IS only (P2); scores are medians across symbols (P3).');
+L.push('- Headline degradation is **B&H-relative per year**: per-trade POSITION returns (sizing-independent) minus window B&H, per year; raw position-return/yr sits beside it. Metric v2 — v1 compared portfolio-sized returns to fully-invested B&H, a unit mismatch fixed before any ranking was consumed (v1 preserved in git history). Parameters were never tuned (P1); ranking uses IS only (P2); scores are medians across symbols (P3).');
 L.push('');
 L.push('## Ranking — daily breadth strategies (by median IS edge vs B&H, %/yr)');
 L.push('');
