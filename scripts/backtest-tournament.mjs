@@ -47,7 +47,55 @@ const SRC_DIR = '/home/karim/claude-a15-20260818/pine-audit/sources';
 const REF_PATH = '/home/karim/claude-a15-20260818/pine-audit/data/daily_deep.json';
 // FATAL if unreadable — a silent {} would bypass every price band (pass 9).
 const REF_RAW = readFileSync(REF_PATH, 'utf8');
-const REF_CLOSES = Object.fromEntries(Object.entries(JSON.parse(REF_RAW)).map(([sym, bars]) => [sym, bars[bars.length - 1][4]]));
+const REF_DATA = JSON.parse(REF_RAW);
+const REF_CLOSES = Object.fromEntries(Object.entries(REF_DATA).map(([sym, bars]) => [sym, bars[bars.length - 1][4]]));
+/** Reference buy & hold per symbol (first->last close) — the OWNERSHIP axis. */
+export const REF_BH = Object.fromEntries(Object.entries(REF_DATA).map(([sym, bars]) => [sym, bars[bars.length - 1][4] / bars[0][4] - 1]));
+
+/**
+ * B&H OWNERSHIP band — report-level corroboration only. Two scalars (last
+ * price + B&H) cannot separate a 20-name universe of clustered mid-caps
+ * (13 confusable directed pairs measured); the decisive per-cell proof is
+ * seriesFingerprintOk below. This band stays as the validator's V7 because it
+ * needs nothing but the recorded metrics.
+ */
+export function bhOwnershipOk(symbolBare, tvBuyHoldReturn, initialCapital = 100000) {
+  const ref = REF_BH[symbolBare];
+  if (ref === undefined || tvBuyHoldReturn === null || tvBuyHoldReturn === undefined) return null; // not checkable
+  const tv = tvBuyHoldReturn / initialCapital;
+  const ratio = (1 + tv) / (1 + ref);
+  return ratio >= 0.5 && ratio <= 2 ? true : { ratio, tv_bh_pct: tv * 100, ref_bh_pct: ref * 100 };
+}
+
+/**
+ * SERIES-FINGERPRINT ownership (sol-max pass 10, the decisive check): the
+ * chart's recent DAILY closes, aligned by exact bar timestamp to the local
+ * reference series of the REQUESTED symbol, must agree date-by-date. Two
+ * different symbols cannot match >=90% of >=10 aligned daily closes within
+ * 3% — independent price paths diverge within days. Raw-vs-back-adjusted
+ * differences only bite at corporate-action boundaries, which recent windows
+ * avoid; the ref snapshot's own age bounds how many chart bars can align.
+ */
+export function seriesFingerprintOk(chartBars, refBars, { tol = 0.03, minOverlap = 10, minFrac = 0.9 } = {}) {
+  if (!Array.isArray(chartBars) || !Array.isArray(refBars)) return { ok: false, reason: 'missing series' };
+  // Align by UTC DAY: TV daily-bar times and the reference's session times
+  // differ in intra-day offset (verified live: 1787236200 ref vs 1787263200 TV
+  // are the same trading day). Exact-second alignment would zero the overlap
+  // and guard-fail every cell.
+  const day = (t) => Math.floor(t / 86400);
+  const refByTime = new Map(refBars.map((b) => [day(b[0]), b[4]]));
+  let overlap = 0;
+  let hits = 0;
+  for (const cb of chartBars) {
+    const refClose = refByTime.get(day(cb.time));
+    if (refClose === undefined) continue;
+    overlap += 1;
+    if (Math.abs(cb.close - refClose) / refClose <= tol) hits += 1;
+  }
+  if (overlap < minOverlap) return { ok: false, reason: `only ${overlap} aligned daily bars (need ${minOverlap})` };
+  const frac = hits / overlap;
+  return frac >= minFrac ? { ok: true, overlap, frac } : { ok: false, reason: `${hits}/${overlap} aligned closes within ${tol * 100}% (need ${minFrac * 100}%)`, overlap, frac };
+}
 
 /**
  * Daily set: the 20 EGX names already used by pine-audit/backtest.mjs, so the
@@ -150,6 +198,21 @@ async function setContextVerified(symbol, timeframe) {
   const prevBar = await lastBarTuple();
   await chart.setSymbol({ symbol });
   await delay(4000);
+  // Fingerprint on the DAILY series first — the reference is daily, and this
+  // must bind the cache to the symbol BEFORE any intraday timeframe hides it.
+  await chart.setTimeframe({ timeframe: '1D' });
+  await delay(2500);
+  const bare0 = symbol.split(':').pop();
+  if (REF_DATA[bare0]) {
+    let fp = null;
+    try {
+      const daily = await data.getOhlcv({ count: 60, summary: false });
+      fp = seriesFingerprintOk(daily?.bars || [], REF_DATA[bare0]);
+    } catch { fp = { ok: false, reason: 'daily bars unreadable' }; }
+    if (!fp.ok) {
+      return { ok: false, guard: true, error: `series fingerprint FAILED for ${symbol}: ${fp.reason} — the cache does not hold ${bare0}'s series` };
+    }
+  }
   await chart.setTimeframe({ timeframe });
   await delay(3000);
   // Guards RE-CHECKED after the switch: replay has been seen ACTIVATING on a
@@ -178,12 +241,28 @@ async function setContextVerified(symbol, timeframe) {
   }
   if (prevSymbol && String(prevSymbol).toUpperCase() !== symbol.toUpperCase()) {
     const newBar = await lastBarTuple();
-    if (prevBar !== null && newBar !== null && newBar === prevBar) {
+    // Unreadable EITHER side makes the change unprovable — guard failure, not
+    // a skip (pass 10: equality was only tested when both were readable).
+    if (prevBar === null || newBar === null) {
+      return { ok: false, guard: true, error: `bar cache unreadable across ${prevSymbol} -> ${symbol} — bar identity unverifiable` };
+    }
+    if (newBar === prevBar) {
       return { ok: false, guard: true, error: `bar cache did not change across ${prevSymbol} -> ${symbol}: last-bar tuple identical — FROZEN bars under a fresh label` };
     }
-    if (newBar === null) {
-      return { ok: false, guard: true, error: `could not read the bar cache after switching to ${symbol} — bar identity unverifiable` };
+  }
+  // Freshness runs UNCONDITIONALLY — including when the label already equals
+  // the target and setSymbol was a no-op (pass 10's counterexample). A live
+  // chart's newest bar cannot be ancient.
+  try {
+    const fresh = await data.getOhlcv({ count: 1, summary: false });
+    const lastT = fresh?.bars?.[fresh.bars.length - 1]?.time;
+    const ageDays = lastT ? (Date.now() / 1000 - lastT) / 86400 : Infinity;
+    const maxAge = timeframe === '1D' ? 10 : 5;
+    if (ageDays > maxAge) {
+      return { ok: false, guard: true, error: `newest bar is ${ageDays.toFixed(1)} days old (limit ${maxAge}) — stale cache` };
     }
+  } catch {
+    return { ok: false, guard: true, error: 'could not read newest bar for freshness — unverifiable' };
   }
   const last = quote.last ?? quote.price;
   const bare = symbol.split(':').pop();
@@ -286,6 +365,18 @@ async function runCell({ strat, symbol, source, title, outDir, manifestHash }) {
     }
     record.trades = rt.trades || [];
     record.trades_truncated = rt.truncated || false;
+
+    // OWNERSHIP: the report's server-computed B&H must belong to the
+    // requested symbol (daily cells; intraday B&H spans the intraday feed and
+    // is not comparable to the daily reference — those rely on the price band,
+    // freshness and tuple checks).
+    if (strat.timeframe === '1D') {
+      const own = bhOwnershipOk(symbol, results.metrics?.buy_hold_return);
+      if (own !== null && own !== true) {
+        throw new Error(`B&H ownership failed for ${symbol}: TV ${own.tv_bh_pct.toFixed(0)}% vs reference ${own.ref_bh_pct.toFixed(0)}% (ratio ${own.ratio.toFixed(2)}) — the report was computed over a DIFFERENT symbol's series`);
+      }
+      record.bh_ownership = own === true ? 'ok' : 'not_checkable';
+    }
 
     record.outcome = cellOutcome(results);
     record.strategy_name_read_back = results.strategy;

@@ -17,7 +17,7 @@
  */
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { checkResultIntegrity } from './backtest-tournament.mjs';
+import { checkResultIntegrity, bhOwnershipOk } from './backtest-tournament.mjs';
 
 const dir = process.argv[2];
 if (!dir) { console.error('usage: validate-tournament-run.mjs <runDir>'); process.exit(2); }
@@ -65,12 +65,24 @@ for (let i = 1; i < ordered.length; i++) {
     fails.push(`V5 consecutive cells share price ${ordered[i].quote_last}: ${ordered[i - 1].symbol} -> ${ordered[i].symbol}`);
   }
 }
-// V6
+// V6 — UNVERIFIABLE IS FAIL (pass 10): a run whose inventory cannot be
+// checked must not be machine-qualified.
 try {
   const before = readFileSync(join(dir, 'saved-scripts-before.json'), 'utf8');
   const after = readFileSync(join(dir, 'saved-scripts-after.json'), 'utf8');
   if (before !== after) fails.push('V6 saved-script inventory changed during the run');
-} catch { warn.push('V6 inventory snapshots incomplete (run aborted?) — verify manually'); }
+} catch { fails.push('V6 inventory snapshots incomplete — inventory unverifiable, run not qualifiable'); }
+
+// V7 — B&H ownership for daily OK cells (pass 10: tuple change is not
+// ownership; a single frozen cell with a unique stale price passed V1/V5).
+for (const c of cells) {
+  if (c.outcome !== 'OK' || String(c.timeframe).toUpperCase() !== '1D') continue;
+  const bare = String(c.symbol).split(':').pop();
+  const own = bhOwnershipOk(bare, c.metrics?.buy_hold_return);
+  if (own !== null && own !== true) {
+    fails.push(`V7 ${c.strategy}/${c.symbol}: B&H ownership failed (TV ${own.tv_bh_pct.toFixed(0)}% vs ref ${own.ref_bh_pct.toFixed(0)}%)`);
+  }
+}
 
 const okCells = cells.filter((c) => c.outcome === 'OK').length;
 console.log(JSON.stringify({

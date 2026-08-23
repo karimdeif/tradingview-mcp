@@ -1,7 +1,7 @@
 /** Pure-function tests for the tournament harness (sol-max pass 9: harness changes lacked tests). */
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { cellOutcome, parseStrategyTitle, checkResultIntegrity, normTf } from '../scripts/backtest-tournament.mjs';
+import { cellOutcome, parseStrategyTitle, checkResultIntegrity, normTf, bhOwnershipOk, seriesFingerprintOk, REF_BH } from '../scripts/backtest-tournament.mjs';
 
 describe('cellOutcome (pass 8: incomplete reports must not become NO_TRADES)', () => {
   it('ERROR when unsuccessful', () => assert.equal(cellOutcome({ success: false }), 'ERROR'));
@@ -45,4 +45,66 @@ describe('checkResultIntegrity in the harness (G1 lands where it is CALLED)', ()
     const out = checkResultIntegrity([{ symbol: 'A', metrics: { ...m } }, { symbol: 'B', metrics: { ...m } }]);
     assert.equal(out.ok, false);
   });
+});
+
+describe('B&H ownership (pass 10: change is not ownership)', () => {
+  it('accepts the true symbol', () => {
+    const tvAbs = REF_BH.COMI * 100000 * 1.01; // 1% engine disagreement
+    assert.equal(bhOwnershipOk('COMI', tvAbs), true);
+  });
+
+  it("REJECTS the reviewer's exact counterexample — ARCC's series under ABUK's label", () => {
+    const arccAbs = REF_BH.ARCC * 100000;
+    const r = bhOwnershipOk('ABUK', arccAbs);
+    assert.notEqual(r, true);
+    assert.ok(r.ratio < 0.5);
+  });
+
+  it('returns null (not checkable) for unknown symbols or missing B&H', () => {
+    assert.equal(bhOwnershipOk('ZZZZ', 1000), null);
+    assert.equal(bhOwnershipOk('COMI', null), null);
+  });
+
+  it('the band is corroboration, not proof — 13 joint-confusable pairs measured; the fingerprint is the proof', () => {
+    // ARCC-under-ABUK (the reviewer's case) fails the band; FWRY/CLHO/SKPC
+    // class pairs pass it — which is exactly why seriesFingerprintOk exists.
+    assert.notEqual(bhOwnershipOk('ABUK', REF_BH.ARCC * 100000), true);
+    assert.equal(bhOwnershipOk('SKPC', REF_BH.CLHO * 100000), true, 'documented confusable pair passes the band');
+  });
+});
+
+describe('seriesFingerprintOk (pass 10 — the decisive ownership proof)', () => {
+  const mk = (times, closes) => times.map((t, i) => [t, 0, 0, 0, closes[i], 0]);
+  const chartOf = (times, closes) => times.map((t, i) => ({ time: t, close: closes[i] }));
+  const T = Array.from({ length: 20 }, (_, i) => 1e9 + i * 86400);
+
+  it('aligns by UTC day — intra-day offsets between TV and reference times must not zero the overlap', () => {
+    const closes = T.map((_, i) => 100 + i);
+    const offsetTimes = T.map((t) => t + 27000); // same day, different session offset
+    assert.equal(seriesFingerprintOk(chartOf(offsetTimes, closes), mk(T, closes)).ok, true);
+  });
+
+  it('accepts the same series with small adjustment noise', () => {
+    const closes = T.map((_, i) => 100 + i);
+    const noisy = closes.map((c) => c * 1.01);
+    assert.equal(seriesFingerprintOk(chartOf(T, noisy), mk(T, closes)).ok, true);
+  });
+
+  it('REJECTS a different symbol at a similar price level — paths diverge date-by-date', () => {
+    const a = T.map((_, i) => 100 + Math.sin(i) * 8 + i);
+    const b = T.map((_, i) => 100 + Math.cos(i * 1.7) * 8 + i * 0.7);
+    const r = seriesFingerprintOk(chartOf(T, b), mk(T, a));
+    assert.equal(r.ok, false);
+  });
+
+  it('REJECTS when too few bars align by timestamp — unverifiable is failure', () => {
+    const r = seriesFingerprintOk(chartOf(T.slice(0, 3), [1, 2, 3]), mk(T, T.map(() => 1)));
+    assert.equal(r.ok, false);
+    assert.match(r.reason, /aligned daily bars/);
+  });
+
+  it('REJECTS missing series outright', () => {
+    assert.equal(seriesFingerprintOk(null, []).ok, false);
+  });
+
 });
