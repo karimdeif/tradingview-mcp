@@ -38,7 +38,9 @@ const FIND_STRATEGY_JS = `
       try { mi = s.metaInfo ? s.metaInfo() : null; } catch (e) {}
       var isStrat = mi && (mi.isTVScriptStrategy || mi.is_strategy);
       if ((isStrat || typeof s.reportData === 'function') && typeof s.reportData === 'function') {
-        strategies.push({ s: s, name: mi ? mi.description : null });
+        var sid = null;
+        try { sid = typeof s.id === 'function' ? s.id() : s.id; } catch (e) {}
+        strategies.push({ s: s, name: mi ? mi.description : null, id: sid || null });
       }
     }
     return strategies;
@@ -52,10 +54,10 @@ const FIND_STRATEGY_JS = `
     // Prefer one with a computed report (has .performance).
     for (var j = 0; j < strategies.length; j++) {
       var rd = _reportOf(strategies[j].s);
-      if (rd && rd.performance) return { strat: strategies[j].s, report: rd, name: strategies[j].name, strategy_count: strategies.length };
+      if (rd && rd.performance) return { strat: strategies[j].s, report: rd, name: strategies[j].name, id: strategies[j].id, strategy_count: strategies.length };
     }
     // None computed — return the first so callers can hint "open the panel".
-    if (strategies.length) return { strat: strategies[0].s, report: null, name: strategies[0].name, strategy_count: strategies.length };
+    if (strategies.length) return { strat: strategies[0].s, report: null, name: strategies[0].name, id: strategies[0].id, strategy_count: strategies.length };
     return null;
   }
   // TradingView never computes a report for a hidden strategy (crossed-out eye
@@ -278,17 +280,88 @@ export async function getStrategyResults() {
         var clean = {};
         for (var k in metrics) { if (metrics[k] !== null && metrics[k] !== undefined) clean[k] = metrics[k]; }
         var currency = rd.currency || null;
-        return {metrics: clean, currency: currency, strategy: found.name, source: 'internal_api'};
+        // Coverage window from the round-trip trades themselves: each carries
+        // entry (e.tm) and exit (x.tm) as epoch ms. Without this, a 20-year
+        // daily backtest and a 3-week intraday backtest land in the same table
+        // looking comparable. (#coverage: the panel's own date range is not
+        // exposed anywhere machine-readable; first/last trade bounds are.)
+        var coverage = null;
+        if (Array.isArray(rd.trades) && rd.trades.length) {
+          var first = rd.trades[0], last = rd.trades[rd.trades.length - 1];
+          coverage = {
+            trade_count: rd.trades.length,
+            first_entry_time: first.e ? first.e.tm : null,
+            last_exit_time: last.x ? last.x.tm : (last.e ? last.e.tm : null),
+            last_trade_open: !last.x
+          };
+        }
+        return {metrics: clean, currency: currency, strategy: found.name, entity_id: found.id || null, strategy_count: found.strategy_count, coverage: coverage, source: 'internal_api'};
       } catch(e) { return {metrics: {}, source: 'internal_api', error: e.message}; }
     })()
   `);
+  const cov = results?.coverage;
   return {
     success: Object.keys(results?.metrics || {}).length > 0,
     metric_count: Object.keys(results?.metrics || {}).length,
-    strategy: results?.strategy, currency: results?.currency, source: results?.source,
+    strategy: results?.strategy, entity_id: results?.entity_id ?? null,
+    strategy_count: results?.strategy_count ?? null,
+    currency: results?.currency, source: results?.source,
     metrics: results?.metrics || {},
+    ...(cov && {
+      coverage: {
+        ...cov,
+        first_entry_iso: cov.first_entry_time ? new Date(cov.first_entry_time).toISOString() : null,
+        last_exit_iso: cov.last_exit_time ? new Date(cov.last_exit_time).toISOString() : null,
+      },
+    }),
     ...(ready.unhidden.length && { unhidden_strategies: ready.unhidden, note: 'Strategy was hidden on the chart; it was made visible so the report could compute.' }),
     error: results?.error,
+  };
+}
+
+/**
+ * Full round-trip trade list from reportData.trades — entry/exit epoch-ms and
+ * per-trade P&L. This is the anti-overfitting substrate: it lets a run be
+ * split into in-sample / out-of-sample windows AFTER the fact without
+ * re-running, since parameters are never tuned. (ordersData(), used by
+ * data_get_trades, has only bar indices and caps at 20 — useless for this.)
+ */
+export async function getReportTrades({ max = 5000 } = {}) {
+  const cap = Math.max(1, Math.min(Number(max) || 5000, 20000));
+  const ready = await ensureStrategyTesterReady();
+  const out = await evaluate(`
+    (function() {
+      ${FIND_STRATEGY_JS}
+      try {
+        var found = findStrategy();
+        var rd = found ? _reportOf(found.strat) : null;
+        if (!rd || !Array.isArray(rd.trades)) return { trades: [], error: 'No computed strategy report with trades on chart.' };
+        var total = rd.trades.length;
+        var start = Math.max(0, total - ${cap});
+        var out = [];
+        for (var i = start; i < total; i++) {
+          var t = rd.trades[i];
+          out.push({
+            entry_time: t.e ? t.e.tm : null,
+            exit_time: t.x ? t.x.tm : null,
+            profit: t.tp ? t.tp.v : null,
+            profit_pct: t.tp ? t.tp.p : null,
+            side: t.e ? t.e.c : null,
+          });
+        }
+        return { trades: out, total_trades: total, truncated: start > 0, strategy: found.name, entity_id: found.id || null };
+      } catch (e) { return { trades: [], error: e.message }; }
+    })()
+  `);
+  return {
+    success: (out?.trades?.length || 0) > 0,
+    trade_count: out?.trades?.length || 0,
+    total_trades: out?.total_trades ?? 0,
+    truncated: out?.truncated ?? false,
+    strategy: out?.strategy, entity_id: out?.entity_id ?? null,
+    trades: out?.trades || [],
+    ...(ready.unhidden.length && { unhidden_strategies: ready.unhidden }),
+    error: out?.error,
   };
 }
 
@@ -319,6 +392,9 @@ export async function getTrades({ max_trades } = {}) {
               entry: o.e,
               price: o.p,
               qty: o.q,
+              // NB: ordersData()'s tm is a BAR INDEX (observed: 4), unlike
+              // reportData.trades where e.tm/x.tm are epoch ms. Coverage
+              // timestamps come from data_get_strategy_results, not from here.
               time_index: o.tm
             });
           }
