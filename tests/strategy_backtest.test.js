@@ -401,9 +401,16 @@ describe('digest correlation (pass 4 — id+version can be reused by an Untitled
     assert.ok(r.problems.some((p) => /DIFFERENT source is on the chart/.test(p)));
   });
 
-  it('accepts a missing study version when the digest binds (fresh-draft mechanics)', () => {
+  it('accepts a missing study version ONLY when the editor had none (fresh draft)', () => {
+    const fresh = { ...base, expectedScript: { script_id: null, version: null, digest: SCRIPT.digest } };
+    const r = verifyAttachment({ ...fresh, after: [strat({ pine_version: null, script_id: 'USER;assigned1' })] });
+    assert.deepEqual(r.problems, []);
+  });
+
+  it('REJECTS a missing study version when the editor HAD one (pass-8 finding 5)', () => {
     const r = verifyAttachment({ ...base, after: [strat({ pine_version: null })] });
-    assert.deepEqual(r.problems, [], 'digest is the unconditional binder; version is corroboration');
+    assert.equal(r.target, undefined);
+    assert.ok(r.problems.some((p) => /corroboration unavailable/.test(p)));
   });
 
   it('REJECTS a missing study digest', () => {

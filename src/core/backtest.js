@@ -632,8 +632,12 @@ export function verifyAttachment({ before, after, attached, expect_name, readFai
       else if (expectedScript.script_id && candidate.script_id !== expectedScript.script_id) {
         problems.push(`Attached study came from script ${candidate.script_id}, but the editor held ${expectedScript.script_id}.`);
       }
-      if (expectedScript.version && candidate.pine_version && candidate.pine_version !== expectedScript.version) {
-        problems.push(`Attached study is script version ${candidate.pine_version}, but the editor held ${expectedScript.version}.`);
+      if (expectedScript.version) {
+        if (!candidate.pine_version) {
+          problems.push(`Attached study exposes no script version, but the editor held ${expectedScript.version} — corroboration unavailable.`);
+        } else if (candidate.pine_version !== expectedScript.version) {
+          problems.push(`Attached study is script version ${candidate.pine_version}, but the editor held ${expectedScript.version}.`);
+        }
       }
     }
 

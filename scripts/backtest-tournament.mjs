@@ -36,6 +36,22 @@ const { evaluate, evaluateAsync, disconnect } = await import(join(R, 'connection
 const SRC_DIR = '/home/karim/claude-a15-20260818/pine-audit/sources';
 
 /**
+ * Reference last closes from the local daily series (pine-audit daily_deep,
+ * snapshot ~08-19). A frozen chart serves the PREVIOUS symbol's bars under the
+ * new symbol's label — quote.symbol reads api.symbol() while the price comes
+ * from the bar cache, so label checks all pass (sol-max pass 8; the 08-18
+ * incident shape). Two defences: a per-cell ±25% sanity band against these
+ * references, and a cross-cell duplicate-price abort — unrelated symbols must
+ * not share a last price.
+ */
+const REF_CLOSES = (() => {
+  try {
+    const D = JSON.parse(readFileSync('/home/karim/claude-a15-20260818/pine-audit/data/daily_deep.json', 'utf8'));
+    return Object.fromEntries(Object.entries(D).map(([sym, bars]) => [sym, bars[bars.length - 1][4]]));
+  } catch { return {}; }
+})();
+
+/**
  * Daily set: the 20 EGX names already used by pine-audit/backtest.mjs, so the
  * G4 cross-engine columns line up. Intraday subset: >=100M EGP average daily
  * turnover over the last 60 sessions (computed 2026-08-23 from
@@ -146,13 +162,26 @@ async function setContextVerified(symbol, timeframe) {
   if (String(quote.symbol || '').toUpperCase() !== symbol.toUpperCase()) {
     return { ok: false, error: `quote is for ${quote.symbol ?? '(none)'}, not ${symbol} — stale chart` };
   }
-  return { ok: true, last: quote.last ?? quote.price, resolution: st.resolution };
+  const last = quote.last ?? quote.price;
+  const bare = symbol.split(':').pop();
+  const ref = REF_CLOSES[bare];
+  if (ref && (last < ref * 0.75 || last > ref * 1.25)) {
+    return { ok: false, guard: true, error: `price sanity failed for ${symbol}: quote ${last} vs reference close ${ref} (±25%) — frozen or foreign bars suspected` };
+  }
+  return { ok: true, last, resolution: st.resolution };
 }
 
 export function cellOutcome(results) {
   const m = results?.metrics || {};
   if (!results?.success) return 'ERROR';
-  if ((m.total_trades ?? 0) === 0) return 'NO_TRADES';
+  if ((m.total_trades ?? 0) === 0) {
+    // An INCOMPLETE report ({performance:{all:{}}}) also yields total_trades 0
+    // — indistinguishable from a genuine zero-trade run unless we demand the
+    // fields every truly computed report carries (sol-max pass 8). buy & hold
+    // is computed for the full series regardless of trades.
+    if (m.buy_hold_return === null || m.buy_hold_return === undefined) return 'ERROR';
+    return 'NO_TRADES';
+  }
   return 'OK';
 }
 
@@ -165,7 +194,9 @@ async function runCell({ strat, symbol, source, title, outDir, manifestHash }) {
   if (existsSync(cellPath)) {
     try {
       const cached = JSON.parse(readFileSync(cellPath, 'utf8'));
-      if (cached.manifest_hash === manifestHash && cached.outcome === 'OK') return { skipped: true, cellPath };
+      const evidence = [cached.attach?.screenshot_before, cached.attach?.screenshot_after, cached.screenshot_report];
+      const evidenceIntact = evidence.every((f) => typeof f === 'string' && existsSync(f));
+      if (cached.manifest_hash === manifestHash && cached.outcome === 'OK' && evidenceIntact) return { skipped: true, cellPath };
     } catch { /* unreadable cache — re-run */ }
   }
 
@@ -181,8 +212,9 @@ async function runCell({ strat, symbol, source, title, outDir, manifestHash }) {
     if (!clear.success) throw new Error(`clearStudies failed: ${JSON.stringify(clear)}`);
 
     const ctx = await setContextVerified(`EGX:${symbol}`, strat.timeframe);
-    if (!ctx.ok) { record.guard_failure = /replay|modal/.test(ctx.error || ''); throw new Error(ctx.error); }
+    if (!ctx.ok) { record.guard_failure = ctx.guard || /replay|modal|frozen/.test(ctx.error || ''); throw new Error(ctx.error); }
     record.resolution_landed = ctx.resolution;
+    record.quote_last = ctx.last;
 
     const set = await bt.setDraftSource({ source });
     if (!set.success) throw new Error(`setDraftSource failed: ${set.error}`);
@@ -241,6 +273,15 @@ async function runCell({ strat, symbol, source, title, outDir, manifestHash }) {
   } catch (err) {
     record.outcome = 'ERROR';
     record.error = err.message;
+    // A modal/replay can appear AFTER the context check and surface as an
+    // ordinary error here — re-probe the guards so the sweep aborts instead of
+    // marching a poisoned session into the next cell (sol-max pass 8).
+    if (!record.guard_failure) {
+      try {
+        const g = await guardsClear('post-error');
+        if (!g.ok) { record.guard_failure = true; record.guard_error = g.error; }
+      } catch { record.guard_failure = true; }
+    }
   }
   record.finished_at = new Date().toISOString();
   // Atomic: never leave a half-written cell for the resume logic to trust.
@@ -296,10 +337,11 @@ async function main() {
   const inventoryBefore = await savedScriptInventory();
   writeFileSync(join(outDir, 'saved-scripts-before.json'), JSON.stringify(inventoryBefore, null, 2));
 
-  const g0 = await guardsClear('preflight');
-  if (!g0.ok) { console.error(g0.error); process.exitCode = 1; await disconnect(); return; }
-
+  const seenPrices = new Map(); // last price -> symbol; duplicates across symbols = frozen feed
   try {
+    const g0 = await guardsClear('preflight');
+    if (!g0.ok) { console.error(g0.error); process.exitCode = 1; return; }
+
     outer: for (const strat of plan) {
       let source = strat.inline ?? readFileSync(join(SRC_DIR, strat.file), 'utf8');
       if (strat.patch) {
@@ -320,6 +362,17 @@ async function main() {
         console.log(`  ${symbol}: ${res.record.outcome}` + (res.record.outcome === 'OK'
           ? ` net ${(m.net_profit_percent * 100).toFixed(2)}% trades ${m.total_trades} dd ${(m.max_drawdown_percent * 100).toFixed(2)}%`
           : ` ${res.record.error || ''}`));
+        // Cross-cell price fingerprint: two DIFFERENT symbols sharing an
+        // identical last price is the 08-18 frozen-feed signature.
+        if (res.record.quote_last != null) {
+          const owner = seenPrices.get(res.record.quote_last);
+          if (owner && owner !== symbol) {
+            console.error(`FROZEN-FEED SIGNATURE: ${symbol} and ${owner} share last price ${res.record.quote_last} — aborting.`);
+            process.exitCode = 6;
+            break outer;
+          }
+          seenPrices.set(res.record.quote_last, symbol);
+        }
         // A replay/modal guard failure means the SESSION is compromised — the
         // next cell would be just as poisoned. Abort the sweep (pass 7).
         if (res.record.guard_failure) {
