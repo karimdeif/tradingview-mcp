@@ -599,7 +599,7 @@ async function main() {
           if (cached.last_bar != null) {
             const owner = seenBars.get(cached.last_bar);
             if (owner && owner !== symbol) {
-              console.error(`FROZEN-FEED SIGNATURE (cached): ${symbol} and ${owner} share an ENTIRE last bar — aborting.`);
+              console.error(`FROZEN-FEED SIGNATURE (cached): ${symbol} and ${owner} share an identical completed-bar tail — aborting.`);
               process.exitCode = 6;
               break outer;
             }
@@ -627,7 +627,7 @@ async function main() {
         if (res.record.last_bar != null) {
           const owner = seenBars.get(res.record.last_bar);
           if (owner && owner !== symbol) {
-            console.error(`FROZEN-FEED SIGNATURE: ${symbol} and ${owner} share an ENTIRE last bar ${res.record.last_bar} — aborting.`);
+            console.error(`FROZEN-FEED SIGNATURE: ${symbol} and ${owner} share an identical completed-bar tail — aborting.`);
             process.exitCode = 6;
             break outer;
           }
