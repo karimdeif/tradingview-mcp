@@ -1,0 +1,11 @@
+//@version=6
+strategy("Canon Donchian 20/10 L/F", overlay=true, initial_capital=100000, currency=currency.EGP, default_qty_type=strategy.percent_of_equity, default_qty_value=100, commission_type=strategy.commission.percent, commission_value=0.10, pyramiding=0, calc_on_order_fills=false, process_orders_on_close=false)
+// Classic breakout: enter above 20-day high, exit below 10-day low.
+hi = ta.highest(high, 20)
+lo = ta.lowest(low, 10)
+if close[1] > hi[2] and strategy.position_size == 0
+    strategy.entry("L", strategy.long)
+if close[1] < lo[2] and strategy.position_size > 0
+    strategy.close("L")
+plot(hi, "20d high")
+plot(lo, "10d low")

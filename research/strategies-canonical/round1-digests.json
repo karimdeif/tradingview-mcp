@@ -1,0 +1,12 @@
+{
+ "supertrend-10-3": "928ea6328504fdff978a49b5d5004f0007b4f274",
+ "donchian-20-10": "21a9949080fa9bc4bbaa5bcea2b46a382602c26c",
+ "donchian-55-20": "a0402b89db4934165af289aaa9b687f080248c2a",
+ "boll-revert-20-2": "f0af6f144bea63dc50495818dc48579e2ae5c91d",
+ "rsi2-connors": "a2bbe042cc9a1da1b903359ad3d9506ec13b148b",
+ "macd-12-26-9": "00f74936c088982d37858e75a8e7463f8c174157",
+ "tsmom-252": "b4eb0c2943003736a5eeca442681c2fbccda544d",
+ "golden-cross-50-200": "322c1be89ce2ce8e1a683916f11c16b6263b1e3a",
+ "keltner-break-20-2": "88368c2beb171a6c1e55daee14ff6566f69ed1c7",
+ "psar-002-02": "581a71b0ba85c24765650e7c9907c7c2cee85ac4"
+}

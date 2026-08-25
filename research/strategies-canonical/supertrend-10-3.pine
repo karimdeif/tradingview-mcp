@@ -1,0 +1,9 @@
+//@version=6
+strategy("Canon Supertrend 10x3 L/F", overlay=true, initial_capital=100000, currency=currency.EGP, default_qty_type=strategy.percent_of_equity, default_qty_value=100, commission_type=strategy.commission.percent, commission_value=0.10, pyramiding=0, calc_on_order_fills=false, process_orders_on_close=false)
+// Textbook Supertrend: ATR 10, multiplier 3. Long while trend is up, flat otherwise.
+[st, dir] = ta.supertrend(3.0, 10)
+if dir[1] < 0 and strategy.position_size == 0
+    strategy.entry("L", strategy.long)
+if dir[1] > 0 and strategy.position_size > 0
+    strategy.close("L")
+plot(st, "Supertrend")

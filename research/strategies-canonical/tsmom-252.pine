@@ -1,0 +1,8 @@
+//@version=6
+strategy("Canon TS-Momentum 252 L/F", overlay=true, initial_capital=100000, currency=currency.EGP, default_qty_type=strategy.percent_of_equity, default_qty_value=100, commission_type=strategy.commission.percent, commission_value=0.10, pyramiding=0, calc_on_order_fills=false, process_orders_on_close=false)
+// Time-series momentum: long while the 12-month return is positive.
+mom = close - close[252]
+if mom[1] > 0 and strategy.position_size == 0
+    strategy.entry("L", strategy.long)
+if mom[1] <= 0 and strategy.position_size > 0
+    strategy.close("L")

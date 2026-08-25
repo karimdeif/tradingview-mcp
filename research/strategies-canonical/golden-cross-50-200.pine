@@ -1,0 +1,11 @@
+//@version=6
+strategy("Canon Golden Cross 50/200 L/F", overlay=true, initial_capital=100000, currency=currency.EGP, default_qty_type=strategy.percent_of_equity, default_qty_value=100, commission_type=strategy.commission.percent, commission_value=0.10, pyramiding=0, calc_on_order_fills=false, process_orders_on_close=false)
+// The classic: long while SMA50 > SMA200.
+s50 = ta.sma(close, 50)
+s200 = ta.sma(close, 200)
+if s50[1] > s200[1] and strategy.position_size == 0
+    strategy.entry("L", strategy.long)
+if s50[1] < s200[1] and strategy.position_size > 0
+    strategy.close("L")
+plot(s50, "SMA50")
+plot(s200, "SMA200")

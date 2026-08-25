@@ -1,0 +1,10 @@
+//@version=6
+strategy("Canon Bollinger Revert 20/2 L/F", overlay=true, initial_capital=100000, currency=currency.EGP, default_qty_type=strategy.percent_of_equity, default_qty_value=100, commission_type=strategy.commission.percent, commission_value=0.10, pyramiding=0, calc_on_order_fills=false, process_orders_on_close=false)
+// Mean reversion: long below the lower band, exit at the basis.
+basis = ta.sma(close, 20)
+dev = 2.0 * ta.stdev(close, 20)
+if close[1] < basis[1] - dev[1] and strategy.position_size == 0
+    strategy.entry("L", strategy.long)
+if close[1] >= basis[1] and strategy.position_size > 0
+    strategy.close("L")
+plot(basis, "basis")

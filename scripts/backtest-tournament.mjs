@@ -44,7 +44,10 @@ const SRC_DIR = '/home/karim/claude-a15-20260818/pine-audit/sources';
  * references, and a cross-cell duplicate-price abort — unrelated symbols must
  * not share a last price.
  */
-const REF_PATH = '/home/karim/claude-a15-20260818/pine-audit/data/daily_deep.json';
+// TV_REF_DATA overrides the reference-series file (e.g. the 44-symbol
+// universe extension built from QuestDB for the 2026-08-25 campaign). The
+// file's sha1 is in the manifest either way, so cache provenance holds.
+const REF_PATH = process.env.TV_REF_DATA || '/home/karim/claude-a15-20260818/pine-audit/data/daily_deep.json';
 // FATAL if unreadable — a silent {} would bypass every price band (pass 9).
 const REF_RAW = readFileSync(REF_PATH, 'utf8');
 const REF_DATA = JSON.parse(REF_RAW);
@@ -473,7 +476,19 @@ async function main() {
   const dry = args.includes('--dry');
   mkdirSync(join(outDir, 'cells'), { recursive: true });
 
-  const plan = STRATEGIES.filter((s) => !only || s.key === only);
+  // --config <file.json>: an array of {key, file(absolute), timeframe,
+  // symbols[]} replacing the built-in STRATEGIES — used by campaign rounds
+  // whose candidate set is frozen in a committed prereg. Entries get the same
+  // treatment as built-ins (title parsed from source, manifest-hashed).
+  const cfgIdx = args.indexOf('--config');
+  const roster = cfgIdx >= 0 ? JSON.parse(readFileSync(args[cfgIdx + 1], 'utf8')) : STRATEGIES;
+  if (cfgIdx >= 0) {
+    for (const r of roster) {
+      if (!r.key || !r.file || !r.timeframe || !Array.isArray(r.symbols)) throw new Error(`config entry invalid: ${JSON.stringify(r).slice(0, 120)}`);
+      if (!r.file.startsWith('/')) throw new Error(`${r.key}: config file paths must be absolute`);
+    }
+  }
+  const plan = roster.filter((s) => !only || s.key === only);
 
   // Run manifest: any change to the harness, a source file, a patch, a symbol
   // set or the TV build invalidates cached cells (sol-max pass 7).
@@ -482,9 +497,9 @@ async function main() {
     harness_sha1: createHash('sha1').update(readFileSync(new URL(import.meta.url).pathname, 'utf8')).digest('hex'),
     reference_closes_sha1: createHash('sha1').update(REF_RAW).digest('hex'),
     tv_build: tvBuild,
-    strategies: STRATEGIES.map((s) => ({
+    strategies: roster.map((s) => ({
       key: s.key, timeframe: s.timeframe, symbols: s.symbols, patch: s.patch ?? null,
-      source_sha1: createHash('sha1').update(s.inline ?? readFileSync(join(SRC_DIR, s.file), 'utf8')).digest('hex'),
+      source_sha1: createHash('sha1').update(s.inline ?? readFileSync(s.file?.startsWith('/') ? s.file : join(SRC_DIR, s.file), 'utf8')).digest('hex'),
     })),
   };
   const manifestHash = createHash('sha1').update(JSON.stringify(manifest)).digest('hex');
@@ -500,7 +515,7 @@ async function main() {
     if (!g0.ok) { console.error(g0.error); process.exitCode = 1; return; }
 
     outer: for (const strat of plan) {
-      let source = strat.inline ?? readFileSync(join(SRC_DIR, strat.file), 'utf8');
+      let source = strat.inline ?? readFileSync(strat.file?.startsWith('/') ? strat.file : join(SRC_DIR, strat.file), 'utf8');
       if (strat.patch) {
         if (!source.includes(strat.patch.from)) throw new Error(`${strat.key}: patch anchor not found`);
         source = source.replace(strat.patch.from, strat.patch.to);

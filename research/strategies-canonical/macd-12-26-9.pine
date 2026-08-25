@@ -1,0 +1,8 @@
+//@version=6
+strategy("Canon MACD 12/26/9 L/F", overlay=true, initial_capital=100000, currency=currency.EGP, default_qty_type=strategy.percent_of_equity, default_qty_value=100, commission_type=strategy.commission.percent, commission_value=0.10, pyramiding=0, calc_on_order_fills=false, process_orders_on_close=false)
+// Plain MACD line/signal cross, long/flat.
+[m, sig, _h] = ta.macd(close, 12, 26, 9)
+if ta.crossover(m, sig)[1] and strategy.position_size == 0
+    strategy.entry("L", strategy.long)
+if ta.crossunder(m, sig)[1] and strategy.position_size > 0
+    strategy.close("L")

@@ -1,0 +1,11 @@
+//@version=6
+strategy("Canon RSI-2 Connors L/F", overlay=true, initial_capital=100000, currency=currency.EGP, default_qty_type=strategy.percent_of_equity, default_qty_value=100, commission_type=strategy.commission.percent, commission_value=0.10, pyramiding=0, calc_on_order_fills=false, process_orders_on_close=false)
+// Connors RSI-2 as published: uptrend filter SMA200, entry RSI(2)<5, exit close>SMA(5).
+r2 = ta.rsi(close, 2)
+s200 = ta.sma(close, 200)
+s5 = ta.sma(close, 5)
+if close[1] > s200[1] and r2[1] < 5 and strategy.position_size == 0
+    strategy.entry("L", strategy.long)
+if close[1] > s5[1] and strategy.position_size > 0
+    strategy.close("L")
+plot(s200, "SMA200")

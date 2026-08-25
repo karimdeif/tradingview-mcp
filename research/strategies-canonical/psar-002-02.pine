@@ -1,0 +1,9 @@
+//@version=6
+strategy("Canon Parabolic SAR .02/.2 L/F", overlay=true, initial_capital=100000, currency=currency.EGP, default_qty_type=strategy.percent_of_equity, default_qty_value=100, commission_type=strategy.commission.percent, commission_value=0.10, pyramiding=0, calc_on_order_fills=false, process_orders_on_close=false)
+// Wilder's defaults: start 0.02, increment 0.02, max 0.2. Long while price above SAR.
+sar = ta.sar(0.02, 0.02, 0.2)
+if close[1] > sar[1] and strategy.position_size == 0
+    strategy.entry("L", strategy.long)
+if close[1] < sar[1] and strategy.position_size > 0
+    strategy.close("L")
+plot(sar, "SAR", style=plot.style_cross)
