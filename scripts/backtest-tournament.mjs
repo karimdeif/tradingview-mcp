@@ -23,7 +23,7 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync, renameSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { join, basename } from 'node:path';
+import { join, basename, resolve } from 'node:path';
 
 const R = new URL('../src/', import.meta.url).pathname;
 const chart = await import(join(R, 'core/chart.js'));
@@ -53,7 +53,9 @@ const REF_RAW = readFileSync(REF_PATH, 'utf8');
 const REF_DATA = JSON.parse(REF_RAW);
 const REF_CLOSES = Object.fromEntries(Object.entries(REF_DATA).map(([sym, bars]) => [sym, bars[bars.length - 1][4]]));
 /** Reference buy & hold per symbol (first->last close) — the OWNERSHIP axis. */
-export const REF_BH = Object.fromEntries(Object.entries(REF_DATA).map(([sym, bars]) => [sym, bars[bars.length - 1][4] / bars[0][4] - 1]));
+export const REF_BH = Object.fromEntries(Object.entries(REF_DATA)
+  .filter(([, bars]) => bars.length && bars[0][4] > 0)
+  .map(([sym, bars]) => [sym, bars[bars.length - 1][4] / bars[0][4] - 1]));
 
 /**
  * B&H OWNERSHIP band — report-level corroboration only. Two scalars (last
@@ -62,8 +64,8 @@ export const REF_BH = Object.fromEntries(Object.entries(REF_DATA).map(([sym, bar
  * seriesFingerprintOk below. This band stays as the validator's V7 because it
  * needs nothing but the recorded metrics.
  */
-export function bhOwnershipOk(symbolBare, tvBuyHoldReturn, initialCapital = 100000) {
-  const ref = REF_BH[symbolBare];
+export function bhOwnershipOk(symbolBare, tvBuyHoldReturn, initialCapital = 100000, refBh = REF_BH) {
+  const ref = refBh[symbolBare];
   if (ref === undefined || tvBuyHoldReturn === null || tvBuyHoldReturn === undefined) return null; // not checkable
   const tv = tvBuyHoldReturn / initialCapital;
   const ratio = (1 + tv) / (1 + ref);
@@ -335,7 +337,9 @@ export function cellOutcome(results) {
 }
 
 async function runCell({ strat, symbol, source, title, outDir, manifestHash }) {
-  const cellPath = join(outDir, 'cells', `${strat.key}__${symbol}.json`);
+  const cellsRoot = resolve(outDir, 'cells');
+  const cellPath = resolve(cellsRoot, `${strat.key}__${symbol}.json`);
+  if (!cellPath.startsWith(cellsRoot + '/')) throw new Error(`cell path escapes the run directory: ${cellPath}`);
   // A cached cell is trusted ONLY if it succeeded under the SAME manifest —
   // a config change (patch, symbols, timeframe, source edit, harness edit,
   // TV build) must invalidate it, and ERROR/NO_TRADES cells are retried
@@ -481,12 +485,36 @@ async function main() {
   // whose candidate set is frozen in a committed prereg. Entries get the same
   // treatment as built-ins (title parsed from source, manifest-hashed).
   const cfgIdx = args.indexOf('--config');
-  const roster = cfgIdx >= 0 ? JSON.parse(readFileSync(args[cfgIdx + 1], 'utf8')) : STRATEGIES;
+  let roster;
   if (cfgIdx >= 0) {
-    for (const r of roster) {
-      if (!r.key || !r.file || !r.timeframe || !Array.isArray(r.symbols)) throw new Error(`config entry invalid: ${JSON.stringify(r).slice(0, 120)}`);
-      if (!r.file.startsWith('/')) throw new Error(`${r.key}: config file paths must be absolute`);
-    }
+    const raw = JSON.parse(readFileSync(args[cfgIdx + 1], 'utf8'));
+    // PROJECT each entry onto the declared schema — a config must not smuggle
+    // `inline` or `patch` past the frozen reviewed sources (sol pass 15), and
+    // keys/symbols become filesystem paths, so they get strict syntax,
+    // uniqueness, and containment checks.
+    const seenKeys = new Set();
+    roster = raw.map((r) => {
+      const extra = Object.keys(r).filter((k) => !['key', 'file', 'timeframe', 'symbols'].includes(k));
+      if (extra.length) throw new Error(`config entry ${r.key ?? '?'}: undeclared fields ${extra.join(',')} rejected`);
+      if (!/^[a-z0-9][a-z0-9._-]{0,63}$/.test(r.key ?? '')) throw new Error(`config key invalid: ${JSON.stringify(r.key)}`);
+      if (seenKeys.has(r.key)) throw new Error(`duplicate config key ${r.key} — cache aliasing`);
+      seenKeys.add(r.key);
+      if (typeof r.file !== 'string' || !r.file.startsWith('/')) throw new Error(`${r.key}: file must be an absolute path`);
+      if (typeof r.timeframe !== 'string' || !/^([0-9]{1,3}|1D|D|W)$/.test(r.timeframe)) throw new Error(`${r.key}: timeframe invalid`);
+      if (!Array.isArray(r.symbols) || !r.symbols.length) throw new Error(`${r.key}: symbols required`);
+      const seenSyms = new Set();
+      for (const sym of r.symbols) {
+        if (!/^[A-Z0-9]{1,12}$/.test(sym)) throw new Error(`${r.key}: symbol invalid: ${JSON.stringify(sym)}`);
+        if (seenSyms.has(sym)) throw new Error(`${r.key}: duplicate symbol ${sym}`);
+        seenSyms.add(sym);
+        // The ownership guards FAIL OPEN on a missing reference symbol —
+        // so missing coverage aborts the run up front (sol pass 15).
+        if (!REF_DATA[sym]) throw new Error(`${r.key}: symbol ${sym} has no series in the reference file (${REF_PATH}) — fingerprint/price-band would silently skip; extend TV_REF_DATA first`);
+      }
+      return { key: r.key, file: r.file, timeframe: r.timeframe, symbols: [...r.symbols] };
+    });
+  } else {
+    roster = STRATEGIES;
   }
   const plan = roster.filter((s) => !only || s.key === only);
 

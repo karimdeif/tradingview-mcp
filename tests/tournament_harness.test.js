@@ -49,14 +49,15 @@ describe('checkResultIntegrity in the harness (G1 lands where it is CALLED)', ()
 });
 
 describe('B&H ownership (pass 10: change is not ownership)', () => {
+  const FIX = { COMI: 166.07, ABUK: 27.07, ARCC: 5.94 }; // legacy raw-B&H fixtures
   it('accepts the true symbol', () => {
-    const tvAbs = REF_BH.COMI * 100000 * 1.01; // 1% engine disagreement
-    assert.equal(bhOwnershipOk('COMI', tvAbs), true);
+    const tvAbs = FIX.COMI * 100000 * 1.01; // 1% engine disagreement
+    assert.equal(bhOwnershipOk('COMI', tvAbs, 100000, FIX), true);
   });
 
   it("REJECTS the reviewer's exact counterexample — ARCC's series under ABUK's label", () => {
-    const arccAbs = REF_BH.ARCC * 100000;
-    const r = bhOwnershipOk('ABUK', arccAbs);
+    const arccAbs = FIX.ARCC * 100000;
+    const r = bhOwnershipOk('ABUK', arccAbs, 100000, FIX);
     assert.notEqual(r, true);
     assert.ok(r.ratio < 0.5);
   });
@@ -67,10 +68,9 @@ describe('B&H ownership (pass 10: change is not ownership)', () => {
   });
 
   it('the band is corroboration, not proof — 13 joint-confusable pairs measured; the fingerprint is the proof', () => {
-    // ARCC-under-ABUK (the reviewer's case) fails the band; FWRY/CLHO/SKPC
-    // class pairs pass it — which is exactly why seriesFingerprintOk exists.
-    assert.notEqual(bhOwnershipOk('ABUK', REF_BH.ARCC * 100000), true);
-    assert.equal(bhOwnershipOk('SKPC', REF_BH.CLHO * 100000), true, 'documented confusable pair passes the band');
+    const FIX2 = { ABUK: 27.07, ARCC: 5.94, SKPC: 12.01, CLHO: 11.63 };
+    assert.notEqual(bhOwnershipOk('ABUK', FIX2.ARCC * 100000, 100000, FIX2), true);
+    assert.equal(bhOwnershipOk('SKPC', FIX2.CLHO * 100000, 100000, FIX2), true, 'documented confusable pair passes the band');
   });
 });
 
