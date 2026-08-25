@@ -57,12 +57,16 @@ for (const key of keys) {
   const stratMan = manifest.strategies.find((s) => s.key === key);
   // CRLF-canonical source digest, recomputed from the actual source file —
   // fail CLOSED when unavailable (a made-up digest is worse than none).
-  let crlf = null;
-  if (sourceMap[key]) {
-    const srcText = readFileSync(sourceMap[key], 'utf8');
-    crlf = sha1(srcText.replace(/\r\n/g, '\n').replace(/\n/g, '\r\n'));
+  // FAIL CLOSED, whole-run (sol pass 18): a partial registry written with
+  // success invites silent gaps; and the mapped file must BE the run's source
+  // — its raw sha1 is cross-checked against the manifest's recorded hash.
+  if (!sourceMap[key]) { console.error(`ABORT: ${key} has no --sources mapping — no partial registries`); process.exit(1); }
+  const srcText = readFileSync(sourceMap[key], 'utf8');
+  if (stratMan?.source_sha1 && sha1(srcText) !== stratMan.source_sha1) {
+    console.error(`ABORT: ${key}: mapped file ${sourceMap[key]} (raw sha1 ${sha1(srcText).slice(0, 12)}) is not the run's source (manifest ${stratMan.source_sha1.slice(0, 12)})`);
+    process.exit(1);
   }
-  if (!crlf) { console.error(`SKIP ${key}: no source file to compute the CRLF-canonical digest (pass --sources)`); continue; }
+  const crlf = sha1(srcText.replace(/\r\n/g, '\n').replace(/\n/g, '\r\n'));
   const digest12 = crlf.slice(0, 12);
   const tf = sc[0]?.timeframe ?? 'na';
   const window = `${(row.coverage_min || 'na').slice(0, 10)}..${(row.coverage_max || 'na').slice(0, 10)}`;

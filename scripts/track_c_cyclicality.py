@@ -60,11 +60,15 @@ def effect_ci(flagged, n=2000, block=10):
     return (diffs[int(0.025*len(diffs))], diffs[int(0.975*len(diffs))]) if diffs else (float('nan'), float('nan'))
 
 def on_off_family(label_fn, scale=1e4, series=None):
-    """Generic on/off family: IS/OOS effects + bootstrap CIs on both windows."""
+    """Generic on/off family: IS/OOS effects + bootstrap CIs on both windows.
+    Rows may be (date, ret) or (date, ret, target_date); the split uses BOTH
+    dates when a target exists (sol 18: a 2021-12-30 signal with a 2022-01-02
+    payoff is OOS)."""
     src = series if series is not None else basket
     out = {}
     for w in ('is', 'oos'):
-        flagged = [(r, label_fn(d)) for d, r in src if pair_split(d) == w]
+        flagged = [(row[1], label_fn(row[0])) for row in src
+                   if pair_split(row[0], row[2] if len(row) > 2 else None) == w]
         on = [r for r, f in flagged if f]; off = [r for r, f in flagged if not f]
         if not on or not off: out[w] = None; continue
         lo, hi = effect_ci(flagged)
@@ -76,9 +80,9 @@ findings = {"prereg": "docs/PREREG_CAMPAIGN_2026-08-25.md", "split": "2022-01-01
             "proxy_note": "PROXY basket = equal-weight deep-36, NOT the N=80 live basket", "families": {}}
 
 # ---- F1: NEXT-day return classified by the SIGNAL day's weekday (as registered) ----
-nextday = []  # (signal_date, next_day_return)
+nextday = []  # (signal_date, next_day_return, target_date)
 for i in range(len(basket)-1):
-    nextday.append((basket[i][0], basket[i+1][1]))
+    nextday.append((basket[i][0], basket[i+1][1], basket[i+1][0]))
 f1 = []
 for wd, name in [(6,'Sun'),(0,'Mon'),(1,'Tue'),(2,'Wed'),(3,'Thu')]:
     fam = on_off_family(lambda d, wd=wd: d.weekday() == wd, series=nextday)
@@ -99,7 +103,8 @@ def month_family(series, scale=100):
         fam = on_off_family(lambda d, m=m: d.month == m, scale=scale, series=series)
         if not fam['is'] or not fam['oos'] or fam['is']['n_on'] < 5 or fam['oos']['n_on'] < 2: continue
         rows.append({"month": m, "is_pct": round(fam['is']['eff'],2), "is_ci": [round(x,2) for x in fam['is']['ci']],
-                     "oos_pct": round(fam['oos']['eff'],2), "n_is": fam['is']['n_on'], "n_oos": fam['oos']['n_on'],
+                     "oos_pct": round(fam['oos']['eff'],2), "oos_ci": [round(x,2) for x in fam['oos']['ci']],
+                     "n_is": fam['is']['n_on'], "n_oos": fam['oos']['n_on'],
                      "survives": survives(fam['is']['eff'], fam['oos']['eff'])})
     return rows
 findings["families"]["F2_month_of_year"] = month_family(mrets)
@@ -114,7 +119,7 @@ ram = [(datetime.date.fromisoformat(s), datetime.date.fromisoformat(s)+datetime.
 def in_ram(d): return any(a <= d < b for a, b in ram)          # end-exclusive → 30 days
 eidset = set()
 for _, b in ram:
-    for k in range(0, 5): eidset.add(b + datetime.timedelta(days=k))   # 5 days from true end
+    for k in range(-5, 6): eidset.add(b + datetime.timedelta(days=k))  # ±5 around the true end (prereg literal)
 base_noeid = [(d, r) for d, r in basket if d not in eidset]
 famR = on_off_family(in_ram, series=base_noeid)
 famE = on_off_family(lambda d: d in eidset, series=[(d, r) for d, r in basket if not in_ram(d)])
@@ -122,9 +127,12 @@ findings["families"]["F3_ramadan"] = {
   "declared_direction": "positive",
   "is_bp": round(famR['is']['eff'],2) if famR['is'] else None, "is_ci": [round(x,2) for x in famR['is']['ci']] if famR['is'] else None,
   "oos_bp": round(famR['oos']['eff'],2) if famR['oos'] else None,
+  "oos_ci": [round(x,2) for x in famR['oos']['ci']] if famR['oos'] else None,
   "survives": bool(famR['is'] and famR['oos'] and survives(famR['is']['eff'], famR['oos']['eff']) and famR['is']['eff'] > 0),
   "eid_is_bp": round(famE['is']['eff'],2) if famE['is'] else None,
+  "eid_is_ci": [round(x,2) for x in famE['is']['ci']] if famE['is'] else None,
   "eid_oos_bp": round(famE['oos']['eff'],2) if famE['oos'] else None,
+  "eid_oos_ci": [round(x,2) for x in famE['oos']['ci']] if famE['oos'] else None,
   "note": "30d end-exclusive windows; Eid = 5 days from window end; controls exclude the other regime"}
 
 # ---- F4: turn-of-month −1..+3 relative to the first trading day ----
@@ -142,18 +150,24 @@ findings["families"]["F4_turn_of_month"] = {
   "declared_direction": "positive",
   "is_bp": round(famT['is']['eff'],2) if famT['is'] else None, "is_ci": [round(x,2) for x in famT['is']['ci']] if famT['is'] else None,
   "oos_bp": round(famT['oos']['eff'],2) if famT['oos'] else None,
+  "oos_ci": [round(x,2) for x in famT['oos']['ci']] if famT['oos'] else None,
   "survives": bool(famT['is'] and famT['oos'] and survives(famT['is']['eff'], famT['oos']['eff']) and famT['is']['eff'] > 0)}
 
 # ---- F5: cross-asset lead-lag — positional next trading week; monthly USDEGP ----
 def series_points(key, tf, diff=False):
     src = MACRO[key][tf]
-    pts = {}
-    for i in range(1, len(src)):
-        if not diff and not src[i-1][1]: continue
-        d = day(src[i][0])
-        v = (src[i][1]-src[i-1][1]) if diff else (src[i][1]/src[i-1][1]-1)
-        pts[d] = v                                                # last bar per date wins, explicit
-    return sorted(pts.items())
+    # Dedupe to the LAST bar per date FIRST, then compute returns over the
+    # deduped level series (sol 18: return-then-overwrite lost information).
+    levels = {}
+    for t, v in src:
+        levels[day(t)] = v
+    lv = sorted(levels.items())
+    pts = []
+    for i in range(1, len(lv)):
+        if not diff and not lv[i-1][1]: continue
+        v = (lv[i][1]-lv[i-1][1]) if diff else (lv[i][1]/lv[i-1][1]-1)
+        pts.append((lv[i][0], v))
+    return pts
 egx_w = series_points('egx30', 'W')
 egx_dates = [d for d, _ in egx_w]
 def next_week_target(d):
@@ -184,20 +198,17 @@ egx_m = series_points('egx30', 'M')
 for key, direction, tf, isdiff in PAIRS:
     pts = series_points(key, tf, diff=isdiff)
     buckets = {"is": ([], []), "oos": ([], [])}
-    if tf == 'W':
-        for d, x in pts:
-            nt = next_week_target(d)
-            if not nt: continue
-            ed, er = nt
-            b = buckets[pair_split(d, ed)]
-            b[0].append(x); b[1].append(er)
-    else:  # monthly: predictor month m -> EGX month m+1 (positional)
-        for i, (d, x) in enumerate(pts):
-            nxt = [(ed, er) for ed, er in egx_m if ed > d + datetime.timedelta(days=5)]
-            if not nxt: continue
-            ed, er = nxt[0]
-            b = buckets[pair_split(d, ed)]
-            b[0].append(x); b[1].append(er)
+    # ONE-TO-ONE non-overlapping pairing (sol 18: two predictor weeks were
+    # reusing one payoff bar): a target pointer only advances.
+    tgt = egx_w if tf == 'W' else egx_m
+    gap = datetime.timedelta(days=2 if tf == 'W' else 5)
+    ti = 0
+    for d, x in pts:
+        while ti < len(tgt) and tgt[ti][0] <= d + gap: ti += 1
+        if ti >= len(tgt): break
+        ed, er = tgt[ti]; ti += 1
+        b = buckets[pair_split(d, ed)]
+        b[0].append(x); b[1].append(er)
     (ix, iy), (ox, oy) = buckets['is'], buckets['oos']
     pi, po, si, so = corr(ix, iy), corr(ox, oy), spearman(ix, iy), spearman(ox, oy)
     want = 1 if direction == "positive" else -1
@@ -214,7 +225,11 @@ wk = {}
 for d, r in basket:
     key = d.isocalendar()[:2]
     wk.setdefault(key, []).append((d, r))
-bweek = sorted((max(v)[0], sum(x for _, x in v)) for _, v in wk.items())
+def _compound(rs): 
+    p = 1.0
+    for x in rs: p *= (1 + x)
+    return p - 1
+bweek = sorted((max(v)[0], _compound([x for _, x in v])) for _, v in wk.items())
 def ar1_of(pairs):
     xs = [r for _, r in pairs]
     return corr(xs[:-1], xs[1:]) if len(xs) > 10 else float('nan')
@@ -228,6 +243,7 @@ def month_add(ym, k):
     y, m = ym; m += k
     return (y + (m-1)//12, (m-1) % 12 + 1)
 months = sorted(set(k for v in mclose.values() for k in v))
+LAST_COMPLETE = months[-2] if len(months) > 1 else None  # final month is partial (right-censoring, sol 18)
 spread = {"is": [], "oos": []}
 for m0 in months:
     m12, m1, mf = month_add(m0, -13), month_add(m0, -1), month_add(m0, 1)   # calendar arithmetic (sol 17)
@@ -236,7 +252,7 @@ for m0 in months:
         mc = mclose[sym]
         if all(k in mc for k in (m0, m12, m1, mf)) and mc[m12] and mc[m0]:
             scored.append((mc[m1]/mc[m12]-1, mc[mf]/mc[m0]-1))
-    if len(scored) < 20: continue
+    if len(scored) < 20 or (LAST_COMPLETE and mf > LAST_COMPLETE): continue
     scored.sort(key=lambda x: x[0])
     k = max(2, len(scored)//10)                                            # deciles per prereg (sol 17)
     sp = statistics.mean(x[1] for x in scored[-k:]) - statistics.mean(x[1] for x in scored[:k])
