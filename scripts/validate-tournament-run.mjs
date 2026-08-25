@@ -26,29 +26,34 @@ const cells = readdirSync(join(dir, 'cells')).filter((f) => f.endsWith('.json'))
 const fails = [];
 const warn = [];
 
-// V1 (global) — pass-20 semantics, mirrored from the reviewed in-run
-// detector: the frozen signature is an identical COMPLETED-BAR TAIL across
-// symbols; a bare price collision is piastre quantization (warning) whenever
-// tail keys exist and differ. Cells from pre-tail harnesses (no last_bar)
-// keep the strict price rule — they have no stronger evidence to stand on.
+// V1 (global) — pass-20 semantics, TWO-PASS (sol pass 22: streaming evaluation
+// was order-dependent; collision softening must consider every cell of both
+// symbols at a price, so evidence is aggregated first, judged second).
+// Failure classes: identical completed-bar tail across symbols; a cross-symbol
+// price collision where EITHER symbol has ANY tail-less cell at that price.
+// Only all-tails-on-both-sides collisions soften to piastre warnings.
 const byTail = new Map();
-const byPrice = new Map();
 for (const c of cells) {
-  if (c.last_bar != null) {
-    const towner = byTail.get(c.last_bar);
-    if (towner && towner !== c.symbol) fails.push(`V1 identical completed-bar tail: ${c.symbol} and ${towner}`);
-    else byTail.set(c.last_bar, c.symbol);
-  }
-  if (c.quote_last == null) continue;
-  const prev = byPrice.get(c.quote_last);
-  if (prev && prev.symbol !== c.symbol) {
-    // A collision softens to a warning only when BOTH sides carry tail
-    // evidence — otherwise order-dependence lets a legacy cell hide behind a
-    // modern one (sol pass 21).
-    if (c.last_bar != null && prev.hasTail) warn.push(`V1 price collision ${c.quote_last}: ${c.symbol} and ${prev.symbol} — piastre quantization (tails differ)`);
-    else fails.push(`V1 duplicate price ${c.quote_last}: ${c.symbol} and ${prev.symbol} (tail evidence missing on ${c.last_bar == null ? c.symbol : prev.symbol})`);
-  } else if (!prev) byPrice.set(c.quote_last, { symbol: c.symbol, hasTail: c.last_bar != null });
+  if (c.last_bar == null) continue;
+  const towner = byTail.get(c.last_bar);
+  if (towner && towner !== c.symbol) fails.push(`V1 identical completed-bar tail: ${c.symbol} and ${towner}`);
+  else byTail.set(c.last_bar, c.symbol);
 }
+const priceMap = new Map(); // price -> Map(symbol -> allCellsHaveTail)
+for (const c of cells) {
+  if (c.quote_last == null) continue;
+  if (!priceMap.has(c.quote_last)) priceMap.set(c.quote_last, new Map());
+  const m = priceMap.get(c.quote_last);
+  m.set(c.symbol, (m.get(c.symbol) ?? true) && c.last_bar != null);
+}
+for (const [price, m] of priceMap) {
+  if (m.size < 2) continue;
+  const syms = [...m.entries()];
+  const weak = syms.filter(([, hasTail]) => !hasTail).map(([sym]) => sym);
+  if (weak.length) fails.push(`V1 duplicate price ${price}: ${syms.map(([sym]) => sym).join(' / ')} (tail evidence missing on ${weak.join(', ')})`);
+  else warn.push(`V1 price collision ${price}: ${syms.map(([sym]) => sym).join(' / ')} — piastre quantization (all tails present and distinct)`);
+}
+
 // V2
 for (const c of cells) {
   if (c.outcome === 'NO_TRADES' && (c.metrics?.buy_hold_return === null || c.metrics?.buy_hold_return === undefined)) {
