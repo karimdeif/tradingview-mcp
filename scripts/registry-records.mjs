@@ -10,11 +10,18 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { loadCells, strategyRow } from './lib-tournament-stats.mjs';
+import { initStats, loadCells, strategyRow } from './lib-tournament-stats.mjs';
 
 const dir = process.argv[2];
 const universe = process.argv[3];
-if (!dir || !universe) { console.error('usage: registry-records.mjs <runDir> <universeLabel> [--out DIR]'); process.exit(2); }
+if (!dir || !universe) { console.error('usage: registry-records.mjs <runDir> <universeLabel> [--sources roster.json] [--out DIR]'); process.exit(2); }
+const srcIdx = process.argv.indexOf('--sources');
+/** key -> absolute source path, for recomputing the CRLF-canonical digest the
+ * prereg and the attach identity actually use (the manifest stores raw-LF
+ * sha1s; labeling those CRLF was wrong — sol pass 17). */
+const sourceMap = srcIdx >= 0
+  ? Object.fromEntries(JSON.parse(readFileSync(process.argv[srcIdx + 1], 'utf8')).map((r) => [r.key, r.file]))
+  : {};
 const outDir = process.argv.includes('--out') ? process.argv[process.argv.indexOf('--out') + 1] : join(dir, 'registry');
 mkdirSync(outDir, { recursive: true });
 
@@ -26,12 +33,15 @@ const validation = (() => {
 
 const manifest = JSON.parse(readFileSync(join(dir, 'run-manifest.json'), 'utf8'));
 const commit = execFileSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: import.meta.dirname, encoding: 'utf8' }).trim();
+initStats(dir);
 const cells = loadCells(dir);
 const sha1 = (t) => createHash('sha1').update(t).digest('hex');
 
 /** Verdict per the prereg vocabulary — mechanical, no judgment. */
 export function verdictOf(row) {
-  if (row.ok === 0) return 'UNRUNNABLE';
+  // ok===0 splits: cells that RAN and produced zero trades are evidence
+  // absence, not unrunnability (sol pass 17).
+  if (row.ok === 0) return row.no_trades > 0 ? 'INSUFFICIENT-EVIDENCE' : 'UNRUNNABLE';
   if (row.flags.includes('INSUFFICIENT-EVIDENCE') || row.flags.includes('SPARSE-EDGE-SUBSET') || row.flags.includes('OOS-ONLY')) return 'INSUFFICIENT-EVIDENCE';
   if (row.flags.includes('OVERFIT-SUSPECT')) return 'OVERFIT-SUSPECT';
   if (row.med_is_edge !== null && row.med_is_edge > 0
@@ -45,18 +55,30 @@ for (const key of keys) {
   const sc = cells.filter((c) => c.strategy === key);
   const row = strategyRow(key, sc);
   const stratMan = manifest.strategies.find((s) => s.key === key);
-  const digest12 = (stratMan?.source_sha1 || sha1(key)).slice(0, 12);
+  // CRLF-canonical source digest, recomputed from the actual source file —
+  // fail CLOSED when unavailable (a made-up digest is worse than none).
+  let crlf = null;
+  if (sourceMap[key]) {
+    const srcText = readFileSync(sourceMap[key], 'utf8');
+    crlf = sha1(srcText.replace(/\r\n/g, '\n').replace(/\n/g, '\r\n'));
+  }
+  if (!crlf) { console.error(`SKIP ${key}: no source file to compute the CRLF-canonical digest (pass --sources)`); continue; }
+  const digest12 = crlf.slice(0, 12);
+  const tf = sc[0]?.timeframe ?? 'na';
   const window = `${(row.coverage_min || 'na').slice(0, 10)}..${(row.coverage_max || 'na').slice(0, 10)}`;
-  const okBH = sc.filter((c) => c.outcome === 'OK' && c.metrics?.buy_hold_return != null);
+  // Direct comparison of two absolute-EGP fields — net −5 beating B&H −10
+  // counts (sol pass 17's exact case).
+  const okBH = sc.filter((c) => c.outcome === 'OK' && c.metrics?.buy_hold_return != null && c.metrics?.net_profit != null);
   const beatBH = okBH.length
-    ? okBH.filter((c) => (c.metrics.net_profit_percent ?? 0) * 100000 > 0 && c.metrics.net_profit ? c.metrics.net_profit > c.metrics.buy_hold_return : false).length / okBH.length
+    ? okBH.filter((c) => c.metrics.net_profit > c.metrics.buy_hold_return).length / okBH.length
     : null;
   records.push({
-    registry_id: `${key}@${digest12}#${window}`,
+    registry_id: `${key}@${digest12}#${universe}#${tf}#${window}`,
     date: new Date().toISOString().slice(0, 10),
     family: key.replace(/-[0-9].*$/, ''),
     title: sc[0]?.title ?? null,
-    source_sha1_crlf: stratMan?.source_sha1 ?? null,
+    source_sha1_crlf: crlf,
+    source_sha1_raw_manifest: stratMan?.source_sha1 ?? null,
     params: 'frozen-published',
     universe, timeframe: sc[0]?.timeframe ?? null,
     window: { start: row.coverage_min, end: row.coverage_max },

@@ -3,13 +3,38 @@
  * Extracted verbatim from tournament-report.mjs (sol-reviewed lineage). */
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { createHash } from 'node:crypto';
 
 export const SPLIT_MS = Date.UTC(2022, 0, 1);
 export const CAPITAL = 100000;
-const REF = JSON.parse(readFileSync(process.env.TV_REF_DATA || '/home/karim/claude-a15-20260818/pine-audit/data/daily_deep.json', 'utf8'));
+
+/**
+ * The reference series MUST be the one the run was recorded against — the
+ * wrong file silently reshapes edges, denominators, flags and verdicts (sol
+ * pass 17). initStats(runDir) loads the file named by TV_REF_DATA (or the
+ * legacy default) and REFUSES to proceed unless its sha1 matches the run
+ * manifest's reference_closes_sha1 (when the manifest carries one).
+ */
+let REF = null;
+export function initStats(runDir) {
+  const path = process.env.TV_REF_DATA || '/home/karim/claude-a15-20260818/pine-audit/data/daily_deep.json';
+  const raw = readFileSync(path, 'utf8');
+  try {
+    const man = JSON.parse(readFileSync(join(runDir, 'run-manifest.json'), 'utf8'));
+    if (man.reference_closes_sha1) {
+      const got = createHash('sha1').update(raw).digest('hex');
+      if (got !== man.reference_closes_sha1) {
+        throw new Error(`reference file ${path} (sha1 ${got.slice(0, 12)}) does not match the run manifest's reference ${man.reference_closes_sha1.slice(0, 12)} — set TV_REF_DATA to the file the run used`);
+      }
+    }
+  } catch (e) { if (String(e.message).includes('does not match')) throw e; /* no manifest = legacy run, proceed */ }
+  REF = JSON.parse(raw);
+  return REF;
+}
+function ref() { if (!REF) throw new Error('initStats(runDir) must be called before any stats computation'); return REF; }
 
 export function refCloseAt(sym, ms) {
-  const bars = REF[sym];
+  const bars = ref()[sym];
   if (!bars) return null;
   let best = null;
   for (const b of bars) { if (b[0] * 1000 <= ms) best = b[4]; else break; }

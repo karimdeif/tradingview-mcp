@@ -105,6 +105,22 @@ if (mixed) {
   warn.push(`V8 mixed provenance: ${segmentKeys.map((k) => `${k.slice(0, 12)}×${segments[k]}`).join(', ')} (run-manifest ${currentManifest ? currentManifest.slice(0, 12) : 'missing'}) — segments ran under DIFFERENT guard stacks; disclose per-segment guarantees. Inventory snapshots cover only the LAST segment; earlier segments' own runs each reported inventory unchanged in their logs.`);
 }
 
+// V9 — COMPLETENESS (sol pass 17): every strategy×symbol pair in the run
+// manifest must have a cell on disk; an aborted partial run must not be
+// certifiable, and an empty run must not QUALIFY.
+try {
+  const man = JSON.parse(readFileSync(join(dir, 'run-manifest.json'), 'utf8'));
+  const have = new Set(cells.map((c) => `${c.strategy}__${String(c.symbol).split(':').pop()}`));
+  const missing = [];
+  for (const st of man.strategies || []) {
+    for (const sym of st.symbols || []) {
+      if (!have.has(`${st.key}__${sym}`)) missing.push(`${st.key}__${sym}`);
+    }
+  }
+  if (missing.length) fails.push(`V9 incomplete run: ${missing.length} manifest cells missing (${missing.slice(0, 5).join(', ')}${missing.length > 5 ? ', …' : ''})`);
+  if (!cells.length) fails.push('V9 empty run: no cells at all');
+} catch { fails.push('V9 run-manifest unreadable — completeness unverifiable'); }
+
 const okCells = cells.filter((c) => c.outcome === 'OK').length;
 const verdict = fails.length ? 'FAIL' : (mixed ? 'QUALIFIED' : 'PASS');
 console.log(JSON.stringify({
