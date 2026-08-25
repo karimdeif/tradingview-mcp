@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import assert from 'node:assert/strict';
-import { cellOutcome, parseStrategyTitle, checkResultIntegrity, normTf, bhOwnershipOk, seriesFingerprintOk, REF_BH } from '../scripts/backtest-tournament.mjs';
+import { cellOutcome, parseStrategyTitle, checkResultIntegrity, normTf, bhOwnershipOk, seriesFingerprintOk, completedTailKey, REF_BH } from '../scripts/backtest-tournament.mjs';
 
 describe('cellOutcome (pass 8: incomplete reports must not become NO_TRADES)', () => {
   it('ERROR when unsuccessful', () => assert.equal(cellOutcome({ success: false }), 'ERROR'));
@@ -185,5 +185,27 @@ describe('config validation via the real CLI (sol pass 16b)', () => {
   });
   it('rejects a roster symbol missing from the reference — fail closed, built-in path included', () => {
     assert.match(runCfg([{ key: 'k1', file: PINE, timeframe: '1D', symbols: ['ZZZZ' + 'Q'] }]), /no series in the reference file/);
+  });
+});
+
+describe('completedTailKey (sol pass 19 — the forming bar mutates)', () => {
+  const bar = (t, c, v) => ({ time: t, open: c, high: c, low: c, close: c, volume: v });
+  const bars = [bar(1, 10, 5), bar(2, 11, 6), bar(3, 12, 7), bar(4, 13, 8), bar(5, 14, 9)];
+
+  it('is INVARIANT to mutations of the forming (last) bar', () => {
+    const frozen = [...bars];
+    const oneMoreTick = [...bars.slice(0, -1), bar(5, 14, 99)]; // same price, more volume
+    assert.equal(completedTailKey(frozen), completedTailKey(oneMoreTick),
+      'a frozen source gaining volume ticks must NOT look fresh');
+  });
+
+  it('differs when any completed bar differs', () => {
+    const other = [...bars.slice(0, 2), bar(3, 99, 7), ...bars.slice(3)];
+    assert.notEqual(completedTailKey(bars), completedTailKey(other));
+  });
+
+  it('returns null (fail-closed upstream) on short or missing series', () => {
+    assert.equal(completedTailKey(bars.slice(0, 3)), null);
+    assert.equal(completedTailKey(null), null);
   });
 });

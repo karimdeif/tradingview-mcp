@@ -230,6 +230,24 @@ async function lastBarTuple() {
   } catch { return null; }
 }
 
+/**
+ * Cross-cell identity key from COMPLETED bars only (sol pass 19): the forming
+ * last bar mutates (volume ticks on every same-price trade), so a frozen
+ * source can produce a fresh-looking JSON. The three bars BEFORE the forming
+ * one are immutable within a session.
+ */
+export function completedTailKey(bars) {
+  if (!Array.isArray(bars) || bars.length < 4) return null;
+  return JSON.stringify(bars.slice(-4, -1));
+}
+
+async function completedTail() {
+  try {
+    const r = await data.getOhlcv({ count: 6, summary: false });
+    return completedTailKey(r?.bars);
+  } catch { return null; }
+}
+
 async function setContextVerified(symbol, timeframe) {
   // BAR IDENTITY, not just label identity (pass 9): quote.symbol reads
   // api.symbol() while prices come from the bar cache, so a frozen cache
@@ -319,8 +337,13 @@ async function setContextVerified(symbol, timeframe) {
   if (ref && (last < ref * 0.75 || last > ref * 1.25)) {
     return { ok: false, guard: true, error: `price sanity failed for ${symbol}: quote ${last} vs reference close ${ref} (±25%) — frozen or foreign bars suspected` };
   }
-  const lastBar = await lastBarTuple();
-  return { ok: true, last, resolution: st.resolution, last_bar: lastBar };
+  const tailKey = await completedTail();
+  if (tailKey === null) {
+    // Fail CLOSED (sol pass 19): a cell without an identity key would skip the
+    // cross-cell detector forever via the cache.
+    return { ok: false, guard: true, error: `completed-bar identity key unreadable for ${symbol} — cross-cell detection would be skipped` };
+  }
+  return { ok: true, last, resolution: st.resolution, last_bar: tailKey };
 }
 
 export function cellOutcome(results) {
@@ -582,7 +605,11 @@ async function main() {
             }
             seenBars.set(cached.last_bar, symbol);
           }
-          if (cached.quote_last != null) seenPrices.set(cached.quote_last, symbol);
+          if (cached.quote_last != null) {
+            const powner = seenPrices.get(cached.quote_last);
+            if (powner && powner !== symbol) console.log(`  NOTE: ${symbol} (cached) and ${powner} share last price ${cached.quote_last} — piastre collision (tails differ).`);
+            seenPrices.set(cached.quote_last, symbol);
+          }
           continue;
         }
         cells.push(res.record);
