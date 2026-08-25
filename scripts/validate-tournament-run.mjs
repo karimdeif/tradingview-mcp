@@ -26,13 +26,25 @@ const cells = readdirSync(join(dir, 'cells')).filter((f) => f.endsWith('.json'))
 const fails = [];
 const warn = [];
 
-// V1 (global, includes what in-run seeding would have missed)
+// V1 (global) — pass-20 semantics, mirrored from the reviewed in-run
+// detector: the frozen signature is an identical COMPLETED-BAR TAIL across
+// symbols; a bare price collision is piastre quantization (warning) whenever
+// tail keys exist and differ. Cells from pre-tail harnesses (no last_bar)
+// keep the strict price rule — they have no stronger evidence to stand on.
+const byTail = new Map();
 const byPrice = new Map();
 for (const c of cells) {
+  if (c.last_bar != null) {
+    const towner = byTail.get(c.last_bar);
+    if (towner && towner !== c.symbol) fails.push(`V1 identical completed-bar tail: ${c.symbol} and ${towner}`);
+    else byTail.set(c.last_bar, c.symbol);
+  }
   if (c.quote_last == null) continue;
   const owner = byPrice.get(c.quote_last);
-  if (owner && owner !== c.symbol) fails.push(`V1 duplicate price ${c.quote_last}: ${c.symbol} and ${owner}`);
-  else byPrice.set(c.quote_last, c.symbol);
+  if (owner && owner !== c.symbol) {
+    if (c.last_bar != null) warn.push(`V1 price collision ${c.quote_last}: ${c.symbol} and ${owner} — piastre quantization (tails differ)`);
+    else fails.push(`V1 duplicate price ${c.quote_last}: ${c.symbol} and ${owner} (no tail evidence)`);
+  } else byPrice.set(c.quote_last, c.symbol);
 }
 // V2
 for (const c of cells) {
