@@ -1,6 +1,9 @@
 /** Pure-function tests for the tournament harness (sol-max pass 9: harness changes lacked tests). */
 import { describe, it } from 'node:test';
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import assert from 'node:assert/strict';
 import { cellOutcome, parseStrategyTitle, checkResultIntegrity, normTf, bhOwnershipOk, seriesFingerprintOk, REF_BH } from '../scripts/backtest-tournament.mjs';
 
@@ -151,4 +154,36 @@ describe('seriesFingerprintOk (pass 10 — the decisive ownership proof)', () =>
     assert.match(r.reason, /only 1 aligned unique daily bars/);
   });
 
+});
+
+describe('config validation via the real CLI (sol pass 16b)', () => {
+  const HARNESS = new URL('../scripts/backtest-tournament.mjs', import.meta.url).pathname;
+  const CAMPAIGN_REF = '/home/karim/claude-a15-20260818/pine-audit/data/ref_universe_2026-08-25.json';
+  const PINE = '/home/karim/claude-a15-20260818/tradingview-mcp/research/strategies-canonical/macd-12-26-9.pine';
+  function runCfg(cfg, ref = CAMPAIGN_REF) {
+    const dir = mkdtempSync(join(tmpdir(), 'cfg-'));
+    const p = join(dir, 'c.json');
+    writeFileSync(p, JSON.stringify(cfg));
+    try {
+      execFileSync('node', [HARNESS, '--dry', '--config', p, '--out', join(dir, 'out')], {
+        env: { ...process.env, TV_REF_DATA: ref }, stdio: 'pipe', timeout: 60000,
+      });
+      return null;
+    } catch (e) { return String(e.stderr || e.message); }
+  }
+  it('accepts the real round-1 roster shape', () => {
+    assert.equal(runCfg([{ key: 'macd-12-26-9', file: PINE, timeframe: '1D', symbols: ['COMI'] }]), null);
+  });
+  it('rejects a non-string key that coerces through the regex', () => {
+    assert.match(runCfg([{ key: 0, file: PINE, timeframe: '1D', symbols: ['COMI'] }]), /key invalid/);
+  });
+  it('rejects a non-string symbol (array coercion)', () => {
+    assert.match(runCfg([{ key: 'k1', file: PINE, timeframe: '1D', symbols: [['COMI']] }]), /symbol invalid/);
+  });
+  it('rejects undeclared fields (inline)', () => {
+    assert.match(runCfg([{ key: 'k1', file: PINE, timeframe: '1D', symbols: ['COMI'], inline: 'x' }]), /undeclared fields/);
+  });
+  it('rejects a roster symbol missing from the reference — fail closed, built-in path included', () => {
+    assert.match(runCfg([{ key: 'k1', file: PINE, timeframe: '1D', symbols: ['ZZZZ' + 'Q'] }]), /no series in the reference file/);
+  });
 });

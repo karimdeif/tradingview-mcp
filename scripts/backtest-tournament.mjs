@@ -496,7 +496,7 @@ async function main() {
     roster = raw.map((r) => {
       const extra = Object.keys(r).filter((k) => !['key', 'file', 'timeframe', 'symbols'].includes(k));
       if (extra.length) throw new Error(`config entry ${r.key ?? '?'}: undeclared fields ${extra.join(',')} rejected`);
-      if (!/^[a-z0-9][a-z0-9._-]{0,63}$/.test(r.key ?? '')) throw new Error(`config key invalid: ${JSON.stringify(r.key)}`);
+      if (typeof r.key !== 'string' || !/^[a-z0-9][a-z0-9._-]{0,63}$/.test(r.key)) throw new Error(`config key invalid: ${JSON.stringify(r.key)}`);
       if (seenKeys.has(r.key)) throw new Error(`duplicate config key ${r.key} — cache aliasing`);
       seenKeys.add(r.key);
       if (typeof r.file !== 'string' || !r.file.startsWith('/')) throw new Error(`${r.key}: file must be an absolute path`);
@@ -504,12 +504,9 @@ async function main() {
       if (!Array.isArray(r.symbols) || !r.symbols.length) throw new Error(`${r.key}: symbols required`);
       const seenSyms = new Set();
       for (const sym of r.symbols) {
-        if (!/^[A-Z0-9]{1,12}$/.test(sym)) throw new Error(`${r.key}: symbol invalid: ${JSON.stringify(sym)}`);
+        if (typeof sym !== 'string' || !/^[A-Z0-9]{1,12}$/.test(sym)) throw new Error(`${r.key}: symbol invalid: ${JSON.stringify(sym)}`);
         if (seenSyms.has(sym)) throw new Error(`${r.key}: duplicate symbol ${sym}`);
         seenSyms.add(sym);
-        // The ownership guards FAIL OPEN on a missing reference symbol —
-        // so missing coverage aborts the run up front (sol pass 15).
-        if (!REF_DATA[sym]) throw new Error(`${r.key}: symbol ${sym} has no series in the reference file (${REF_PATH}) — fingerprint/price-band would silently skip; extend TV_REF_DATA first`);
       }
       return { key: r.key, file: r.file, timeframe: r.timeframe, symbols: [...r.symbols] };
     });
@@ -517,6 +514,17 @@ async function main() {
     roster = STRATEGIES;
   }
   const plan = roster.filter((s) => !only || s.key === only);
+  // The ownership guards FAIL OPEN on a missing reference symbol, so complete
+  // coverage is required for WHATEVER roster runs — built-ins included (sol
+  // pass 16b: the built-in branch bypassed the config-only check, and the
+  // campaign reference lacks 7 legacy symbols).
+  for (const strat of plan) {
+    for (const sym of strat.symbols) {
+      if (!REF_DATA[sym]) {
+        throw new Error(`${strat.key}: symbol ${sym} has no series in the reference file (${REF_PATH}) — the fingerprint and price-band guards would silently skip; use a reference that covers the roster`);
+      }
+    }
+  }
 
   // Run manifest: any change to the harness, a source file, a patch, a symbol
   // set or the TV build invalidates cached cells (sol-max pass 7).
