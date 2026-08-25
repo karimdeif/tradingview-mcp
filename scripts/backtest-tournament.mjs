@@ -319,7 +319,8 @@ async function setContextVerified(symbol, timeframe) {
   if (ref && (last < ref * 0.75 || last > ref * 1.25)) {
     return { ok: false, guard: true, error: `price sanity failed for ${symbol}: quote ${last} vs reference close ${ref} (±25%) — frozen or foreign bars suspected` };
   }
-  return { ok: true, last, resolution: st.resolution };
+  const lastBar = await lastBarTuple();
+  return { ok: true, last, resolution: st.resolution, last_bar: lastBar };
 }
 
 export function cellOutcome(results) {
@@ -368,6 +369,7 @@ async function runCell({ strat, symbol, source, title, outDir, manifestHash }) {
     if (!ctx.ok) { record.guard_failure = ctx.guard || /replay|modal|frozen/.test(ctx.error || ''); throw new Error(ctx.error); }
     record.resolution_landed = ctx.resolution;
     record.quote_last = ctx.last;
+    record.last_bar = ctx.last_bar;
 
     const set = await bt.setDraftSource({ source });
     if (!set.success) throw new Error(`setDraftSource failed: ${set.error}`);
@@ -545,7 +547,8 @@ async function main() {
   const inventoryBefore = await savedScriptInventory();
   writeFileSync(join(outDir, 'saved-scripts-before.json'), JSON.stringify(inventoryBefore, null, 2));
 
-  const seenPrices = new Map(); // last price -> symbol; duplicates across symbols = frozen feed
+  const seenPrices = new Map(); // last price -> symbol; collisions are warnings (piastre quantization)
+  const seenBars = new Map();   // full last-bar tuple -> symbol; a shared BAR is the frozen signature
   try {
     const g0 = await guardsClear('preflight');
     if (!g0.ok) { console.error(g0.error); process.exitCode = 1; return; }
@@ -568,17 +571,18 @@ async function main() {
           const cached = JSON.parse(readFileSync(res.cellPath, 'utf8'));
           console.log(`  ${symbol}: (cached OK)`);
           cells.push(cached);
-          // Cached cells must still seed the duplicate-price map, or a fresh
-          // cell frozen onto a cached symbol's price goes unseen (pass 9).
-          if (cached.quote_last != null) {
-            const owner = seenPrices.get(cached.quote_last);
+          // Cached cells seed both maps (pass 9); tuple collisions abort,
+          // price collisions warn.
+          if (cached.last_bar != null) {
+            const owner = seenBars.get(cached.last_bar);
             if (owner && owner !== symbol) {
-              console.error(`FROZEN-FEED SIGNATURE (cached): ${symbol} and ${owner} share last price ${cached.quote_last} — aborting.`);
+              console.error(`FROZEN-FEED SIGNATURE (cached): ${symbol} and ${owner} share an ENTIRE last bar — aborting.`);
               process.exitCode = 6;
               break outer;
             }
-            seenPrices.set(cached.quote_last, symbol);
+            seenBars.set(cached.last_bar, symbol);
           }
+          if (cached.quote_last != null) seenPrices.set(cached.quote_last, symbol);
           continue;
         }
         cells.push(res.record);
@@ -586,14 +590,26 @@ async function main() {
         console.log(`  ${symbol}: ${res.record.outcome}` + (res.record.outcome === 'OK'
           ? ` net ${(m.net_profit_percent * 100).toFixed(2)}% trades ${m.total_trades} dd ${(m.max_drawdown_percent * 100).toFixed(2)}%`
           : ` ${res.record.error || ''}`));
-        // Cross-cell price fingerprint: two DIFFERENT symbols sharing an
-        // identical last price is the 08-18 frozen-feed signature.
+        // Cross-cell frozen-feed detector, v2 (live false abort 2026-08-25:
+        // SVCE and AMOC legitimately shared last price 10.92 — piastre-
+        // quantized EGX prices collide, exactly the "safe false abort" sol
+        // pass 9 predicted, and both cells' series fingerprints had already
+        // PROVEN their identities). The real frozen signature is the FULL
+        // last-bar tuple: two symbols cannot share time+OHLCV. A bare price
+        // collision is now a loud warning only.
+        if (res.record.last_bar != null) {
+          const owner = seenBars.get(res.record.last_bar);
+          if (owner && owner !== symbol) {
+            console.error(`FROZEN-FEED SIGNATURE: ${symbol} and ${owner} share an ENTIRE last bar ${res.record.last_bar} — aborting.`);
+            process.exitCode = 6;
+            break outer;
+          }
+          seenBars.set(res.record.last_bar, symbol);
+        }
         if (res.record.quote_last != null) {
           const owner = seenPrices.get(res.record.quote_last);
           if (owner && owner !== symbol) {
-            console.error(`FROZEN-FEED SIGNATURE: ${symbol} and ${owner} share last price ${res.record.quote_last} — aborting.`);
-            process.exitCode = 6;
-            break outer;
+            console.log(`  NOTE: ${symbol} and ${owner} share last price ${res.record.quote_last} — legitimate piastre collision (bar tuples differ; fingerprints verified).`);
           }
           seenPrices.set(res.record.quote_last, symbol);
         }
