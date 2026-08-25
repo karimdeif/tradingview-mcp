@@ -40,11 +40,14 @@ for (const c of cells) {
     else byTail.set(c.last_bar, c.symbol);
   }
   if (c.quote_last == null) continue;
-  const owner = byPrice.get(c.quote_last);
-  if (owner && owner !== c.symbol) {
-    if (c.last_bar != null) warn.push(`V1 price collision ${c.quote_last}: ${c.symbol} and ${owner} — piastre quantization (tails differ)`);
-    else fails.push(`V1 duplicate price ${c.quote_last}: ${c.symbol} and ${owner} (no tail evidence)`);
-  } else byPrice.set(c.quote_last, c.symbol);
+  const prev = byPrice.get(c.quote_last);
+  if (prev && prev.symbol !== c.symbol) {
+    // A collision softens to a warning only when BOTH sides carry tail
+    // evidence — otherwise order-dependence lets a legacy cell hide behind a
+    // modern one (sol pass 21).
+    if (c.last_bar != null && prev.hasTail) warn.push(`V1 price collision ${c.quote_last}: ${c.symbol} and ${prev.symbol} — piastre quantization (tails differ)`);
+    else fails.push(`V1 duplicate price ${c.quote_last}: ${c.symbol} and ${prev.symbol} (tail evidence missing on ${c.last_bar == null ? c.symbol : prev.symbol})`);
+  } else if (!prev) byPrice.set(c.quote_last, { symbol: c.symbol, hasTail: c.last_bar != null });
 }
 // V2
 for (const c of cells) {

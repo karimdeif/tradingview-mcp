@@ -114,6 +114,7 @@ const fmt = (v, d = 2) => (v == null || Number.isNaN(v) ? 'n/a' : (+v).toFixed(d
 for (const r of records) {
   L.push(`| **${r.verdict}** | ${r.registry_id} | ${fmt(r.metrics.med_is_edge_py)} (${r.metrics.n_is_edge}) | ${fmt(r.metrics.med_oos_edge_py)} (${r.metrics.n_oos_edge}) | ${fmt(r.metrics.degradation)} | ${fmt(r.metrics.median_net_pct)} | ${fmt(r.metrics.median_trades, 0)} | ${r.flags.join(' ') || '—'} |`);
 }
-L.push('', `Evidence denominator: cells with ≥30 trades per family are in each record's metrics; <30 median flags INSUFFICIENT-EVIDENCE.`, '');
+L.push('', `Evidence denominator: cells with ≥30 trades per family are in each record's metrics; <30 median flags INSUFFICIENT-EVIDENCE.`,
+  '', 'Verdict note: SPARSE-EDGE-SUBSET (edge computable on <70% of OK cells — e.g. shallow listings with no in-sample window) routes to INSUFFICIENT-EVIDENCE by the registered precedence even where the evidenced subset failed out-of-sample. Such families lack breadth-complete evidence to earn FAILED; the OOS collapse is preserved in each record\'s metrics and is not being softened.', '');
 writeFileSync(join(outDir, 'REGISTRY.md'), L.join('\n'));
 console.log(`registry: ${records.length} records -> ${outDir}`);
